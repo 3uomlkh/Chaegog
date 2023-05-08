@@ -41,7 +41,7 @@
         android:fontFamily="@font/pretendardregular"
         android:text="제품의 식품유형표를 인식해주세요."
         android:textAlignment="center"
-        android:textSize="18dp"
+        android:textSize="20dp"
         android:textStyle="bold"
         android:visibility="visible" />
 
@@ -126,6 +126,7 @@
         android:id="@+id/recomm_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
         android:visibility="gone"
         android:text="추천 제품이 없습니다"
         android:textSize="16sp"

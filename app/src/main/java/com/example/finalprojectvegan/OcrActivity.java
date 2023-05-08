@@ -275,6 +275,7 @@ public class OcrActivity extends AppCompatActivity {
                     activityResultPicture.launch(intent);
 
 
+
                 } else if (result == PopupResult.RIGHT) {
                     // 갤러리
 //                    intent = new Intent(Intent.ACTION_PICK);
@@ -290,17 +291,6 @@ public class OcrActivity extends AppCompatActivity {
 //                setImage(uri);
 //            }
         } else if(resultCode == -2 && requestCode == 101){
-            Log.d("resultcode", resultCode + "");
-            String result = data.getStringExtra("RESULT");
-            Uri resultUri = null;
-            if(result != null){
-                resultUri = Uri.parse(result);
-                Log.d("RESULT", result);
-            }
-            setImage(resultUri);
-
-        }
-        else if(resultCode == -3 && requestCode == 102){
             Log.d("resultcode", resultCode + "");
             String result = data.getStringExtra("RESULT");
             Uri resultUri = null;
@@ -551,14 +541,22 @@ public class OcrActivity extends AppCompatActivity {
 
                 List<String> newList2 = list4.stream().distinct().collect(Collectors.toList());
                 String n_ingre2 = newList2.toString().replace("[","").replace("]","");
-
+//                if(n_ingre1 != null){
+//                    n_ingredient.setText(n_ingre1);
+//                } else if(n_ingre1 == null){
+//                    n_ingredient.setText("부적합한 원재료가 없습니다.");
+//                }
+//                if(n_ingre2 != null){
+//                    allergy_ingredient.setText(n_ingre2);
+//                } else if(n_ingre2 == null){
+//                    allergy_ingredient.setText("알러지 유발 원재료가 없습니다.");
+//                }
                 if(!checkFit){
-                    Log.d("OCRTEST", resultText + " - 채식유형에 부적합합니다.");
+                    Log.d("OCRTEST", resultText + " - 채식유형 및 알러지에 부적합합니다.");
                     ocrTextView.setText(USER_ID + "님에게 맞지않는 제품입니다.");
                     ocrTextView.setTextSize(20);
                     n_ingredient.setText(n_ingre1);
                     allergy_ingredient.setText(n_ingre2);
-
                     View ocrLayout = findViewById(R.id.ocrLayout);
                     ocrLayout.setBackgroundColor(Color.parseColor("#FFF8E1"));
 
@@ -571,11 +569,12 @@ public class OcrActivity extends AppCompatActivity {
                     n_ingredient.setVisibility(View.VISIBLE);
                     allergy_text.setVisibility(View.VISIBLE);
                     allergy_ingredient.setVisibility(View.VISIBLE);
+                    recomm_textView.setVisibility(View.VISIBLE);
                     recomm_text.setVisibility(View.VISIBLE);
-                    recomm_image.setVisibility(View.VISIBLE);
+                    //recomm_image.setVisibility(View.VISIBLE);
 
                 }else{
-                    Log.d("OCRTEST", resultText + " - 채식유형에 적합합니다.");
+                    Log.d("OCRTEST", resultText + " - 채식유형 및 알러지에 적합합니다.");
                     y_ingredient_text.setText(USER_ID + "님에게\n적합한 제품입니다.");
                     y_ingredient_text.setVisibility(View.VISIBLE);
 

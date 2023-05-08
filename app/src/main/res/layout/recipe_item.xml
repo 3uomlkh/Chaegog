@@ -1,85 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:elevation="2dp"
+    app:cardCornerRadius="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="15dp">
+        android:orientation="vertical"
+        android:padding="4dp">
+        <ImageView
+            android:id="@+id/recipe_image"
+            android:layout_width="400dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:outlineSpotShadowColor="#6D6D6D"
+            tools:srcCompat="@tools:sample/avatars" />
+
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
             <TextView
-                android:id="@+id/recipe_name"
-                android:layout_width="match_parent"
+                android:id="@+id/recipe_title"
+                android:layout_width="340dp"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
+                android:textSize="16sp"
                 android:textColor="@color/black"
-                android:fontFamily="@font/pretendardregular"
                 android:text="레시피 이름" />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/recipe_way"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/pretendardregular"
-                    android:text="요리방법" />
-                <TextView
-                    android:layout_width="10dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="|"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/pretendardregular"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:id="@+id/recipe_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/pretendardregular"
-                    android:text="레시피 타입" />
-            </LinearLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <ImageView
+                android:id="@+id/saveImage"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/favorite_off"/>
+
         </LinearLayout>
-        <CheckBox
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:button="@null"
-            android:background="@drawable/custom_checkbox"
-            android:layout_gravity="top"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/green"
-            android:id="@+id/ProductFavorite"/>
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@color/gray_f5"
-        android:gravity="end"
-        android:orientation="vertical">
-
-    <ImageView
-        android:id="@+id/recipe_image"
-        android:layout_width="400dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:outlineSpotShadowColor="#6D6D6D"
-        tools:srcCompat="@tools:sample/avatars" />
-    </LinearLayout>
-</LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -33,6 +33,10 @@ android {
 }
 
 dependencies {
+
+    // Jsoup
+    implementation 'org.jsoup:jsoup:1.15.1'
+
     implementation 'com.github.yalantis:ucrop:2.2.6'
     // New version
     def multidex_version = "2.0.1"

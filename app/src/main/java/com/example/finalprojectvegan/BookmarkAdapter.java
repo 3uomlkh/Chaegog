@@ -3,77 +3,105 @@ package com.example.finalprojectvegan;
 
 import android.content.Context;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
-import com.example.finalprojectvegan.Model.BookmarkData;
+import com.example.finalprojectvegan.Model.RecipeData;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.List;
+import java.util.ArrayList;
 
 class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHolder>{
-    private Context context;
-    private List<BookmarkData> bookmarkList;
+    private ArrayList<RecipeData> listData = new ArrayList<>();
+    private FirebaseAuth mAuth;
 
-    public BookmarkAdapter(Context context, List<BookmarkData> bookmarkList) {
-        this.context = context;
-        this.bookmarkList = bookmarkList;
-    }
     @NonNull
     @Override
     public BookmarkAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(context).inflate(R.layout.bookmark1_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false);
         return new ViewHolder(view);
     }
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//        holder.onBind(dataList.get(position));
-       holder.name.setText(bookmarkList.get(position).getStoreName());
-       holder.address.setText("" + bookmarkList.get(position).getStoreAddr());
-       holder.time.setText("" + bookmarkList.get(position).getStoreTime());
-       holder.dayOff.setText("" + bookmarkList.get(position).getStoreDayoff());
+    public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
+        holder.onBind(listData.get(i));
+        String url = listData.get(i).getClickUrl();
+        holder.title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Context context = view.getContext();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                context.startActivity(intent);
+            }
+        });
+
+        String title = listData.get(i).getTitle();
+        String image = listData.get(i).getImageUrl();
+        String itemKey = listData.get(i).getItemKeyList();
+        ArrayList<String> bookmarkIdList = listData.get(i).getBookmarkIdList();
+        Log.d("BookmarkRVA", "title : " + title);
+        Log.d("BookmarkRVA", "itemKey : " + itemKey);
+        Log.d("BookmarkRVA", "bookmarkList : " + bookmarkIdList.toString());
 
 
-        String imgURL = bookmarkList.get(position).getStoreImage();
-        Glide.with(holder.itemView)
-                .load(imgURL)
-                .override(150,150)
-                .apply(new RequestOptions().transform(new CenterCrop(),
-                        new RoundedCorners(20)))
-                .into(holder.image);
+        if (bookmarkIdList.contains(itemKey)) {
+            holder.saveImage.setImageResource(R.drawable.favorite_on);
+        } else {
+            holder.saveImage.setImageResource(R.drawable.favorite_off);
+        }
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference bookmarkRef = database.getReference("bookmark");
+
+        holder.saveImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bookmarkRef
+                        .child(mAuth.getCurrentUser().getUid())
+                        .child("recipe_bookmark")
+                        .child(itemKey)
+                        .setValue(null);
+                Toast.makeText(view.getContext(), "북마크 삭제", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
 
-        return bookmarkList.size();
+        return listData.size();
+    }
+
+    public void addItem(RecipeData data) {
+        listData.add(data);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-        TextView name;
-        TextView address;
-        TextView time;
-        TextView dayOff;
-        ImageView image;
+        private TextView title;
+        private ImageView thumbnail;
+        private ImageView saveImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            name = (TextView)itemView.findViewById(R.id.bookmarkNameTv);
-            address = (TextView)itemView.findViewById(R.id.bookmarkAddrTv);
-            image = (ImageView)itemView.findViewById(R.id.bookmarkImageView);
-            time = (TextView)itemView.findViewById(R.id.bookmarkTimeTv);
-            dayOff = (TextView)itemView.findViewById(R.id.bookmarkDayOffTv);
+            title = itemView.findViewById(R.id.recipe_title);
+            thumbnail = itemView.findViewById(R.id.recipe_image);
+            saveImage = itemView.findViewById(R.id.saveImage);
+        }
+        void onBind(RecipeData data) {
+            title.setText(data.getTitle());
+            Glide.with(itemView.getContext()).load(data.getImageUrl()).into(thumbnail);
         }
     }
 }

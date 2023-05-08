@@ -40,14 +40,12 @@ public class BookmarkActivity extends AppCompatActivity {
                         return;
                     case "레시피":
                         getSupportFragmentManager().beginTransaction().replace(R.id.bookmark_layout, bookmark3).commitAllowingStateLoss();
-                        return;
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 getSupportFragmentManager().beginTransaction() .replace(R.id.main_layout, bookmark1).commitAllowingStateLoss();
-                return;
             }
         });
     }

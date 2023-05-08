@@ -1,120 +1,64 @@
 package com.example.finalprojectvegan.Model;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
 
 public class RecipeData {
-    @SerializedName("RCP_NM")
-    private String recipeName;
-    @SerializedName("RCP_PAT2")
-    private String recipeType;
-    @SerializedName("RCP_PARTS_DTLS")
-    private String recipeIngredient;
-    @SerializedName("RCP_WAY2")
-    private String recipeWay;
-    @SerializedName("HASH_TAG")
-    private String recipeHashTag;
-    @SerializedName("ATT_FILE_NO_MK")
-    private String recipeImageMK;
-    @SerializedName("ATT_FILE_NO_MAIN")
-    private String recipeImageMAIN;
-    @SerializedName("MANUAL_IMG01")
-    private String manualImage01;
-    @SerializedName("MANUAL_IMG02")
-    private String manualImage02;
-    @SerializedName("MANUAL_IMG03")
-    private String manualImage03;
-    @SerializedName("MANUAL_IMG04")
-    private String manualImage04;
-    @SerializedName("MANUAL_IMG05")
-    private String manualImage05;
-    @SerializedName("MANUAL_IMG06")
-    private String manualImage06;
-    @SerializedName("MANUAL01")
-    private String manual01;
-    @SerializedName("MANUAL02")
-    private String manual02;
-    @SerializedName("MANUAL03")
-    private String manual03;
-    @SerializedName("MANUAL04")
-    private String manual04;
-    @SerializedName("MANUAL05")
-    private String manual05;
-    @SerializedName("MANUAL06")
-    private String manual06;
+    private String title;
+    private String imageUrl;
+    private String clickUrl;
+    private String itemKeyList;
+    private ArrayList<String> bookmarkIdList;
 
-    public String getRecipeName() {
-        return recipeName;
+    public RecipeData() {
+        this.title = title;
+        this.imageUrl = imageUrl;
+        this.clickUrl = clickUrl;
+        this.itemKeyList = itemKeyList;
     }
 
-    public String getRecipeType() {
-        return recipeType;
+    public RecipeData(String imageUrl, String title, String clickUrl) {
+        this.imageUrl = imageUrl;
+        this.title = title;
+        this.clickUrl = clickUrl;
     }
 
-    public String getRecipeIngredient() {
-        return recipeIngredient;
+    public String getTitle() {
+        return title;
     }
 
-    public String getRecipeWay() {
-        return recipeWay;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getRecipeHashTag() {
-        return recipeHashTag;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public String getRecipeImageMK() {
-        return recipeImageMK;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public String getRecipeImageMAIN() {
-        return recipeImageMAIN;
+    public String getClickUrl() {
+        return clickUrl;
     }
 
-    public String getManualImage01() {
-        return manualImage01;
+    public void setClickUrl(String clickUrl) {
+        this.clickUrl = clickUrl;
     }
 
-    public String getManualImage02() {
-        return manualImage02;
+    public String getItemKeyList() {
+        return itemKeyList;
     }
 
-    public String getManualImage03() {
-        return manualImage03;
+    public void setItemKeyList(String itemKeyList) {
+        this.itemKeyList = itemKeyList;
     }
 
-    public String getManualImage04() {
-        return manualImage04;
+    public ArrayList<String> getBookmarkIdList() {
+        return bookmarkIdList;
     }
 
-    public String getManualImage05() {
-        return manualImage05;
-    }
-
-    public String getManualImage06() {
-        return manualImage06;
-    }
-
-    public String getManual01() {
-        return manual01;
-    }
-
-    public String getManual02() {
-        return manual02;
-    }
-
-    public String getManual03() {
-        return manual03;
-    }
-
-    public String getManual04() {
-        return manual04;
-    }
-
-    public String getManual05() {
-        return manual05;
-    }
-
-    public String getManual06() {
-        return manual06;
+    public void setBookmarkIdList(ArrayList<String> bookmarkIdList) {
+        this.bookmarkIdList = bookmarkIdList;
     }
 }
