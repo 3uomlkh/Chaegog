@@ -95,9 +95,9 @@ class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHolder>{
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.bookmark_title);
-            thumbnail = itemView.findViewById(R.id.bookmark_image);
-            saveImage = itemView.findViewById(R.id.saveImage);
+            title = itemView.findViewById(R.id.recipe_title);
+            thumbnail = itemView.findViewById(R.id.recipe_image);
+            saveImage = itemView.findViewById(R.id.recipe_save_image);
         }
         void onBind(RecipeData data) {
             title.setText(data.getTitle());
