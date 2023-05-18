@@ -29,9 +29,6 @@
             android:name=".RoadingActivity"
             android:exported="false" />
         <activity
-            android:name=".MyFeedActivity"
-            android:exported="false" />
-        <activity
             android:name=".CropperActivity"
             android:exported="false" />
         <activity
@@ -39,9 +36,6 @@
             android:exported="false" />
         <activity
             android:name=".BookmarkActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RecipeDetailActivity"
             android:exported="false" />
         <activity
             android:name=".WritePostActivity"

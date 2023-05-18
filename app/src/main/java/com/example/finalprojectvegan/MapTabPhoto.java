@@ -23,46 +23,23 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MapTabPhoto#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MapTabPhoto extends Fragment {
     RecyclerView recyclerView;
     GalleryAdapter adapter;
     GridLayoutManager gridLayoutManager;
     String name;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public MapTabPhoto() {
         // Required empty public constructor
     }
 
     public static MapTabPhoto newInstance(String param1, String param2) {
         MapTabPhoto fragment = new MapTabPhoto();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -72,7 +49,6 @@ public class MapTabPhoto extends Fragment {
 
         Bundle bundle = getArguments();
         name = bundle.getString("name");
-
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("review")

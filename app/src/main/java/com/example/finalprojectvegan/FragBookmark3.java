@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+// 레시피 북마크
 public class FragBookmark3 extends Fragment {
     private ArrayList<String> itemKeyList = new ArrayList<>();
     private ArrayList<String> bookmarkIdList = new ArrayList<>();
@@ -38,7 +39,6 @@ public class FragBookmark3 extends Fragment {
 
     public static FragBookmark3 newInstance(String param1, String param2) {
         FragBookmark3 fragment = new FragBookmark3();
-
         return fragment;
     }
 
@@ -70,10 +70,8 @@ public class FragBookmark3 extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-
-
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Log.d("Bookmark","KEY : " + snapshot.getKey());
+                    Log.d("FragBookmark3","KEY : " + snapshot.getKey());
                     if(bookmarkIdList.contains(snapshot.getKey())) {
                         itemKeyList.add(snapshot.getKey());
                     }
@@ -88,11 +86,11 @@ public class FragBookmark3 extends Fragment {
                     adapter.addItem(data);
                 }
 
-                Log.d("FragBookmark",listTitle.toString());
-                Log.d("FragBookmark",listThumb.toString());
-                Log.d("FragBookmark",clickUrl.toString());
-                Log.d("FragBookmark",itemKeyList.toString());
-                Log.d("FragBookmark",bookmarkIdList.toString());
+                Log.d("FragBookmark3",listTitle.toString());
+                Log.d("FragBookmark3",listThumb.toString());
+                Log.d("FragBookmark3",clickUrl.toString());
+                Log.d("FragBookmark3",itemKeyList.toString());
+                Log.d("FragBookmark3",bookmarkIdList.toString());
 
                 adapter.notifyDataSetChanged();
                 recyclerView.setAdapter(adapter);

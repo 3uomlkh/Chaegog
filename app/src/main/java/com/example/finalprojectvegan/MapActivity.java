@@ -2,7 +2,6 @@ package com.example.finalprojectvegan;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,8 +19,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.finalprojectvegan.Model.NaverMapData;
-import com.example.finalprojectvegan.Model.NaverMapItem;
+import com.example.finalprojectvegan.Model.MapData;
+import com.example.finalprojectvegan.Model.RecipeData;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
@@ -32,11 +35,8 @@ import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
 import com.naver.maps.map.util.FusedLocationSource;
-import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.ArrayList;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
         private static final String TAG = "MapActivity";
@@ -47,21 +47,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         };
         private FusedLocationSource mLocationSource;
         private NaverMap mNaverMap;
-
-        private NaverMapItem naverMapList;
-        private List<NaverMapData> naverMapInfo;
-
         double lat, lnt;
         String mapInfoName, mapInfoAddr, mapInfoTime, mapInfoDayoff,
-                mapInfoImage, mapInfoCategory, mapInfoMenu, userID, userPk;
-        boolean mapInfoBookmark;
-
+                mapInfoImage, mapInfoCategory, mapInfoMenu, mapInfoPhonenum;
         TextView getMapInfoName, getMapInfoAddr, getMapInfoTime, getMapInfoDayoff;
         ImageView getMapInfoImage;
         ImageButton mapInfoButton;
         LinearLayout mapInfoLayout;
-        CheckBox getMapInfoBookmark;
         View map_fragment;
+        private DatabaseReference mDatabase;
+        private ArrayList<String> mapNameList = new ArrayList<>();
+        private ArrayList<String> mapAddrList = new ArrayList<>();
+        private ArrayList<String> mapTimeList = new ArrayList<>();
+        private ArrayList<String> mapDayoffList = new ArrayList<>();
+        private ArrayList<String> mapImageList = new ArrayList<>();
+        private ArrayList<String> mapLatList = new ArrayList<>();
+        private ArrayList<String> mapLntList = new ArrayList<>();
+        private ArrayList<String> mapMenuList = new ArrayList<>();
+        private ArrayList<String> mapCategoryList = new ArrayList<>();
+        private ArrayList<String> mapPhonenumList = new ArrayList<>();
 
 
         @Override
@@ -69,14 +73,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_map);
 
-
-            // 식당 정보가 출력되는 곳
             getMapInfoName = findViewById(R.id.map_info_name);
             getMapInfoAddr = findViewById(R.id.map_info_addr);
             getMapInfoTime = findViewById(R.id.map_info_time);
             getMapInfoDayoff = findViewById(R.id.map_info_day_off);
             getMapInfoImage = findViewById(R.id.map_info_image);
-            getMapInfoBookmark = findViewById(R.id.favorite_checkbox);
             mapInfoButton = findViewById(R.id.map_info_button);
 
             FragmentManager fm = getSupportFragmentManager();
@@ -91,109 +92,113 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mLocationSource =
                     new FusedLocationSource(this, PERMISSION_REQUEST_CODE);
 
-
         }
 
         @Override
         public void onMapReady (@NonNull NaverMap naverMap){
             Log.d(TAG, "onMapReady");
 
-
             mapInfoLayout = findViewById(R.id.map_info_layout);
             map_fragment = findViewById(R.id.map_fragment);
 
-            NaverMapApiInterface naverMapApiInterface = NaverMapRequest.getClient().create(NaverMapApiInterface.class);
-            Call<NaverMapItem> call = naverMapApiInterface.getMapData();
-            call.enqueue(new Callback<NaverMapItem>() {
-                             @Override
-                             public void onResponse(Call<NaverMapItem> call, Response<NaverMapItem> response) {
-                                 naverMapList = response.body();
-                                 naverMapInfo = naverMapList.MAPSTOREINFO;
+            mDatabase = FirebaseDatabase.getInstance().getReference("Maps");
+            mDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                 // 마커 여러개 찍기
-                                 for(int i=0; i < naverMapInfo.size(); i++){
-                                     Marker[] markers = new Marker[naverMapInfo.size()];
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                                     markers[i] = new Marker();
-                                     lat = naverMapInfo.get(i).getStoreLat();
-                                     lnt = naverMapInfo.get(i).getStoreLnt();
-                                     markers[i].setPosition(new LatLng(lat, lnt));
-                                     markers[i].setCaptionText(naverMapInfo.get(i).getStoreName());
-                                     markers[i].setMap(naverMap);
+                        mapNameList.add(snapshot.child("storeName").getValue().toString());
+                        mapAddrList.add(snapshot.child("storeAddr").getValue().toString());
+                        mapTimeList.add(snapshot.child("storeTime").getValue().toString());
+                        mapDayoffList.add(snapshot.child("storeDayOff").getValue().toString());
+                        mapImageList.add(snapshot.child("storeImage").getValue().toString());
+                        mapLatList.add(snapshot.child("storeLat").getValue().toString());
+                        mapLntList.add(snapshot.child("storeLnt").getValue().toString());
+                        mapMenuList.add(snapshot.child("storeMenu").getValue().toString());
+                        mapCategoryList.add(snapshot.child("storeCategory").getValue().toString());
+                        mapPhonenumList.add(snapshot.child("storePhonenum").getValue().toString());
 
-                                     int finalI = i;
-                                     markers[i].setOnClickListener(new Overlay.OnClickListener() {
-                                         @Override
-                                         public boolean onClick(@NonNull Overlay overlay)
-                                         {
-                                             // DB에서 차례대로 정보 받아오기
-                                             mapInfoName = naverMapInfo.get(finalI).getStoreName();
-                                             mapInfoAddr = naverMapInfo.get(finalI).getStoreAddr();
-                                             mapInfoTime = naverMapInfo.get(finalI).getStoreTime();
-                                             mapInfoDayoff = naverMapInfo.get(finalI).getStoreDayOff();
-                                             mapInfoImage = naverMapInfo.get(finalI).getStoreImage();
-                                             mapInfoCategory = naverMapInfo.get(finalI).getStoreCategory();
-                                             mapInfoMenu = naverMapInfo.get(finalI).getStoreMenu();
-                                             mapInfoBookmark = naverMapInfo.get(finalI).getStoreBookmark();
+                    }
+                    for(int i=0; i < mapNameList.size(); i++){
+                        Marker[] markers = new Marker[mapNameList.size()];
 
-                                             mapInfoButton.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
+                        markers[i] = new Marker();
+                        lat = Double.parseDouble(mapLatList.get(i));
+                        lnt = Double.parseDouble(mapLntList.get(i));
+                        markers[i].setPosition(new LatLng(lat, lnt));
+                        markers[i].setCaptionText(mapNameList.get(i));
+                        markers[i].setMap(naverMap);
 
-                                                    Intent intent = new Intent(MapActivity.this, MapInfoActivity.class);
-                                                    intent.putExtra("name", mapInfoName);
-                                                    intent.putExtra("image", mapInfoImage);
-                                                    intent.putExtra("addr", mapInfoAddr);
-                                                    intent.putExtra("time", mapInfoTime);
-                                                    intent.putExtra("dayOff", mapInfoDayoff);
-                                                    intent.putExtra("category", mapInfoCategory);
-                                                    intent.putExtra("menu", mapInfoMenu);
-                                                    startActivity(intent);
+                        int k = i;
+                        markers[i].setOnClickListener(new Overlay.OnClickListener() {
+                            @Override
+                            public boolean onClick(@NonNull Overlay overlay)
+                            {
+                                // DB에서 차례대로 정보 받아오기
+                                mapInfoName = mapNameList.get(k);
+                                mapInfoAddr = mapAddrList.get(k);
+                                mapInfoTime = mapTimeList.get(k);
+                                mapInfoDayoff = mapDayoffList.get(k);
+                                mapInfoImage = mapImageList.get(k);
+                                mapInfoCategory = mapCategoryList.get(k);
+                                mapInfoMenu = mapMenuList.get(k);
+                                mapInfoPhonenum = mapPhonenumList.get(k);
 
-                                                }
-                                             });
+                                mapInfoButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
 
-                                             // 받아온 데이터로 TextView 내용 변경
-                                             getMapInfoName.setText(mapInfoName);
-                                             getMapInfoAddr.setText(mapInfoAddr);
-                                             getMapInfoTime.setText(mapInfoTime);
-                                             getMapInfoDayoff.setText(mapInfoDayoff);
-                                             startLoadingImage();
+                                        Intent intent = new Intent(MapActivity.this, MapInfoActivity.class);
+                                        intent.putExtra("name", mapInfoName);
+                                        intent.putExtra("addr", mapInfoAddr);
+                                        intent.putExtra("time", mapInfoTime);
+                                        intent.putExtra("dayOff", mapInfoDayoff);
+                                        intent.putExtra("image", mapInfoImage);
+                                        intent.putExtra("category", mapInfoCategory);
+                                        intent.putExtra("menu", mapInfoMenu);
+                                        intent.putExtra("phone", mapInfoPhonenum);
+                                        startActivity(intent);
 
-                                             // visibility가 gone으로 되어있던 정보창 레이아웃을 visible로 변경
-                                             mapInfoLayout.setVisibility(View.VISIBLE);
+                                    }
+                                });
 
-                                             map_fragment.setOnTouchListener(new View.OnTouchListener() {
-                                                 @Override
-                                                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                                                         mapInfoLayout.setVisibility(View.GONE);
-                                                     return false;
-                                                 }
-                                             });
+                                // 받아온 데이터로 TextView 내용 변경
+                                getMapInfoName.setText(mapInfoName);
+                                getMapInfoAddr.setText(mapInfoAddr);
+                                getMapInfoTime.setText(mapInfoTime);
+                                getMapInfoDayoff.setText(mapInfoDayoff);
+                                startLoadingImage();
 
-                                             return false;
+                                // visibility가 gone으로 되어있던 정보창 레이아웃을 visible로 변경
+                                mapInfoLayout.setVisibility(View.VISIBLE);
 
-                                         }
-                                     });
+                                map_fragment.setOnTouchListener(new View.OnTouchListener() {
+                                    @Override
+                                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                                        mapInfoLayout.setVisibility(View.GONE);
+                                        return false;
+                                    }
+                                });
 
-                                 }
-                             }
+                                return false;
 
-                             @Override
-                             public void onFailure(Call<NaverMapItem> call, Throwable t) {
+                            }
+                        });
 
-                             }
-                         });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.w(TAG, "Failed to read value.", error.toException());
+                }
+            });
 
 
             // NaverMap 객체를 받아 NaverMap 객체에 위치 소스 지정
             mNaverMap = naverMap;
             mNaverMap.setLocationSource(mLocationSource);
-
-//            naverMap.addOnLocationChangeListener(location ->
-//                    Toast.makeText(this,
-//                            location.getLatitude() + ", " + location.getLongitude(),
-//                            Toast.LENGTH_SHORT).show());
 
             UiSettings uiSettings = mNaverMap.getUiSettings();
             uiSettings.setCompassEnabled(true);
@@ -227,14 +232,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-            // request code와 권한획득 여부 확인
-//            if (requestCode == PERMISSION_REQUEST_CODE) {
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    mNaverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
-//                }
-//            }
 
             if (mLocationSource.onRequestPermissionsResult(
                     requestCode, permissions, grantResults)) {

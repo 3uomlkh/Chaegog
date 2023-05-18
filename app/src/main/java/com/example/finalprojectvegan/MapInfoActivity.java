@@ -6,13 +6,16 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.finalprojectvegan.Model.MapTabInfo;
+import com.example.finalprojectvegan.Model.MapData;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+
 public class MapInfoActivity extends AppCompatActivity {
-    private Fragment fragment_info, fragment_menu, fragment_photo, fragment_review;
+    private Fragment fragment_info, fragment_menu, fragment_photo, fragment_review, fragment_map_bookmark;
     private TabLayout tabs;
-    String name, addr, time, dayoff, category, menu, pk, id, image,menuFi;
+    String name, addr, time, dayoff, category, menu, image;
+    private ArrayList<MapData> mapListData = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,7 @@ public class MapInfoActivity extends AppCompatActivity {
         fragment_menu = new MapTabMenu();
         fragment_photo = new MapTabPhoto();
         fragment_review = new MapTabReview();
+        fragment_map_bookmark = new FragBookmark1();
 
         tabs = findViewById(R.id.map_info_tabs);
 
@@ -60,22 +64,9 @@ public class MapInfoActivity extends AppCompatActivity {
         dayoff = intent.getStringExtra("dayOff");
         category = intent.getStringExtra("category");
         menu = intent.getStringExtra("menu");
-        id = intent.getStringExtra("userID");
-        pk = intent.getStringExtra("userPk");
-        image = intent.getStringExtra("image");
 
-
-        String arr[] = menu.split(",");
-        for(int i=0; i < arr.length; i++){
-            if(menuFi != null){
-                menuFi = menuFi + "\n" + arr[i];
-            }else{
-                menuFi = arr[i];
-            }
-        }
-
+        // Bundle에넣어 fragment로 보내기
         Bundle bundle = new Bundle();
-
         bundle.putString("name", name);
         bundle.putString("image", image);
         bundle.putString("addr", addr);
@@ -83,72 +74,11 @@ public class MapInfoActivity extends AppCompatActivity {
         bundle.putString("dayOff", dayoff);
         bundle.putString("category", category);
         bundle.putString("menu", menu);
-        bundle.putString("menuFi", menuFi);
         fragment_info.setArguments(bundle);
         fragment_menu.setArguments(bundle);
         fragment_review.setArguments(bundle);
         fragment_photo.setArguments(bundle);
-
-
-
-//        getMapInfoDetailName.setText(name);
-//        getMapInfoDetailAddr.setText(addr);
-//        getMapInfoDetailTime.setText(time);
-//        getMapInfoDetailDayOff.setText(dayoff);
-//        getMapInfoDetailCategory.setText(category);
-//        getMapInfoDetailMenu.setText(menu);
-//        Glide.with(this)
-//                .load(image)
-//                .apply(new RequestOptions().transform(new CenterCrop(),
-//                        new RoundedCorners(10)))
-//                .into(getMapInfoDetailImage);
-//
-//        getMapInfoBookmark.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String userPK = pk;
-//                String userID = id;
-//                String storeName = name;
-//                String storeAddr = addr;
-//                String storeImage =  image;
-//                String storeTime = time;
-//                String storeDayOff = dayoff;
-//
-//                if (getMapInfoBookmark.isChecked()) {
-//                    Response.Listener<String> responseListener = new Response.Listener<String>() {
-//                        @Override
-//                        public void onResponse(String response) {
-//                            try {
-//                                JSONObject jsonObject = new JSONObject(response);
-//                                boolean success = jsonObject.getBoolean("success");
-//                                if (success) {
-//                                    Toast.makeText(getApplicationContext(), "북마크 추가", Toast.LENGTH_SHORT).show();
-//                                    Log.d("bookmark", userPK);
-//                                    Log.d("bookmark", userID);
-//                                    Log.d("bookmark", storeName);
-//                                    Log.d("bookmark", storeAddr);
-//                                    Log.d("bookmark", storeImage);
-//                                    Log.d("bookmark", storeTime);
-//                                    Log.d("bookmark", storeDayOff);
-//                                } else {
-//                                    Toast.makeText(getApplicationContext(), "북마크 실패", Toast.LENGTH_SHORT).show();
-//                                    return;
-//                                }
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    };
-//
-//                    BookmarkRequest bookmarkRequest = new BookmarkRequest(userPK, userID, storeName, storeAddr, storeImage, storeTime, storeDayOff, responseListener);
-//                    RequestQueue queue = Volley.newRequestQueue(MapInfoActivity.this);
-//                    queue.add(bookmarkRequest);
-//                } else {
-//                    Toast.makeText(MapInfoActivity.this, "북마크 삭제", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//        });
+        fragment_map_bookmark.setArguments(bundle);
 
     }
 }

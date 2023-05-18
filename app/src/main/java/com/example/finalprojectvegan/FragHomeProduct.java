@@ -79,27 +79,27 @@ public class FragHomeProduct extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_frag_home_product, container, false);
-        pInfo = new ArrayList<>();
-        recyclerView = view.findViewById(R.id.product_recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        ProductApiInterface apiInterface = NaverMapRequest.getClient().create(ProductApiInterface.class);
-        Call<ProductItem> call = apiInterface.getProductData();
-        call.enqueue(new Callback<ProductItem>(){
-            @Override
-            public void onResponse(Call<ProductItem> call, Response<ProductItem> response) {
-                pList = response.body();
-                pInfo = pList.PRODUCT;
-
-                adapter = new ProductAdapter(getContext(), pInfo);
-                recyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onFailure(Call<ProductItem> call, Throwable t) {
-                Log.d("FragHomeProduct", t.toString());
-            }
-        });
+//        pInfo = new ArrayList<>();
+//        recyclerView = view.findViewById(R.id.product_recyclerView);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//
+//        ProductApiInterface apiInterface = NaverMapRequest.getClient().create(ProductApiInterface.class);
+//        Call<ProductItem> call = apiInterface.getProductData();
+//        call.enqueue(new Callback<ProductItem>(){
+//            @Override
+//            public void onResponse(Call<ProductItem> call, Response<ProductItem> response) {
+//                pList = response.body();
+//                pInfo = pList.PRODUCT;
+//
+//                adapter = new ProductAdapter(getContext(), pInfo);
+//                recyclerView.setAdapter(adapter);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ProductItem> call, Throwable t) {
+//                Log.d("FragHomeProduct", t.toString());
+//            }
+//        });
         return view;
     }
 }

@@ -91,12 +91,12 @@ class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.ViewHolder>{
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView title;
         private ImageView thumbnail;
-        private ImageView saveImage;
+        ImageView saveImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.recipe_title);
-            thumbnail = itemView.findViewById(R.id.recipe_image);
+            title = itemView.findViewById(R.id.bookmark_title);
+            thumbnail = itemView.findViewById(R.id.bookmark_image);
             saveImage = itemView.findViewById(R.id.saveImage);
         }
         void onBind(RecipeData data) {

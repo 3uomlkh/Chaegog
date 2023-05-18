@@ -3,12 +3,9 @@ package com.example.finalprojectvegan.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,18 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.finalprojectvegan.R;
 import com.example.finalprojectvegan.Model.RecipeData;
-import com.example.finalprojectvegan.RecipeDetailActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
     private ArrayList<RecipeData> listData = new ArrayList<>();
@@ -112,7 +104,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             super(itemView);
             title = itemView.findViewById(R.id.recipe_title);
             thumbnail = itemView.findViewById(R.id.recipe_image);
-            saveImage = itemView.findViewById(R.id.saveImage);
+            saveImage = itemView.findViewById(R.id.recipe_save_image);
         }
         void onBind(RecipeData data) {
             title.setText(data.getTitle());

@@ -25,28 +25,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MapTabReview#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MapTabReview extends Fragment {
-    private FirebaseUser firebaseUser;
-    String name;
-    String restName;
-    String ee;
-    int cc=0;
-    private HashMap<String, Object> hashMap = new HashMap<>();
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String name;
 
     public MapTabReview() {
         // Required empty public constructor
@@ -54,20 +35,12 @@ public class MapTabReview extends Fragment {
 
     public static MapTabReview newInstance(String param1, String param2) {
         MapTabReview fragment = new MapTabReview();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -77,8 +50,6 @@ public class MapTabReview extends Fragment {
 
         Bundle bundle = getArguments();
         name = bundle.getString("name");
-
-
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("review")
@@ -101,33 +72,7 @@ public class MapTabReview extends Fragment {
                                             documentSnapshot.getData().get("imagePath1").toString(),
                                             new Date(documentSnapshot.getDate("createdAt").getTime())));
 
-
-                                    //String aa = documentSnapshot.getData().get("rating").toString();
-                                    //String aa = ratings.get().toString();
-                                    //float bb = Float.parseFloat(aa);
-                                    //float cc = bb / documentSnapshot.getData().size();
-                                    //Log.d("ratingbar",  "별점 "+ aa + "점");
-                                    //Log.d("ratingbar",  documentSnapshot.getData().get("name").toString());
-//                                    bb += bb;
-//                                    for(int i=0; i < documentSnapshot.getData().size(); i++) {
-//                                        if (ratings.equals(name)) {
-//                                            cc += 1;
-//
-//                                            Log.d("cc는", cc + "");
-//
-//                                        }
-//                                        break;
-//                                    }
-//                                    Log.d("ratingbar", "bb는" + bb + "");
-//                                    float rr = bb / cc;
-//
-//                                    ee = "평균 별점 "+ rr + "점";
-
                                 }
-//                                if (ee != null) {
-//                                    Log.d("ratingbar", ee);
-//                                }
-
 
                                     RecyclerView recyclerView = view.findViewById(R.id.review_recyclerview);
                                     recyclerView.setHasFixedSize(true);

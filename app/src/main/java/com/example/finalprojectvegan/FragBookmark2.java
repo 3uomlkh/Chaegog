@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+// 제품 북마크
 public class FragBookmark2 extends Fragment {
     private View view;
     public FragBookmark2() {
@@ -16,7 +17,6 @@ public class FragBookmark2 extends Fragment {
 
     public static FragBookmark2 newInstance(String param1, String param2) {
         FragBookmark2 fragment = new FragBookmark2();
-
         return fragment;
     }
 
