@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.example.finalprojectvegan.Model.FoodIngreData;
 import com.example.finalprojectvegan.Model.FoodIngreItem;
+import com.example.finalprojectvegan.Model.MapData;
 import com.example.finalprojectvegan.Model.UserInfo;
 import com.example.finalprojectvegan.Model.UserVeganAllergyInfo;
 import com.example.finalprojectvegan.Model.UserVeganTypeInfo;
@@ -40,6 +41,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -66,6 +72,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OcrActivity extends AppCompatActivity {
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
 
     final private static String TAG = "tag";
     private static final int CAMERA = 100;
@@ -98,7 +106,6 @@ public class OcrActivity extends AppCompatActivity {
     String OcrFoodStr;
     String OcrResultStr;
     boolean checkFit; // flag 변수
-    boolean checkFitTwo;
     String USER_ID; // 사용자 닉네임
     String USER_VEGAN_TYPE; // 사용자 채식주의 유형
     String USER_VEGAN_ALLERGY; // 사용자 알러지 타입
@@ -400,8 +407,29 @@ public class OcrActivity extends AppCompatActivity {
     // OCR 판단
     public void compare(){
 
+        ArrayList<String> listFood = new ArrayList<>();
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference("Foods");
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    listFood.add(snapshot.child("FoodName").getValue().toString());
+
+                }
+                Log.d("listFood", listFood.toString());
+                Log.d("listFood", resultText);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("TAG", "Failed to read value.", error.toException());
+            }
+        });
+
         checkFit = true;
-        checkFitTwo = true;
         ocrTextView = findViewById(R.id.ocrTextView);
         // 부적합한 원재료명을 넣을 리스트
         List<String> list1 = new ArrayList<>();
@@ -409,7 +437,6 @@ public class OcrActivity extends AppCompatActivity {
 
         List<String> list3 = new ArrayList<>();
         List<String> list4 = new ArrayList<>();
-
 
         FoodIngreApiInterface apiInterface = NaverMapRequest.getClient().create(FoodIngreApiInterface.class);
         Call<FoodIngreItem> call = apiInterface.getFoodIngredientData();
@@ -541,16 +568,7 @@ public class OcrActivity extends AppCompatActivity {
 
                 List<String> newList2 = list4.stream().distinct().collect(Collectors.toList());
                 String n_ingre2 = newList2.toString().replace("[","").replace("]","");
-//                if(n_ingre1 != null){
-//                    n_ingredient.setText(n_ingre1);
-//                } else if(n_ingre1 == null){
-//                    n_ingredient.setText("부적합한 원재료가 없습니다.");
-//                }
-//                if(n_ingre2 != null){
-//                    allergy_ingredient.setText(n_ingre2);
-//                } else if(n_ingre2 == null){
-//                    allergy_ingredient.setText("알러지 유발 원재료가 없습니다.");
-//                }
+//
                 if(!checkFit){
                     Log.d("OCRTEST", resultText + " - 채식유형 및 알러지에 부적합합니다.");
                     ocrTextView.setText(USER_ID + "님에게 맞지않는 제품입니다.");

@@ -71,7 +71,6 @@ public class FragBookmark1 extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Log.d("FragBookmark1","KEY : " + snapshot.getKey());
                     if(bookmarkIdList.contains(snapshot.getKey())) {
                         itemKeyList.add(snapshot.getKey());
                     }
@@ -84,12 +83,6 @@ public class FragBookmark1 extends Fragment {
                     data.setBookmarkIdList(bookmarkIdList);
                     adapter.addItem(data);
                 }
-
-                Log.d("FragBookmark1",listName.toString());
-                Log.d("FragBookmark1",listAddr.toString());
-                Log.d("FragBookmark1",listCategory.toString());
-                Log.d("FragBookmark1",itemKeyList.toString());
-                Log.d("FragBookmark1",bookmarkIdList.toString());
 
                 adapter.notifyDataSetChanged();
                 recyclerView.setAdapter(adapter);

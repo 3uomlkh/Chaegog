@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.finalprojectvegan.Adapter.ReviewAdapter;
@@ -27,8 +29,14 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class MapTabReview extends Fragment {
+    Button review_button;
+    TextView review_textView;
+    RatingBar arg_ratingBar;
     private String name;
-
+    float result_rating;
+    float arg_rating;
+//    private String[] ratingList;
+    private ArrayList<String> ratingList = new ArrayList<>();
     public MapTabReview() {
         // Required empty public constructor
     }
@@ -41,15 +49,18 @@ public class MapTabReview extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        name = bundle.getString("name");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map_tab_review, container, false);
+        review_textView = view.findViewById(R.id.review_textView);
+        arg_ratingBar = view.findViewById(R.id.arg_ratingBar);
 
-        Bundle bundle = getArguments();
-        name = bundle.getString("name");
+        ratingList.clear();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("review")
@@ -60,9 +71,11 @@ public class MapTabReview extends Fragment {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
 
+
                                 ArrayList<WriteReviewInfo> postList = new ArrayList<>();
                                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                     Log.d("success_review", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+                                    ratingList.add(documentSnapshot.getData().get("rating").toString());
 
                                     postList.add(new WriteReviewInfo(
                                             documentSnapshot.getData().get("rating").toString(),
@@ -74,12 +87,28 @@ public class MapTabReview extends Fragment {
 
                                 }
 
-                                    RecyclerView recyclerView = view.findViewById(R.id.review_recyclerview);
-                                    recyclerView.setHasFixedSize(true);
-                                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                RecyclerView recyclerView = view.findViewById(R.id.review_recyclerview);
+                                recyclerView.setHasFixedSize(true);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-                                    RecyclerView.Adapter mAdapter = new ReviewAdapter(getActivity(), postList);
-                                    recyclerView.setAdapter(mAdapter);
+                                RecyclerView.Adapter mAdapter = new ReviewAdapter(getActivity(), postList);
+                                recyclerView.setAdapter(mAdapter);
+
+                                result_rating = 0;
+                                arg_rating = 0;
+
+                                // 평균 별점 구하기
+                                for(int i=0; i<ratingList.size(); i++) {
+                                    float rating = Float.parseFloat(ratingList.get(i));
+                                    result_rating += rating;
+                                    Log.d("result_rating : ", result_rating + "");
+                                    arg_rating = result_rating / ratingList.size();
+                                    Log.d("arg_rating : ", arg_rating + "");
+                                }
+                                Log.d("ratingSize : ", ratingList.size() + "");
+                                review_textView.setText(String.valueOf(arg_rating));
+                                arg_ratingBar.setRating(arg_rating);
+
 
                             } else {
                                 Log.d("error", "Error getting documents", task.getException());
@@ -88,18 +117,17 @@ public class MapTabReview extends Fragment {
                     });
 
 
+            review_button = view.findViewById(R.id.review_button);
+            review_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(),WriteReviewActivity.class); //fragment라서 activity intent와는 다른 방식
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.putExtra("name", name);
+                    startActivity(intent);
+                }
+            });
 
-        TextView review_button = view.findViewById(R.id.review_button);
-        review_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),WriteReviewActivity.class); //fragment라서 activity intent와는 다른 방식
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                intent.putExtra("name", name);
-                startActivity(intent);
-            }
-        });
-
-        return view;
+            return view;
     }
 }

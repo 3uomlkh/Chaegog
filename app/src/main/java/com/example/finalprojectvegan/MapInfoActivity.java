@@ -1,21 +1,32 @@
 package com.example.finalprojectvegan;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.example.finalprojectvegan.Adapter.ReviewAdapter;
 import com.example.finalprojectvegan.Model.MapData;
+import com.example.finalprojectvegan.Model.WriteReviewInfo;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MapInfoActivity extends AppCompatActivity {
     private Fragment fragment_info, fragment_menu, fragment_photo, fragment_review, fragment_map_bookmark;
     private TabLayout tabs;
     String name, addr, time, dayoff, category, menu, image;
-    private ArrayList<MapData> mapListData = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +90,8 @@ public class MapInfoActivity extends AppCompatActivity {
         fragment_review.setArguments(bundle);
         fragment_photo.setArguments(bundle);
         fragment_map_bookmark.setArguments(bundle);
+
+
 
     }
 }
