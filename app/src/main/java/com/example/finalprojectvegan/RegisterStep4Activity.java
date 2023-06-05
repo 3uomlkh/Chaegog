@@ -21,7 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterStep4Activity extends AppCompatActivity {
 
-    String userAllergy;
+    String userAllergy, similarAllergy;
     Button Btn_RegisterFinish;
     TextView textView_select_allergy;
     CheckBox checkbox_memil, checkbox_mil, checkbox_daedu, checkbox_hodu, checkbox_peanut, checkbox_peach, checkbox_tomato, checkbox_poultry, checkbox_milk, checkbox_shrimp,
@@ -119,6 +119,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "메밀", Toast.LENGTH_SHORT).show();
                         textView_select_allergy.append("메밀 ");
+
                         count++;
                     } else {
 
@@ -128,6 +129,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "밀", Toast.LENGTH_SHORT).show();
                         textView_select_allergy.append("밀 ");
+
                         count++;
                     } else {
 
@@ -137,6 +139,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "대두", Toast.LENGTH_SHORT).show();
                         textView_select_allergy.append("대두 ");
+                        similarAllergy += "두부 두유 콩나물 된장 고추장 간장 콩기름 ";
                         count++;
                     } else {
 
@@ -155,6 +158,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "땅콩", Toast.LENGTH_SHORT).show();
                         textView_select_allergy.append("땅콩 ");
+                        similarAllergy += "아몬드 캐슈넛 피스타치오 피칸 호두 잣";
                         count++;
                     } else {
 
@@ -164,6 +168,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "복숭아", Toast.LENGTH_SHORT).show();
                         textView_select_allergy.append("복숭아 ");
+                        similarAllergy += "사과 자두 체리 배";
                         count++;
                     } else {
 
@@ -182,6 +187,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "가금류", Toast.LENGTH_SHORT).show();
                         textView_select_allergy.append("가금류 ");
+                        similarAllergy += "계란 난백 난황 알부민 ";
                         count++;
                     } else {
 
@@ -191,6 +197,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "우유", Toast.LENGTH_SHORT).show();
                         textView_select_allergy.append("우유 ");
+                        similarAllergy += "카제인 유청단백 분말유 분유 유크림 유당 유청 산양유 버터 크림 락토알부민 락토페린";
                         count++;
                     } else {
 
@@ -200,6 +207,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "새우", Toast.LENGTH_SHORT).show();
                         textView_select_allergy.append("새우 ");
+                        similarAllergy += "꽃게 바닷가재 ";
                         count++;
                     } else {
 
@@ -218,6 +226,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "홍합", Toast.LENGTH_SHORT).show();
                         textView_select_allergy.append("홍합 ");
+                        similarAllergy += "조개류 ";
                         count++;
                     } else {
 
@@ -227,6 +236,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "전복", Toast.LENGTH_SHORT).show();
                         textView_select_allergy.append("전복 ");
+                        similarAllergy += "조개류 ";
                         count++;
                     } else {
 
@@ -236,6 +246,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "굴", Toast.LENGTH_SHORT).show();
                         textView_select_allergy.append("굴 ");
+                        similarAllergy += "조개류 ";
                         count++;
                     } else {
 

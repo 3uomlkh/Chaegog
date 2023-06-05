@@ -265,8 +265,12 @@ public class OcrActivity extends AppCompatActivity {
                 startActivityForResult(intent1, 101);
             }
         });
+    }
 
+    public void allergyAdd() {
+        if(USER_VEGAN_ALLERGY.contains("메밀")){
 
+        }
     }
 
     @Override
@@ -550,8 +554,22 @@ public class OcrActivity extends AppCompatActivity {
                                     }
                                 }
                                 break;
-//                        case "폴로":
-//                            break;
+                        case "폴로":
+                            String foodInfoName = "소고기, 양고기, 돼지고기, 한우, 삼겹살, 등심, 목살, 베이컨";
+                            String PolloArray[] = foodInfoName.split(",");
+                            for (int j = 0; j < resultSize; j++) {
+                                OcrResultStr = resultArr[j].trim();
+                                for (int k = 0; k < arrSize; k++) {
+                                    OcrFoodStr = foodNameArr[k].trim();
+                                    if (OcrResultStr.equals(OcrFoodStr)) {
+                                        list1.add(OcrFoodStr);
+                                        list2.add(OcrResultStr);
+                                        list1.retainAll(list2);
+                                        checkFit = false;
+                                    }
+                                }
+                            }
+                            break;
                             default:
                         }
                     }

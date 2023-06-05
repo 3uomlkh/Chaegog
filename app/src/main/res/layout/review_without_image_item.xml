@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -10,9 +11,8 @@
     app:strokeWidth="3dp">
 
     <LinearLayout
-        android:id="@+id/review_layout"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp">
 
@@ -30,7 +30,7 @@
                 app:cardCornerRadius="100dp">
 
                 <ImageView
-                    android:id="@+id/imageView_profile"
+                    android:id="@+id/imageView_profile2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/review_item_publisher"
+                    android:id="@+id/review_item_publisher2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -57,7 +57,7 @@
                     android:textStyle="bold"
                     tools:text="작성자" />
                 <RatingBar
-                    android:id="@+id/review_ratingbar"
+                    android:id="@+id/review_ratingbar2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -70,7 +70,7 @@
 
 
             <TextView
-                android:id="@+id/review_item_createdAt"
+                android:id="@+id/review_item_createdAt2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -86,7 +86,7 @@
             android:src="@drawable/ic_baseline_horizontal_rule_24" />
 
         <TextView
-            android:id="@+id/review_item_contents"
+            android:id="@+id/review_item_contents2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -96,41 +96,7 @@
             android:textColor="@color/black"
             android:textSize="16dp"
             android:textStyle="normal"
-            tools:text="식당에 대한 리뷰입니다." />
-<!--        <androidx.viewpager2.widget.ViewPager2-->
-<!--            android:id="@+id/review_viewpager"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_margin="20dp"/>-->
-        <ImageView
-            android:id="@+id/review_item_imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin="20dp"
-            android:background="#00ffffff" />
-
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:orientation="horizontal">-->
-<!--            <ImageView-->
-<!--                android:id="@+id/review_item_imageView"-->
-<!--                android:layout_width="150dp"-->
-<!--                android:layout_height="150dp"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:layout_margin="20dp"-->
-<!--                android:background="#00dfdfdf" />-->
-<!--            <ImageView-->
-<!--                android:id="@+id/review_item_imageView2"-->
-<!--                android:layout_width="150dp"-->
-<!--                android:layout_height="150dp"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:background="#dfdfdf" />-->
-
-<!--        </LinearLayout>-->
+            tools:text="식당에 대한 리뷰입니다."/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

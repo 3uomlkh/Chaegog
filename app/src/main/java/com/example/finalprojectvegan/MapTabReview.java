@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.finalprojectvegan.Adapter.ReviewAdapter;
+import com.example.finalprojectvegan.Adapter.ReviewWithoutImageAdapter;
 import com.example.finalprojectvegan.Model.WriteReviewInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,6 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 public class MapTabReview extends Fragment {
     Button review_button;
@@ -35,7 +38,6 @@ public class MapTabReview extends Fragment {
     private String name;
     float result_rating;
     float arg_rating;
-//    private String[] ratingList;
     private ArrayList<String> ratingList = new ArrayList<>();
     public MapTabReview() {
         // Required empty public constructor
@@ -57,8 +59,10 @@ public class MapTabReview extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map_tab_review, container, false);
+//        View view2 = inflater.inflate(R.layout.review_item, container, false);
         review_textView = view.findViewById(R.id.review_textView);
         arg_ratingBar = view.findViewById(R.id.arg_ratingBar);
+//        review_viewpager = view2.findViewById(R.id.review_viewpager);
 
         ratingList.clear();
 
@@ -71,19 +75,29 @@ public class MapTabReview extends Fragment {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
 
-
+                                int checkImg = 0;
                                 ArrayList<WriteReviewInfo> postList = new ArrayList<>();
                                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                    Log.d("success_review", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+                                    Log.d("success_review", documentSnapshot.getId() + " => " + documentSnapshot.getData().values());
                                     ratingList.add(documentSnapshot.getData().get("rating").toString());
 
-                                    postList.add(new WriteReviewInfo(
-                                            documentSnapshot.getData().get("rating").toString(),
-                                            documentSnapshot.getData().get("name").toString(),
-                                            documentSnapshot.getData().get("review").toString(),
-                                            documentSnapshot.getData().get("publisher").toString(),
-                                            documentSnapshot.getData().get("imagePath1").toString(),
-                                            new Date(documentSnapshot.getDate("createdAt").getTime())));
+                                    if(documentSnapshot.getData().get("imagePath1") == null) {
+                                        postList.add(new WriteReviewInfo(
+                                                documentSnapshot.getData().get("rating").toString(),
+                                                documentSnapshot.getData().get("name").toString(),
+                                                documentSnapshot.getData().get("review").toString(),
+                                                documentSnapshot.getData().get("publisher").toString(),
+                                                new Date(documentSnapshot.getDate("createdAt").getTime())));
+                                    } else {
+                                        checkImg = 1;
+                                        postList.add(new WriteReviewInfo(
+                                                documentSnapshot.getData().get("rating").toString(),
+                                                documentSnapshot.getData().get("name").toString(),
+                                                documentSnapshot.getData().get("review").toString(),
+                                                documentSnapshot.getData().get("publisher").toString(),
+                                                documentSnapshot.getData().get("imagePath1").toString(),
+                                                new Date(documentSnapshot.getDate("createdAt").getTime())));
+                                    }
 
                                 }
 
@@ -91,7 +105,12 @@ public class MapTabReview extends Fragment {
                                 recyclerView.setHasFixedSize(true);
                                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-                                RecyclerView.Adapter mAdapter = new ReviewAdapter(getActivity(), postList);
+                                RecyclerView.Adapter mAdapter;
+                                if(checkImg == 0) {
+                                    mAdapter = new ReviewWithoutImageAdapter(getActivity(), postList);
+                                } else {
+                                    mAdapter = new ReviewAdapter(getActivity(), postList);
+                                }
                                 recyclerView.setAdapter(mAdapter);
 
                                 result_rating = 0;
@@ -115,7 +134,6 @@ public class MapTabReview extends Fragment {
                             }
                         }
                     });
-
 
             review_button = view.findViewById(R.id.review_button);
             review_button.setOnClickListener(new View.OnClickListener() {

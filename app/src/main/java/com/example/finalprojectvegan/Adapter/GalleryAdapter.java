@@ -1,6 +1,8 @@
 package com.example.finalprojectvegan.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.finalprojectvegan.Model.PhotoActivity;
 import com.example.finalprojectvegan.R;
 import com.example.finalprojectvegan.Model.WriteReviewInfo;
 
@@ -30,6 +33,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     public GalleryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(context).inflate(R.layout.gallery_item, parent, false);
+
+
         return new GalleryAdapter.ViewHolder(view);
     }
     @Override
@@ -41,6 +46,15 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                 .override(150,150)
                 .apply(new RequestOptions().transform(new CenterCrop()))
                 .into(holder.image);
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Context context = view.getContext();
+                Intent intent = new Intent(context, PhotoActivity.class);
+                intent.putExtra("imgUrl", imgURL);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -50,7 +64,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         ImageView image;
 
         public ViewHolder(@NonNull View itemView) {

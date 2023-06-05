@@ -63,13 +63,15 @@ public class MapTabPhoto extends Fragment {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 Log.d("success_review", documentSnapshot.getId() + " => " + documentSnapshot.getData());
 
-                                postList.add(new WriteReviewInfo(
-                                        documentSnapshot.getData().get("rating").toString(),
-                                        documentSnapshot.getData().get("name").toString(),
-                                        documentSnapshot.getData().get("review").toString(),
-                                        documentSnapshot.getData().get("publisher").toString(),
-                                        documentSnapshot.getData().get("imagePath1").toString(),
-                                        new Date(documentSnapshot.getDate("createdAt").getTime())));
+                                if(documentSnapshot.getData().get("imagePath1") != null) {
+                                    postList.add(new WriteReviewInfo(
+                                            documentSnapshot.getData().get("rating").toString(),
+                                            documentSnapshot.getData().get("name").toString(),
+                                            documentSnapshot.getData().get("review").toString(),
+                                            documentSnapshot.getData().get("publisher").toString(),
+                                            documentSnapshot.getData().get("imagePath1").toString(),
+                                            new Date(documentSnapshot.getDate("createdAt").getTime())));
+                                }
                             }
                             gridLayoutManager = new GridLayoutManager(getContext(), 3);
                             recyclerView = view.findViewById(R.id.recyclerGridView);

@@ -1,5 +1,8 @@
 package com.example.finalprojectvegan.Model;
 
+import android.net.Uri;
+
+import java.util.ArrayList;
 import java.util.Date;
 
 public class WriteReviewInfo {
@@ -12,6 +15,7 @@ public class WriteReviewInfo {
     private String imagePath2;
     private String imagePath3;
     private Date createdAt;
+    private ArrayList<Uri> images;
 
     public WriteReviewInfo(String rating, String name, String review, String publisher, String imagePath1, Date createdAt) {
         this.name = name;
@@ -21,6 +25,23 @@ public class WriteReviewInfo {
         this.imagePath1 = imagePath1;
         this.imagePath2 = imagePath2;
         this.imagePath3 = imagePath3;
+        this.createdAt = createdAt;
+    }
+
+    public WriteReviewInfo(String rating, String name, String review, String publisher, ArrayList<Uri> images, Date createdAt) {
+        this.name = name;
+        this.review = review;
+        this.rating = rating;
+        this.publisher = publisher;
+        this.images = images;
+        this.createdAt = createdAt;
+    }
+
+    public WriteReviewInfo(String rating, String name, String review, String publisher, Date createdAt) {
+        this.name = name;
+        this.review = review;
+        this.rating = rating;
+        this.publisher = publisher;
         this.createdAt = createdAt;
     }
 
@@ -79,12 +100,19 @@ public class WriteReviewInfo {
     public void setImagePath3(String imagePath3) {
         this.imagePath3 = imagePath3;
     }
-
     public Date getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public ArrayList<Uri> getImages() {
+        return images;
+    }
+
+    public void setImages(ArrayList<Uri> images) {
+        this.images = images;
     }
 }

@@ -1,11 +1,13 @@
 package com.example.finalprojectvegan.Adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -13,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -32,12 +35,11 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder>{
-
-    Fragment fragment;
     private Context context;
     private ArrayList<WriteReviewInfo> mDataset;
-
     ImageView review_item_imageView;
+    private ArrayList<Uri> uriList;
+    ViewPager2 viewPager2;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -57,7 +59,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     @NonNull
     @Override
     public ReviewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
 
         CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.review_item, parent, false);
         ReviewAdapter.ViewHolder viewHolder = new ReviewAdapter.ViewHolder(cardView);
@@ -88,7 +89,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                         if (task.isSuccessful()) {
 
                             ArrayList<UserInfo> postUserList = new ArrayList<>();
-
 
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 Log.d("success", documentSnapshot.getId() + " => " + documentSnapshot.getData());
@@ -122,21 +122,15 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         float review_rating = Float.parseFloat(rating);
         review_ratingbar.setRating(review_rating);
 
-
-        // 진행중..
-
-//        RatingBar review_ratingbar2 = cardView.findViewById(R.id.ratingBar2);
-//        TextView review_textView = cardView.findViewById(R.id.review_textView);
-//        float rating_even = review_rating / mDataset.size();
-//        Log.e("rating_even", rating_even + "");
-
         String url = mDataset.get(position).getImagePath1();
+
         Glide.with(cardView)
                 .load(url)
                 .override(500, 500)
                 .apply(new RequestOptions().transform(new CenterCrop(),
-                new RoundedCorners(10)))
+                        new RoundedCorners(10)))
                 .into(review_item_imageView);
+
     }
 
     @Override
