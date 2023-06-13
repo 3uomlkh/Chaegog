@@ -97,19 +97,20 @@
             android:textSize="16dp"
             android:textStyle="normal"
             tools:text="식당에 대한 리뷰입니다." />
-<!--        <androidx.viewpager2.widget.ViewPager2-->
-<!--            android:id="@+id/review_viewpager"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_margin="20dp"/>-->
         <ImageView
             android:id="@+id/review_item_imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
             android:layout_gravity="center"
             android:layout_margin="20dp"
             android:background="#00ffffff" />
+        <ImageView
+            android:id="@+id/review_menu_option"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_baseline_add_24"
+            android:layout_gravity="right"/>
+
 
 
 <!--        <LinearLayout-->

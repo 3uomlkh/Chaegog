@@ -28,6 +28,12 @@
         android:theme="@style/Theme.FinalProjectVegan"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditReviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".Model.PhotoActivity"
             android:exported="false" />
         <activity
@@ -39,7 +45,7 @@
         <activity
             android:name=".WriteReviewActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".BookmarkActivity"
             android:exported="false" />

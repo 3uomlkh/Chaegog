@@ -92,6 +92,7 @@ public class WriteReviewActivity extends AppCompatActivity {
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
     private FirebaseFirestore db;
+    private DocumentReference documentReference;
     private Intent intent;
 
     @Override
@@ -102,6 +103,7 @@ public class WriteReviewActivity extends AppCompatActivity {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
         db = FirebaseFirestore.getInstance();
+        documentReference = db.collection("review").document();
 
         add_image = findViewById(R.id.add_image);
         imageView1 = findViewById(R.id.review_imageView);
@@ -197,7 +199,6 @@ public class WriteReviewActivity extends AppCompatActivity {
                 } else {
                     if(imagePath.length() > 0 && imgFrom >= 100) {
                         uploader();
-                        uploader();
                     } else {
                         ReviewUpdateWithoutImage();
                     }
@@ -287,8 +288,10 @@ public class WriteReviewActivity extends AppCompatActivity {
 
                 storageReference = firebaseStorage.getReference().child("review")
                         .child(firebaseUser.getUid()).child(imageFileName); // reference에 경로 세팅
+//                storageReference = firebaseStorage.getReference().child("review")
+//                        .child(firebaseUser.getUid()).child(documentReference.getId()).child(imageFileName);
                 uploadTask  = storageReference.putFile(imageUri);
-                Log.d("review_uploader", "uri : " + imageUri);
+                Log.d("review_uploader", "docId : " + documentReference.getId());
 
                 break;
 
@@ -331,71 +334,35 @@ public class WriteReviewActivity extends AppCompatActivity {
         });
     }
 
-//    private void ReviewUpdate(ArrayList<Uri> uriList) {
-//        final String review = ((EditText) findViewById(R.id.edit_review)).getText().toString();
-//
-//        if (review.length() > 0) {
-//            DocumentReference documentReference = db.collection("review").document();
-//
-//            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//            if(ratingBar.getRating() == 0) {
-//                rating = "5.0";
-//            } else {
-//                rating = ratingBar.getRating() + "";
-//            }
-//            WriteReviewInfo reviewInfo = new WriteReviewInfo(rating, name, review, firebaseUser.getUid(), uriList, new Date());
-//
-//            documentReference.set(reviewInfo)
-//                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                        @Override
-//                        public void onSuccess(Void unused) {
-//                        }
-//                    })
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                        }
-//                    });
-//
-//            Log.d("ReviewUpdate", uriList.toString());
-//        } else {
-//            Toast.makeText(this, "리뷰를 입력해주세요", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
     private void ReviewUpdate(Uri uri) {
         final String review = ((EditText) findViewById(R.id.edit_review)).getText().toString();
-
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if(ratingBar.getRating() == 0) {
             rating = "5.0";
         } else {
             rating = ratingBar.getRating() + "";
         }
-        WriteReviewInfo reviewInfo = new WriteReviewInfo(rating, name, review, firebaseUser.getUid(), uri.toString(), new Date());
+        WriteReviewInfo reviewInfo = new WriteReviewInfo(documentReference.getId(), rating, name, review, firebaseUser.getUid(), uri.toString(), new Date());
         uploader(reviewInfo);
+
     }
 
     private void ReviewUpdateWithoutImage() {
         final String review = ((EditText) findViewById(R.id.edit_review)).getText().toString();
-
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if(ratingBar.getRating() == 0) {
             rating = "5.0";
         } else {
             rating = ratingBar.getRating() + "";
         }
-        WriteReviewInfo reviewInfo = new WriteReviewInfo(rating, name, review, firebaseUser.getUid(), new Date());
+        WriteReviewInfo reviewInfo = new WriteReviewInfo(documentReference.getId(), rating, name, review, firebaseUser.getUid(), new Date());
         uploader(reviewInfo);
 
     }
 
     private void uploader(WriteReviewInfo writeReviewInfo) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("review").add(writeReviewInfo)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        documentReference.set(writeReviewInfo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
+                    public void onSuccess(Void unused) {
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

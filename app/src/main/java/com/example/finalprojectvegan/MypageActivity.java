@@ -186,7 +186,8 @@ public class MypageActivity extends AppCompatActivity {
                                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                     Log.d("success", documentSnapshot.getId() + " => " + documentSnapshot.getData());
                                     postUserList.add(new UserVeganAllergyInfo(
-                                            documentSnapshot.getData().get("userAllergy").toString()));
+                                            documentSnapshot.getData().get("userAllergy").toString(),
+                                            documentSnapshot.getData().get("similarAllergy").toString()));
 
                                     if (documentSnapshot.getId().equals(uid)) {
                                         USER_ALLERGY = documentSnapshot.getData().get("userAllergy").toString();

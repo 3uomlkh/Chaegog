@@ -52,36 +52,36 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         String itemKey = listData.get(i).getItemKeyList();
         ArrayList<String> bookmarkIdList = listData.get(i).getBookmarkIdList();
 
-        if (bookmarkIdList.contains(itemKey)) {
-            holder.saveImage.setImageResource(R.drawable.favorite_on);
-        } else {
-            holder.saveImage.setImageResource(R.drawable.favorite_off);
-        }
+//        if (bookmarkIdList.contains(itemKey)) {
+//            holder.saveImage.setImageResource(R.drawable.favorite_on);
+//        } else {
+//            holder.saveImage.setImageResource(R.drawable.favorite_off);
+//        }
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference bookmarkRef = database.getReference("bookmark");
 
-        holder.saveImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(bookmarkIdList.contains(itemKey)) {
-                    bookmarkRef
-                            .child(mAuth.getCurrentUser().getUid())
-                            .child("recipe_bookmark")
-                            .child(itemKey)
-                            .setValue(null);
-                    Toast.makeText(view.getContext(), "북마크 삭제", Toast.LENGTH_SHORT).show();
-                } else {
-                    bookmarkRef
-                            .child(mAuth.getCurrentUser().getUid())
-                            .child("recipe_bookmark")
-                            .child(itemKey)
-                            .setValue(new RecipeData(image, title, url));
-                    Toast.makeText(view.getContext(), "북마크 저장", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        holder.saveImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(bookmarkIdList.contains(itemKey)) {
+//                    bookmarkRef
+//                            .child(mAuth.getCurrentUser().getUid())
+//                            .child("recipe_bookmark")
+//                            .child(itemKey)
+//                            .setValue(null);
+//                    Toast.makeText(view.getContext(), "북마크 삭제", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    bookmarkRef
+//                            .child(mAuth.getCurrentUser().getUid())
+//                            .child("recipe_bookmark")
+//                            .child(itemKey)
+//                            .setValue(new RecipeData(image, title, url));
+//                    Toast.makeText(view.getContext(), "북마크 저장", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
     }
 
 
@@ -93,6 +93,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     public void addItem(RecipeData data) {
         listData.add(data);
+    }
+
+    public void removeItem() {
+        listData.clear();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

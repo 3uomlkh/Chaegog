@@ -297,10 +297,9 @@ public class RegisterStep4Activity extends AppCompatActivity {
 
         if (userAllergy.length() > 0) {
             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            UserVeganAllergyInfo UserVeganAllergyInfo = new UserVeganAllergyInfo(userAllergy);
+            UserVeganAllergyInfo UserVeganAllergyInfo = new UserVeganAllergyInfo(userAllergy, similarAllergy);
             if (firebaseUser != null) {
                 db.collection("userVeganAllergy").document(firebaseUser.getUid()).set(UserVeganAllergyInfo)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {

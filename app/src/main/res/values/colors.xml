@@ -19,4 +19,7 @@
     <color name="black_df">#DFDFDF</color>
     <color name="gray_f5">#F5F5F5</color>
     <color name="yellow">#fff8e1</color>
+
+    <color name="select">#285EFF</color>
+    <color name="unselect">#9C9C9C</color>
 </resources>

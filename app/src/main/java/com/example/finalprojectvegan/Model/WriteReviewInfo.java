@@ -14,13 +14,15 @@ public class WriteReviewInfo {
     private String imagePath1;
     private String imagePath2;
     private String imagePath3;
+    private String reviewId;
     private Date createdAt;
     private ArrayList<Uri> images;
 
-    public WriteReviewInfo(String rating, String name, String review, String publisher, String imagePath1, Date createdAt) {
+    public WriteReviewInfo(String reviewId, String rating, String name, String review, String publisher, String imagePath1, Date createdAt) {
+        this.reviewId = reviewId;
+        this.rating = rating;
         this.name = name;
         this.review = review;
-        this.rating = rating;
         this.publisher = publisher;
         this.imagePath1 = imagePath1;
         this.imagePath2 = imagePath2;
@@ -37,7 +39,8 @@ public class WriteReviewInfo {
         this.createdAt = createdAt;
     }
 
-    public WriteReviewInfo(String rating, String name, String review, String publisher, Date createdAt) {
+    public WriteReviewInfo(String reviewId, String rating, String name, String review, String publisher, Date createdAt) {
+        this.reviewId = reviewId;
         this.name = name;
         this.review = review;
         this.rating = rating;
@@ -114,5 +117,9 @@ public class WriteReviewInfo {
 
     public void setImages(ArrayList<Uri> images) {
         this.images = images;
+    }
+
+    public String getReviewId() {
+        return reviewId;
     }
 }

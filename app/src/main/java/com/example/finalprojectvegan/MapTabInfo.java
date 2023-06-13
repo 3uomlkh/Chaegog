@@ -48,6 +48,13 @@ public class MapTabInfo extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        listName = new ArrayList<>();
+        listCategory = new ArrayList<>();
+        listAddr = new ArrayList<>();
+        listMenu = new ArrayList<>();
+        listTime = new ArrayList<>();
+        listDayoff = new ArrayList<>();
+        listImage = new ArrayList<>();
     }
 
     @Override

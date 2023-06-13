@@ -97,7 +97,6 @@ public class OcrActivity extends AppCompatActivity {
     TextView recomm_textView;
     TextView y_ingredient_text;
     ImageView recomm_image; // 추후 리사이클러뷰로 구현해야함.
-
     FoodIngreItem foodList;
     List<FoodIngreData>  foodInfo;
     String foodInfoGroup;
@@ -111,7 +110,6 @@ public class OcrActivity extends AppCompatActivity {
     String USER_VEGAN_ALLERGY; // 사용자 알러지 타입
 
     ActivityResultLauncher<String> mGetContent;
-    ActivityResultLauncher<String> mGetContent2;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -244,7 +242,8 @@ public class OcrActivity extends AppCompatActivity {
                                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                     Log.d("success", documentSnapshot.getId() + " => " + documentSnapshot.getData());
                                     postUserList.add(new UserVeganAllergyInfo(
-                                            documentSnapshot.getData().get("userAllergy").toString()));
+                                            documentSnapshot.getData().get("userAllergy").toString(),
+                                            documentSnapshot.getData().get("similarAllergy").toString()));
 
                                     if (documentSnapshot.getId().equals(uid)) {
                                         USER_VEGAN_ALLERGY = documentSnapshot.getData().get("userAllergy").toString();
@@ -267,12 +266,6 @@ public class OcrActivity extends AppCompatActivity {
         });
     }
 
-    public void allergyAdd() {
-        if(USER_VEGAN_ALLERGY.contains("메밀")){
-
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -285,22 +278,11 @@ public class OcrActivity extends AppCompatActivity {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     activityResultPicture.launch(intent);
 
-
-
                 } else if (result == PopupResult.RIGHT) {
                     // 갤러리
-//                    intent = new Intent(Intent.ACTION_PICK);
-//                    intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-//                    intent.setType("image/*");
-//                    startActivityForResult(intent, GALLERY);
                     mGetContent.launch("image/*");
                 }
             }
-
-//            else if(requestCode == GALLERY) {
-//                Uri uri = data.getData();
-//                setImage(uri);
-//            }
         } else if(resultCode == -2 && requestCode == 101){
             Log.d("resultcode", resultCode + "");
             String result = data.getStringExtra("RESULT");
@@ -325,6 +307,10 @@ public class OcrActivity extends AppCompatActivity {
                         ocrImage.setImageBitmap(bitmap);
 
                         image = InputImage.fromBitmap(bitmap, 0);
+
+//                        Intent intent1 = new Intent(OcrActivity.this, CropperActivity.class);
+//                        intent1.putExtra("DATA", result.toString());
+//                        startActivityForResult(intent1, 101);
                     }
                 }
             }
@@ -560,7 +546,7 @@ public class OcrActivity extends AppCompatActivity {
                             for (int j = 0; j < resultSize; j++) {
                                 OcrResultStr = resultArr[j].trim();
                                 for (int k = 0; k < arrSize; k++) {
-                                    OcrFoodStr = foodNameArr[k].trim();
+                                    OcrFoodStr = PolloArray[k].trim();
                                     if (OcrResultStr.equals(OcrFoodStr)) {
                                         list1.add(OcrFoodStr);
                                         list2.add(OcrResultStr);
@@ -578,7 +564,6 @@ public class OcrActivity extends AppCompatActivity {
                     checkFit = true;
                 }
 
-
                 Log.d("userAllergy", "유저 알러지 정보 : " + USER_VEGAN_ALLERGY);
 
                 List<String> newList = list1.stream().distinct().collect(Collectors.toList());
@@ -586,7 +571,7 @@ public class OcrActivity extends AppCompatActivity {
 
                 List<String> newList2 = list4.stream().distinct().collect(Collectors.toList());
                 String n_ingre2 = newList2.toString().replace("[","").replace("]","");
-//
+
                 if(!checkFit){
                     Log.d("OCRTEST", resultText + " - 채식유형 및 알러지에 부적합합니다.");
                     ocrTextView.setText(USER_ID + "님에게 맞지않는 제품입니다.");

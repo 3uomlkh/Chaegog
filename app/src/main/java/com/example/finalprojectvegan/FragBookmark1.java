@@ -47,6 +47,10 @@ public class FragBookmark1 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        listName = new ArrayList<>();
+        listAddr = new ArrayList<>();
+        listCategory = new ArrayList<>();
+       listImage = new ArrayList<>();
     }
 
     @Override

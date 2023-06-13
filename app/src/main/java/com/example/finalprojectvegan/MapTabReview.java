@@ -59,10 +59,8 @@ public class MapTabReview extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map_tab_review, container, false);
-//        View view2 = inflater.inflate(R.layout.review_item, container, false);
         review_textView = view.findViewById(R.id.review_textView);
         arg_ratingBar = view.findViewById(R.id.arg_ratingBar);
-//        review_viewpager = view2.findViewById(R.id.review_viewpager);
 
         ratingList.clear();
 
@@ -83,6 +81,7 @@ public class MapTabReview extends Fragment {
 
                                     if(documentSnapshot.getData().get("imagePath1") == null) {
                                         postList.add(new WriteReviewInfo(
+                                                documentSnapshot.getData().get("reviewId").toString(),
                                                 documentSnapshot.getData().get("rating").toString(),
                                                 documentSnapshot.getData().get("name").toString(),
                                                 documentSnapshot.getData().get("review").toString(),
@@ -91,6 +90,7 @@ public class MapTabReview extends Fragment {
                                     } else {
                                         checkImg = 1;
                                         postList.add(new WriteReviewInfo(
+                                                documentSnapshot.getData().get("reviewId").toString(),
                                                 documentSnapshot.getData().get("rating").toString(),
                                                 documentSnapshot.getData().get("name").toString(),
                                                 documentSnapshot.getData().get("review").toString(),
@@ -125,7 +125,8 @@ public class MapTabReview extends Fragment {
                                     Log.d("arg_rating : ", arg_rating + "");
                                 }
                                 Log.d("ratingSize : ", ratingList.size() + "");
-                                review_textView.setText(String.valueOf(arg_rating));
+//                                review_textView.setText(String.valueOf(arg_rating));
+                                review_textView.setText(String.format("%.2f", arg_rating));
                                 arg_ratingBar.setRating(arg_rating);
 
 

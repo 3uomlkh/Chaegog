@@ -65,6 +65,7 @@ public class MapTabPhoto extends Fragment {
 
                                 if(documentSnapshot.getData().get("imagePath1") != null) {
                                     postList.add(new WriteReviewInfo(
+                                            documentSnapshot.getData().get("reviewId").toString(),
                                             documentSnapshot.getData().get("rating").toString(),
                                             documentSnapshot.getData().get("name").toString(),
                                             documentSnapshot.getData().get("review").toString(),

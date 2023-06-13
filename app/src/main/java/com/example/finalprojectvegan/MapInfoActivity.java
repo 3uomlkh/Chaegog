@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.LinearLayout;
 
 import com.example.finalprojectvegan.Adapter.ReviewAdapter;
 import com.example.finalprojectvegan.Model.MapData;

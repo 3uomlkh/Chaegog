@@ -27,6 +27,7 @@ public class MapBookmarkAdapter extends RecyclerView.Adapter<MapBookmarkAdapter.
 
     private ArrayList<MapData> listData = new ArrayList<>();
     private FirebaseAuth mAuth;
+    private int favoriteKey = 1;
 
     @NonNull
     @Override
@@ -46,13 +47,13 @@ public class MapBookmarkAdapter extends RecyclerView.Adapter<MapBookmarkAdapter.
 
         String itemKey = listData.get(i).getItemKeyList();
         ArrayList<String> bookmarkIdList = listData.get(i).getBookmarkIdList();
-        Log.d("MapBookmarkRVA", "itemKey : " + itemKey);
-        Log.d("MapBookmarkRVA", "bookmarkList : " + bookmarkIdList.toString());
-
+//        Log.d("MapBookmarkRVA", "itemKey : " + itemKey);
+//        Log.d("MapBookmarkRVA", "bookmarkList : " + bookmarkIdList.toString());
 
         if (bookmarkIdList.contains(itemKey)) {
             holder.saveImage.setImageResource(R.drawable.favorite_on);
         } else {
+            favoriteKey = 0;
             holder.saveImage.setImageResource(R.drawable.favorite_off);
         }
 
