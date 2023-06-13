@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".EditReviewActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@color/yellow"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:titleTextColor="@color/black">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="리뷰 수정"
+            android:textColor="@color/black" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="별점"
+        android:fontFamily="@font/pretendardregular"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/black" />
+    <RatingBar
+        android:id="@+id/edit_review_ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:contentDescription="별점"
+        android:isIndicator="false"
+        style="@style/Widget.AppCompat.RatingBar.Indicator"
+        android:numStars="5"
+        android:rating="5"
+        android:stepSize="0.5"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="리뷰"
+        android:fontFamily="@font/pretendardregular"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/black" />
+
+    <EditText
+        android:id="@+id/edit_review_review"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/review_border"
+        android:backgroundTint="@color/gray_f5"
+        android:fontFamily="@font/pretendardregular"
+        android:gravity="top"
+        android:hint="해당 식당에 대한 리뷰를 적어주세요."
+        android:lines="10" />
+
+    <Button
+        android:id="@+id/btn_edit_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/green"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/pretendardregular"
+        android:text="수정"
+        android:layout_margin="20dp"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+</LinearLayout>
