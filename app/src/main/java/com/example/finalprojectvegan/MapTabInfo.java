@@ -112,12 +112,12 @@ public class MapTabInfo extends Fragment {
             }
         });
 
-        getBooomarkData();
+        getBookmark();
 
         return view;
     }
 
-    private void getBooomarkData() {
+    private void getBookmark() {
         Log.d("MapTabInfo4", "Map");
         mDatabase = FirebaseDatabase.getInstance().getReference("bookmark");
         ValueEventListener postListener = new ValueEventListener() {

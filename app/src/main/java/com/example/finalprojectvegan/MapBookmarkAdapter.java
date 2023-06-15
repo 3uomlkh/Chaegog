@@ -27,7 +27,6 @@ public class MapBookmarkAdapter extends RecyclerView.Adapter<MapBookmarkAdapter.
 
     private ArrayList<MapData> listData = new ArrayList<>();
     private FirebaseAuth mAuth;
-    private int favoriteKey = 1;
 
     @NonNull
     @Override
@@ -45,17 +44,16 @@ public class MapBookmarkAdapter extends RecyclerView.Adapter<MapBookmarkAdapter.
             }
         });
 
-        String itemKey = listData.get(i).getItemKeyList();
-        ArrayList<String> bookmarkIdList = listData.get(i).getBookmarkIdList();
+//        String itemKey = listData.get(i).getItemKeyList();
+//        ArrayList<String> bookmarkIdList = listData.get(i).getBookmarkIdList();
 //        Log.d("MapBookmarkRVA", "itemKey : " + itemKey);
 //        Log.d("MapBookmarkRVA", "bookmarkList : " + bookmarkIdList.toString());
 
-        if (bookmarkIdList.contains(itemKey)) {
-            holder.saveImage.setImageResource(R.drawable.favorite_on);
-        } else {
-            favoriteKey = 0;
-            holder.saveImage.setImageResource(R.drawable.favorite_off);
-        }
+//        if (bookmarkIdList.contains(itemKey)) {
+//            holder.saveImage.setImageResource(R.drawable.favorite_on);
+//        } else {
+//            holder.saveImage.setImageResource(R.drawable.favorite_off);
+//        }
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -63,12 +61,12 @@ public class MapBookmarkAdapter extends RecyclerView.Adapter<MapBookmarkAdapter.
         holder.saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bookmarkRef
-                        .child(mAuth.getCurrentUser().getUid())
-                        .child("map_bookmark")
-                        .child(itemKey)
-                        .setValue(null);
-                Toast.makeText(view.getContext(), "북마크 삭제", Toast.LENGTH_SHORT).show();
+//                bookmarkRef
+//                        .child(mAuth.getCurrentUser().getUid())
+//                        .child("map_bookmark")
+//                        .child(itemKey)
+//                        .setValue(null);
+//                Toast.makeText(view.getContext(), "북마크 삭제", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -77,6 +75,9 @@ public class MapBookmarkAdapter extends RecyclerView.Adapter<MapBookmarkAdapter.
     public int getItemCount() {
 
         return listData.size();
+    }
+    public void removeItem() {
+        listData.clear();
     }
 
     public void addItem(MapData data) {

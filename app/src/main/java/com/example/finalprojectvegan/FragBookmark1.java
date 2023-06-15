@@ -26,10 +26,10 @@ import java.util.ArrayList;
 public class FragBookmark1 extends Fragment {
     private ArrayList<String> itemKeyList = new ArrayList<>();
     private ArrayList<String> bookmarkIdList = new ArrayList<>();
-    ArrayList<String> listName = new ArrayList<>();
-    ArrayList<String> listAddr = new ArrayList<>();
-    ArrayList<String> listCategory = new ArrayList<>();
-    ArrayList<String> listImage = new ArrayList<>();
+    ArrayList<String> listName;
+    ArrayList<String> listAddr;
+    ArrayList<String> listCategory;
+    ArrayList<String> listImage;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private View view;
@@ -64,7 +64,7 @@ public class FragBookmark1 extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new MapBookmarkAdapter();
 
-        getBookmarkData();
+        getBookmark();
 
         return view;
     }
@@ -100,7 +100,7 @@ public class FragBookmark1 extends Fragment {
         mDatabase.addValueEventListener(postListener);
     }
 
-    private void getBookmarkData() {
+    private void getBookmark() {
         mDatabase = FirebaseDatabase.getInstance().getReference("bookmark");
         ValueEventListener postListener = new ValueEventListener() {
             @Override

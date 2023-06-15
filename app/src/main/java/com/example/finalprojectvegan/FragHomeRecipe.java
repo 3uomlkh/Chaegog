@@ -90,11 +90,9 @@ public class FragHomeRecipe extends Fragment {
         };
         mDatabase.addValueEventListener(postListener);
 
+        //getData();
 
-//        recyclerView.setAdapter(adapter);
-//        getData();
-
-        getBooomarkData();
+        getBookmark();
 
         return view;
     }
@@ -127,7 +125,7 @@ public class FragHomeRecipe extends Fragment {
                     public void run() {
                         for (Element element : title) {
                             listTitle.add(element.text());
-                            Log.d("ListTitle", element + element.text());
+                            Log.d("ListTitle", listTitle.toString());
                         }
                         for (Element element : thumb) {
                             String thumbUrl = element.attr("src");
@@ -142,7 +140,7 @@ public class FragHomeRecipe extends Fragment {
 //                                mDatabase = FirebaseDatabase.getInstance().getReference("recipe");
 //                                mDatabase
 //                                        .push()
-//                                        .setValue(new RecipeData(listThumb.get(k), listTitle.get(k), "https://www.10000recipe.com" + clickUrl.get(k)));
+//                                        .setValue(new RecipeData(listThumb.get(k), listTitle.get(k), clickUrl.get(k)));
 
                             RecipeData data = new RecipeData();
 
@@ -165,7 +163,7 @@ public class FragHomeRecipe extends Fragment {
         }
     }
 
-    private void getBooomarkData() {
+    private void getBookmark() {
         mDatabase = FirebaseDatabase.getInstance().getReference("bookmark");
         ValueEventListener postListener = new ValueEventListener() {
             @Override
