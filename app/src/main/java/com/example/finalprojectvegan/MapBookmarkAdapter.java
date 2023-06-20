@@ -37,23 +37,36 @@ public class MapBookmarkAdapter extends RecyclerView.Adapter<MapBookmarkAdapter.
     @Override
     public void onBindViewHolder(@NonNull MapBookmarkAdapter.ViewHolder holder, int i) {
         holder.onBind(listData.get(i));
-        holder.title.setOnClickListener(new View.OnClickListener() {
+        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                final Context context = view.getContext();
+                int i = holder.getAdapterPosition();
+                Intent intent = new Intent(context, MapInfoActivity.class);
+                intent.putExtra("name", listData.get(i).getName());
+                intent.putExtra("addr", listData.get(i).getAddress());
+                intent.putExtra("time", listData.get(i).getTime());
+                intent.putExtra("dayOff", listData.get(i).getTime());
+                intent.putExtra("image", listData.get(i).getImageUrl());
+                intent.putExtra("category", listData.get(i).getCategory());
+                intent.putExtra("menu", listData.get(i).getMenu());
+                intent.putExtra("phone", listData.get(i).getPhone());
+                intent.putExtra("key", listData.get(i).getItemKeyList());
+                context.startActivity(intent);
             }
         });
 
-//        String itemKey = listData.get(i).getItemKeyList();
-//        ArrayList<String> bookmarkIdList = listData.get(i).getBookmarkIdList();
-//        Log.d("MapBookmarkRVA", "itemKey : " + itemKey);
-//        Log.d("MapBookmarkRVA", "bookmarkList : " + bookmarkIdList.toString());
+        String itemKey = listData.get(i).getItemKeyList();
+        ArrayList<String> bookmarkIdList = listData.get(i).getBookmarkIdList();
+        Log.d("" +
+                "", "itemKey : " + itemKey);
+        Log.d("MapBookmarkRVA", "bookmarkList : " + bookmarkIdList.toString());
 
-//        if (bookmarkIdList.contains(itemKey)) {
-//            holder.saveImage.setImageResource(R.drawable.favorite_on);
-//        } else {
-//            holder.saveImage.setImageResource(R.drawable.favorite_off);
-//        }
+        if (bookmarkIdList.contains(itemKey)) {
+            holder.saveImage.setImageResource(R.drawable.favorite_on);
+        } else {
+            holder.saveImage.setImageResource(R.drawable.favorite_off);
+        }
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -61,12 +74,12 @@ public class MapBookmarkAdapter extends RecyclerView.Adapter<MapBookmarkAdapter.
         holder.saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                bookmarkRef
-//                        .child(mAuth.getCurrentUser().getUid())
-//                        .child("map_bookmark")
-//                        .child(itemKey)
-//                        .setValue(null);
-//                Toast.makeText(view.getContext(), "북마크 삭제", Toast.LENGTH_SHORT).show();
+                bookmarkRef
+                        .child(mAuth.getCurrentUser().getUid())
+                        .child("map_bookmark")
+                        .child(itemKey)
+                        .setValue(null);
+                Toast.makeText(view.getContext(), "북마크 삭제", Toast.LENGTH_SHORT).show();
             }
         });
     }

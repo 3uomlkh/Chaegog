@@ -49,7 +49,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         private NaverMap mNaverMap;
         double lat, lnt;
         String mapInfoName, mapInfoAddr, mapInfoTime, mapInfoDayoff,
-                mapInfoImage, mapInfoCategory, mapInfoMenu, mapInfoPhonenum;
+                mapInfoImage, mapInfoCategory, mapInfoMenu, mapInfoPhonenum, mapInfoKey;
         TextView getMapInfoName, getMapInfoAddr, getMapInfoTime, getMapInfoDayoff;
         ImageView getMapInfoImage;
         ImageButton mapInfoButton;
@@ -66,6 +66,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         private ArrayList<String> mapMenuList = new ArrayList<>();
         private ArrayList<String> mapCategoryList = new ArrayList<>();
         private ArrayList<String> mapPhonenumList = new ArrayList<>();
+        private ArrayList<String> mapItmeKeyList = new ArrayList<>();
 
 
         @Override
@@ -89,8 +90,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             mapFragment.getMapAsync(this);
 
-            mLocationSource =
-                    new FusedLocationSource(this, PERMISSION_REQUEST_CODE);
+            mLocationSource = new FusedLocationSource(this, PERMISSION_REQUEST_CODE);
 
         }
 
@@ -118,6 +118,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         mapMenuList.add(snapshot.child("storeMenu").getValue().toString());
                         mapCategoryList.add(snapshot.child("storeCategory").getValue().toString());
                         mapPhonenumList.add(snapshot.child("storePhonenum").getValue().toString());
+                        mapItmeKeyList.add(snapshot.getKey());
 
                     }
                     for(int i=0; i < mapNameList.size(); i++){
@@ -144,6 +145,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 mapInfoCategory = mapCategoryList.get(k);
                                 mapInfoMenu = mapMenuList.get(k);
                                 mapInfoPhonenum = mapPhonenumList.get(k);
+                                mapInfoKey = mapItmeKeyList.get(k);
 
                                 mapInfoButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -158,6 +160,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                         intent.putExtra("category", mapInfoCategory);
                                         intent.putExtra("menu", mapInfoMenu);
                                         intent.putExtra("phone", mapInfoPhonenum);
+                                        intent.putExtra("key", mapInfoKey);
                                         startActivity(intent);
 
                                     }

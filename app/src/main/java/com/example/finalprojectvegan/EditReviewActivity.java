@@ -22,7 +22,7 @@ import java.util.Locale;
 
 public class EditReviewActivity extends AppCompatActivity {
     private FirebaseFirestore db;
-    SimpleDateFormat EditDate = new SimpleDateFormat("yyyy-MM-dd-HH-mm", Locale.getDefault());
+
     private EditText editReview;
     private RatingBar editRatingBar;
     private Button editButton;

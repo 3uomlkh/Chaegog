@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class MapInfoActivity extends AppCompatActivity {
-    private Fragment fragment_info, fragment_menu, fragment_photo, fragment_review, fragment_map_bookmark;
+    private Fragment fragment_info, fragment_menu, fragment_photo, fragment_review;
     private TabLayout tabs;
-    String name, addr, time, dayoff, category, menu, image;
+    String name, addr, time, dayoff, category, menu, image, key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,6 @@ public class MapInfoActivity extends AppCompatActivity {
         fragment_menu = new MapTabMenu();
         fragment_photo = new MapTabPhoto();
         fragment_review = new MapTabReview();
-        fragment_map_bookmark = new FragBookmark1();
 
         tabs = findViewById(R.id.map_info_tabs);
 
@@ -76,6 +75,7 @@ public class MapInfoActivity extends AppCompatActivity {
         dayoff = intent.getStringExtra("dayOff");
         category = intent.getStringExtra("category");
         menu = intent.getStringExtra("menu");
+        key = intent.getStringExtra("key");
 
         // Bundle에넣어 fragment로 보내기
         Bundle bundle = new Bundle();
@@ -86,13 +86,11 @@ public class MapInfoActivity extends AppCompatActivity {
         bundle.putString("dayOff", dayoff);
         bundle.putString("category", category);
         bundle.putString("menu", menu);
+        bundle.putString("key", key);
         fragment_info.setArguments(bundle);
         fragment_menu.setArguments(bundle);
         fragment_review.setArguments(bundle);
         fragment_photo.setArguments(bundle);
-        fragment_map_bookmark.setArguments(bundle);
-
-
 
     }
 }

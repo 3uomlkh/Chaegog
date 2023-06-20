@@ -125,7 +125,6 @@ public class MapTabReview extends Fragment {
                                     Log.d("arg_rating : ", arg_rating + "");
                                 }
                                 Log.d("ratingSize : ", ratingList.size() + "");
-//                                review_textView.setText(String.valueOf(arg_rating));
                                 review_textView.setText(String.format("%.2f", arg_rating));
                                 arg_ratingBar.setRating(arg_rating);
 

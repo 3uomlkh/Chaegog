@@ -39,15 +39,15 @@
 
     </LinearLayout>
 
-    <Button
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@android:drawable/btn_star"
-        android:id="@+id/btn_follow"
-        android:textColor="@color/material_dynamic_primary0"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:visibility="gone"/>
+<!--    <Button-->
+<!--        android:layout_width="30dp"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:background="@android:drawable/btn_star"-->
+<!--        android:id="@+id/btn_follow"-->
+<!--        android:textColor="@color/material_dynamic_primary0"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_centerVertical="true"-->
+<!--        android:visibility="gone"/>-->
 
 
 </RelativeLayout>

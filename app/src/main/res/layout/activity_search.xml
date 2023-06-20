@@ -14,12 +14,6 @@
         android:orientation="horizontal"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp">
-        <EditText
-            android:id="@+id/search_edit_text"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:hint="전체 검색"
-            android:layout_marginTop="40dp"/>
 
         <Button
             android:id="@+id/search_btn"
@@ -28,6 +22,14 @@
             android:text="검색"
             android:layout_marginStart="10dp"
             android:layout_marginTop="40dp"/>
+        <EditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:hint="계정 검색"
+            android:layout_marginTop="40dp"/>
+
+
     </LinearLayout>
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
@@ -48,7 +50,7 @@
             android:fontFamily="@font/pretendardregular"
             android:id="@+id/search_all"
             android:textColor="@color/black"
-            android:text="전체" />
+            android:text="계정" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -75,10 +77,28 @@
             android:text="식당" />
     </com.google.android.material.tabs.TabLayout>
 
+    <TextView
+        android:id="@+id/recipe_text"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="레시피"
+        android:textColor="#424242"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_recyclerview"
+        android:id="@+id/search_recipe_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/map_text"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="식당"
+        android:textColor="#424242"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
 
 
 <!--    <FrameLayout-->
@@ -86,13 +106,6 @@
 <!--        android:layout_below="@id/map_info_tabs"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="match_parent"/>-->
-<!--    <TextView-->
-<!--        android:id="@+id/recipe_text_view"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textStyle="bold"-->
-<!--        android:textSize="18sp"-->
-<!--        android:layout_margin="20dp"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"/>-->
+
 
 </LinearLayout>

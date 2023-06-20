@@ -22,20 +22,15 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class MapTabInfo extends Fragment {
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
-    String addr;
-    RestaurantAdapter adapter;
-    private ArrayList<String> itemKeyList = new ArrayList<>();
-    private ArrayList<String> bookmarkIdList = new ArrayList<>();
-    ArrayList<String> listName = new ArrayList<>();
-    ArrayList<String> listCategory = new ArrayList<>();
-    ArrayList<String> listAddr = new ArrayList<>();
-    ArrayList<String> listMenu = new ArrayList<>();
-    ArrayList<String> listTime = new ArrayList<>();
-    ArrayList<String> listDayoff = new ArrayList<>();
-    ArrayList<String> listImage = new ArrayList<>();
+    private String key;
+    private RestaurantAdapter adapter;
+    private final ArrayList<String> itemKeyList = new ArrayList<>();
+    private final ArrayList<String> bookmarkIdList = new ArrayList<>();
+    private ArrayList<String> listName, listCategory, listAddr, listMenu, listTime,
+            listDayoff, listImage;
     public MapTabInfo() {
         // Required empty public constructor
     }
@@ -65,7 +60,7 @@ public class MapTabInfo extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         Bundle bundle = getArguments();
-        addr = bundle.getString("addr");
+        key = bundle.getString("key");
 
         recyclerView = view.findViewById(R.id.restaurant_recyclerView);
         recyclerView.setItemAnimator(null);
@@ -93,7 +88,7 @@ public class MapTabInfo extends Fragment {
                 adapter.notifyDataSetChanged();
 
                 for(int i=0; i<listName.size(); i++) {
-                    if(addr.equals(listAddr.get(i))) {
+                    if(key.equals(itemKeyList.get(i))) {
                         MapData data = new MapData(listName.get(i), listAddr.get(i), listCategory.get(i), listImage.get(i));
                         data.setMenu(listMenu.get(i));
                         data.setDayoff(listDayoff.get(i));

@@ -139,8 +139,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReviewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ReviewAdapter.ViewHolder holder, int i) {
         CardView cardView = holder.cardView;
+
+        int position = holder.getAdapterPosition();
 
         db = FirebaseFirestore.getInstance();
         db.collection("user")

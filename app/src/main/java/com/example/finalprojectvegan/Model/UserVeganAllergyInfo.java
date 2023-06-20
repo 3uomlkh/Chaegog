@@ -10,6 +10,10 @@ public class UserVeganAllergyInfo {
         this.similarAllergy = similarAllergy;
     }
 
+    public UserVeganAllergyInfo(String userAllergy) {
+        this.userAllergy = userAllergy;
+    }
+
     public String getuserAllergy() {
         return userAllergy;
     }
