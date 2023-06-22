@@ -41,6 +41,7 @@ public class FragHomeRecipe extends Fragment {
     private FirebaseAuth mAuth;
     RecyclerView recyclerView;
     RecipeAdapter adapter;
+    Document doc;
 
     public static FragHomeRecipe newInstance(String param1, String param2) throws IOException, ParserConfigurationException, SAXException {
         FragHomeRecipe fragment = new FragHomeRecipe();
@@ -110,52 +111,55 @@ public class FragHomeRecipe extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-//                for(int i=1; i<8; i++) {
-                String urlString = "https://www.10000recipe.com/recipe/list.html?q=비건&order=reco&page=";
-                String page = String.valueOf(1);
-                urlString += page;
-                Document doc = Jsoup.connect(urlString).get();
+                for(int i=1; i<9; i++) {
+                    String urlString = "https://www.10000recipe.com/recipe/list.html?q=비건&order=reco&page=";
+                    String page = String.valueOf(i);
+                    urlString += page;
+                    doc = Jsoup.connect(urlString).get();
 
-                final Elements title = doc.select("div div[class=common_sp_caption_tit line2]");
-                final Elements thumb = doc.select("div[class=common_sp_thumb] a img");
-                final Elements click = doc.select("div[class=common_sp_thumb] a");
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (Element element : title) {
-                            listTitle.add(element.text());
-                            Log.d("ListTitle", listTitle.toString());
-                        }
-                        for (Element element : thumb) {
-                            String thumbUrl = element.attr("src");
-                            listThumb.add(thumbUrl);
-                        }
-                        for (Element element : click) {
-                            String detailUrl = element.attr("href");
-                            clickUrl.add(detailUrl);
-                        }
-                        for (int k = 0; k < listTitle.size(); k++) {
-                            // 모든 레시피 firebase db에 저장, 최초에 1번 실행
+                    final Elements title = doc.select("div div[class=common_sp_caption_tit line2]");
+                    final Elements thumb = doc.select("div[class=common_sp_thumb] a > img");
+                    final Elements click = doc.select("div[class=common_sp_thumb] a");
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (Element element : title) {
+                                listTitle.add(element.text());
+                            }
+                            for (Element element : thumb) {
+                                String thumbUrl = element.attr("src");
+                                listThumb.add(thumbUrl);
+                            }
+                            for (Element element : click) {
+                                String detailUrl = element.attr("href");
+                                clickUrl.add(detailUrl);
+                            }
+                            for (int k = 0; k < listTitle.size(); k++) {
+                                // 모든 레시피 firebase db에 저장, 최초에 1번 실행
 //                                mDatabase = FirebaseDatabase.getInstance().getReference("recipe");
 //                                mDatabase
 //                                        .push()
 //                                        .setValue(new RecipeData(listThumb.get(k), listTitle.get(k), clickUrl.get(k)));
 
-                            RecipeData data = new RecipeData();
+                                RecipeData data = new RecipeData();
+                                Log.d("ListTitle", listTitle.get(k)+ "\n");
 
-                            data.setTitle(listTitle.get(k));
-                            data.setImageUrl(listThumb.get(k));
-                            data.setClickUrl(clickUrl.get(k));
-                            data.setItemKeyList(itemKeyList.get(k));
-                            data.setBookmarkIdList(bookmarkIdList);
+                                data.setTitle(listTitle.get(k));
+                                data.setImageUrl(listThumb.get(k));
+                                data.setClickUrl(clickUrl.get(k));
+                                data.setItemKeyList(itemKeyList.get(k));
+                                data.setBookmarkIdList(bookmarkIdList);
 
-                            adapter.addItem(data);
+                                adapter.addItem(data);
+                            }
+
+                            Log.d("recipeTitleSize", listTitle.size() + "");
+
+                            adapter.notifyDataSetChanged();
                         }
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-//                }
+                    });
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

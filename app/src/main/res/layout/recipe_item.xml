@@ -3,45 +3,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="380dp"
     android:layout_margin="10dp"
     android:elevation="2dp"
     app:cardCornerRadius="4dp">
 
     <LinearLayout
+        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="380dp"
         android:orientation="vertical"
         android:padding="4dp">
         <ImageView
             android:id="@+id/recipe_image"
-            android:layout_width="400dp"
-            android:layout_height="200dp"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:outlineSpotShadowColor="#6D6D6D"
             tools:srcCompat="@tools:sample/avatars" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
             <TextView
                 android:id="@+id/recipe_title"
-                android:layout_width="340dp"
+                android:layout_width="320dp"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:text="레시피 이름" />
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+
             <ImageView
                 android:id="@+id/recipe_save_image"
-                android:layout_width="30dp"
+                android:layout_width="36dp"
                 android:layout_height="30dp"
-                android:src="@drawable/favorite_off"/>
+                android:src="@drawable/favorite_off" />
 
         </LinearLayout>
 

@@ -1,11 +1,19 @@
 package com.example.finalprojectvegan;
+
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -39,58 +47,69 @@ import com.naver.maps.map.util.FusedLocationSource;
 import java.util.ArrayList;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
-        private static final String TAG = "MapActivity";
-        private static final int PERMISSION_REQUEST_CODE = 100;
-        private static final String[] PERMISSION = {
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        };
-        private FusedLocationSource mLocationSource;
-        private NaverMap mNaverMap;
-        double lat, lnt;
-        String mapInfoName, mapInfoAddr, mapInfoTime, mapInfoDayoff,
-                mapInfoImage, mapInfoCategory, mapInfoMenu, mapInfoPhonenum, mapInfoKey;
-        TextView getMapInfoName, getMapInfoAddr, getMapInfoTime, getMapInfoDayoff;
-        ImageView getMapInfoImage;
-        ImageButton mapInfoButton;
-        LinearLayout mapInfoLayout;
-        View map_fragment;
-        private DatabaseReference mDatabase;
-        private ArrayList<String> mapNameList = new ArrayList<>();
-        private ArrayList<String> mapAddrList = new ArrayList<>();
-        private ArrayList<String> mapTimeList = new ArrayList<>();
-        private ArrayList<String> mapDayoffList = new ArrayList<>();
-        private ArrayList<String> mapImageList = new ArrayList<>();
-        private ArrayList<String> mapLatList = new ArrayList<>();
-        private ArrayList<String> mapLntList = new ArrayList<>();
-        private ArrayList<String> mapMenuList = new ArrayList<>();
-        private ArrayList<String> mapCategoryList = new ArrayList<>();
-        private ArrayList<String> mapPhonenumList = new ArrayList<>();
-        private ArrayList<String> mapItmeKeyList = new ArrayList<>();
+    private static final String TAG = "MapActivity";
+    private static final int PERMISSION_REQUEST_CODE = 100;
+    private static final String[] PERMISSION = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+    };
+    private FusedLocationSource mLocationSource;
+    private NaverMap mNaverMap;
+    double lat, lnt;
+    String mapInfoName, mapInfoAddr, mapInfoTime, mapInfoDayoff,
+            mapInfoImage, mapInfoCategory, mapInfoMenu, mapInfoPhonenum, mapInfoKey;
+    TextView getMapInfoName, getMapInfoAddr, getMapInfoTime, getMapInfoDayoff;
+    ImageView getMapInfoImage;
+    ImageButton mapInfoButton;
+    LinearLayout mapInfoLayout;
+    View map_fragment;
+    private DatabaseReference mDatabase;
+    private ArrayList<String> mapNameList = new ArrayList<>();
+    private ArrayList<String> mapAddrList = new ArrayList<>();
+    private ArrayList<String> mapTimeList = new ArrayList<>();
+    private ArrayList<String> mapDayoffList = new ArrayList<>();
+    private ArrayList<String> mapImageList = new ArrayList<>();
+    private ArrayList<String> mapLatList = new ArrayList<>();
+    private ArrayList<String> mapLntList = new ArrayList<>();
+    private ArrayList<String> mapMenuList = new ArrayList<>();
+    private ArrayList<String> mapCategoryList = new ArrayList<>();
+    private ArrayList<String> mapPhonenumList = new ArrayList<>();
+    private ArrayList<String> mapItmeKeyList = new ArrayList<>();
 
 
-        @Override
-        protected void onCreate (Bundle savedInstanceState){
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_map);
+    double myLongitude, myLatitude;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
 
-            getMapInfoName = findViewById(R.id.map_info_name);
-            getMapInfoAddr = findViewById(R.id.map_info_addr);
-            getMapInfoTime = findViewById(R.id.map_info_time);
-            getMapInfoDayoff = findViewById(R.id.map_info_day_off);
-            getMapInfoImage = findViewById(R.id.map_info_image);
-            mapInfoButton = findViewById(R.id.map_info_button);
+        getMapInfoName = findViewById(R.id.map_info_name);
+        getMapInfoAddr = findViewById(R.id.map_info_addr);
+        getMapInfoTime = findViewById(R.id.map_info_time);
+        getMapInfoDayoff = findViewById(R.id.map_info_day_off);
+        getMapInfoImage = findViewById(R.id.map_info_image);
+        mapInfoButton = findViewById(R.id.map_info_button);
 
-            FragmentManager fm = getSupportFragmentManager();
-            MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map_fragment);
-            if (mapFragment == null) {
-                mapFragment = MapFragment.newInstance();
-                fm.beginTransaction().add(R.id.map_fragment, mapFragment).commit();
+        FragmentManager fm = getSupportFragmentManager();
+        MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map_fragment);
+        if (mapFragment == null) {
+            mapFragment = MapFragment.newInstance();
+            fm.beginTransaction().add(R.id.map_fragment, mapFragment).commit();
+        }
+
+        mapFragment.getMapAsync(this);
+
+        mLocationSource = new FusedLocationSource(this, PERMISSION_REQUEST_CODE);
+
+        final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if(location != null) {
+                myLongitude = location.getLongitude();
+                myLatitude = location.getLatitude();
             }
-
-            mapFragment.getMapAsync(this);
-
-            mLocationSource = new FusedLocationSource(this, PERMISSION_REQUEST_CODE);
 
         }
 
@@ -128,8 +147,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         lat = Double.parseDouble(mapLatList.get(i));
                         lnt = Double.parseDouble(mapLntList.get(i));
                         markers[i].setPosition(new LatLng(lat, lnt));
-                        markers[i].setCaptionText(mapNameList.get(i));
-                        markers[i].setMap(naverMap);
+//                        markers[i].setCaptionText(mapNameList.get(i));
+//                        markers[i].setMap(naverMap);
+
+                        ArrayList<Integer> distance = new ArrayList<Integer>();
+                        distance.add(getDistance(myLatitude ,myLongitude, lat, lnt));
+                        for(int k=0; k<distance.size(); k++) {
+                            if(distance.get(k) <= 1000) {
+                                Log.d("map_distance", distance.get(k) + "m - " + mapNameList.get(i));
+                                markers[i].setCaptionText(mapNameList.get(i));
+                                markers[i].setMap(naverMap);
+                            }
+                        }
 
                         int k = i;
                         markers[i].setOnClickListener(new Overlay.OnClickListener() {
@@ -204,9 +233,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mNaverMap.setLocationSource(mLocationSource);
 
             UiSettings uiSettings = mNaverMap.getUiSettings();
-            uiSettings.setCompassEnabled(true);
-            uiSettings.setScaleBarEnabled(true);
-            uiSettings.setZoomControlEnabled(true);
             uiSettings.setLocationButtonEnabled(true);
 
             // 권한 확인, onRequestPermissionsResult 콜백 메서드 호출
@@ -224,12 +250,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
         private int getDistance(double lat1, double lnt1, double lat2, double lnt2) {
+            double R = 6372.8 * 1000;
             double dLat = Math.toRadians(lat2 - lat1);
             double dLnt = Math.toRadians(lnt2 - lnt1);
-            double a = Math.sin(dLat/2)* Math.sin(dLat/2)+ Math.cos(Math.toRadians(lat1))* Math.cos(Math.toRadians(lat2))* Math.sin(dLnt/2)* Math.sin(dLnt/2);
-            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            double d = (6372.8 * 1000) * c * 1000;
-            return (int)d;
+            double a = sin(dLat/2) * sin(dLat/2)+ cos(Math.toRadians(lat1))* cos(Math.toRadians(lat2))* sin(dLnt/2)* sin(dLnt/2);
+            double c = 2 * Math.asin(Math.sqrt(a));
+            return (int) (R * c);
         }
 
         @Override
