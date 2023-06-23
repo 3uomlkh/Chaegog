@@ -70,30 +70,30 @@ public class FragHomeRecipe extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new RecipeAdapter();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("recipe");
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+//        mDatabase = FirebaseDatabase.getInstance().getReference("recipe");
+//        ValueEventListener postListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    itemKeyList.add(snapshot.getKey());
+//                }
+//
+//                recyclerView.setAdapter(adapter);
+//                adapter.notifyDataSetChanged();
+//                getData();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.w("RecipeFragment", "loadPost:onCancelled", databaseError.toException());
+//            }
+//        };
+//        mDatabase.addValueEventListener(postListener);
 
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    itemKeyList.add(snapshot.getKey());
-                }
+        getData();
 
-                recyclerView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-                getData();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("RecipeFragment", "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        mDatabase.addValueEventListener(postListener);
-
-        //getData();
-
-        getBookmark();
+        //getBookmark();
 
         return view;
     }
@@ -121,6 +121,7 @@ public class FragHomeRecipe extends Fragment {
                     final Elements thumb = doc.select("div[class=common_sp_thumb] a > img");
                     final Elements click = doc.select("div[class=common_sp_thumb] a");
                     Handler handler = new Handler(Looper.getMainLooper());
+                    int finalI = i;
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -137,10 +138,12 @@ public class FragHomeRecipe extends Fragment {
                             }
                             for (int k = 0; k < listTitle.size(); k++) {
                                 // 모든 레시피 firebase db에 저장, 최초에 1번 실행
-//                                mDatabase = FirebaseDatabase.getInstance().getReference("recipe");
-//                                mDatabase
-//                                        .push()
-//                                        .setValue(new RecipeData(listThumb.get(k), listTitle.get(k), clickUrl.get(k)));
+//                                if(finalI ==8) {
+//                                    mDatabase = FirebaseDatabase.getInstance().getReference("recipe");
+//                                    mDatabase
+//                                            .push()
+//                                            .setValue(new RecipeData(listThumb.get(k), listTitle.get(k), clickUrl.get(k)));
+//                                }
 
                                 RecipeData data = new RecipeData();
                                 Log.d("ListTitle", listTitle.get(k)+ "\n");

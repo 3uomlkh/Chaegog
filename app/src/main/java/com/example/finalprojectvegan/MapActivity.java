@@ -40,6 +40,7 @@ import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
+import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
 import com.naver.maps.map.util.FusedLocationSource;
@@ -75,7 +76,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ArrayList<String> mapCategoryList = new ArrayList<>();
     private ArrayList<String> mapPhonenumList = new ArrayList<>();
     private ArrayList<String> mapItmeKeyList = new ArrayList<>();
-
+    ArrayList<Integer> distance;
 
     double myLongitude, myLatitude;
     @Override
@@ -149,8 +150,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         markers[i].setPosition(new LatLng(lat, lnt));
 //                        markers[i].setCaptionText(mapNameList.get(i));
 //                        markers[i].setMap(naverMap);
-
-                        ArrayList<Integer> distance = new ArrayList<Integer>();
+                        Log.d("map_distance", myLatitude + ", " + myLongitude);
+                        distance = new ArrayList<Integer>();
                         distance.add(getDistance(myLatitude ,myLongitude, lat, lnt));
                         for(int k=0; k<distance.size(); k++) {
                             if(distance.get(k) <= 1000) {
@@ -257,6 +258,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             double c = 2 * Math.asin(Math.sqrt(a));
             return (int) (R * c);
         }
+
 
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
