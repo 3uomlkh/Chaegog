@@ -51,7 +51,7 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
     public UserInfoAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.homefeed_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(cardView);
-        homefeed_item_imageView = cardView.findViewById(R.id.homefeed_item_imageView);
+        homefeed_item_imageView = cardView.findViewById(R.id.Iv_HomeFeed_Image);
 
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +67,7 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CardView cardView = holder.cardView;
 
-        TextView publisherTextView = cardView.findViewById(R.id.homefeed_item_publisher);
+        TextView publisherTextView = cardView.findViewById(R.id.Tv_HomeFeed_Publisher);
         publisherTextView.setText(uDataset.get(position).getUserID());
 
 

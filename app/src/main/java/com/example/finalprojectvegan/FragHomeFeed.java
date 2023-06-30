@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.finalprojectvegan.Adapter.HomefeedAdapter;
+import com.example.finalprojectvegan.Model.FeedInfo;
 import com.example.finalprojectvegan.Model.WritePostInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -101,23 +102,25 @@ public class FragHomeFeed extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
 
-                            ArrayList<WritePostInfo> postList = new ArrayList<>();
+                            ArrayList<FeedInfo> FeedList = new ArrayList<>();
 
 
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 Log.d("success", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                                postList.add(new WritePostInfo(
+                                FeedList.add(new FeedInfo(
                                         documentSnapshot.getData().get("title").toString(),
-                                        documentSnapshot.getData().get("contents").toString(),
+                                        documentSnapshot.getData().get("content").toString(),
                                         documentSnapshot.getData().get("publisher").toString(),
-                                        documentSnapshot.getData().get("imagePath").toString(),
+                                        documentSnapshot.getId(),
+                                        documentSnapshot.getData().get("uri").toString(),
                                         new Date(documentSnapshot.getDate("createdAt").getTime())));
+
                             }
                             RecyclerView recyclerView = view.findViewById(R.id.homefeed_recyclerView);
                             recyclerView.setHasFixedSize(true);
                             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-                            RecyclerView.Adapter mAdapter = new HomefeedAdapter(getActivity(), postList);
+                            RecyclerView.Adapter mAdapter = new HomefeedAdapter(getActivity(), FeedList);
                             recyclerView.setAdapter(mAdapter);
 
                         } else {

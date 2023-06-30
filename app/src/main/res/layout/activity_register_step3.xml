@@ -42,7 +42,7 @@
 
 
     <Button
-        android:id="@+id/Btn_RegisterThirdToFourth"
+        android:id="@+id/Btn_Register3To4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/pretendardregular"
@@ -58,7 +58,7 @@
         android:layout_marginTop="5dp"
         android:orientation="vertical"
         android:weightSum="1"
-        app:layout_constraintBottom_toTopOf="@+id/Btn_RegisterThirdToFourth"
+        app:layout_constraintBottom_toTopOf="@+id/Btn_Register3To4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,7 +66,7 @@
         app:layout_constraintVertical_bias="0.0">
 
         <RadioGroup
-            android:id="@+id/radioGroup_veganType"
+            android:id="@+id/Rg_veganType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -74,7 +74,7 @@
 
 
             <RadioButton
-                android:id="@+id/radio_Vegan"
+                android:id="@+id/Radio_Vegan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="5dp"
@@ -87,7 +87,7 @@
                 android:textSize="16sp" />
 
             <RadioButton
-                android:id="@+id/radio_Lacto"
+                android:id="@+id/Radio_Lacto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="5dp"
@@ -100,7 +100,7 @@
                 android:textSize="16sp" />
 
             <RadioButton
-                android:id="@+id/radio_Ovo"
+                android:id="@+id/Radio_Ovo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="5dp"
@@ -113,7 +113,7 @@
                 android:textSize="16sp" />
 
             <RadioButton
-                android:id="@+id/radio_LactoOvo"
+                android:id="@+id/Radio_LactoOvo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="5dp"
@@ -126,7 +126,7 @@
                 android:textSize="16sp" />
 
             <RadioButton
-                android:id="@+id/radio_Pollo"
+                android:id="@+id/Radio_Pollo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="5dp"
@@ -137,7 +137,7 @@
                 android:textColor="@drawable/selector_radio_text" />
 
             <RadioButton
-                android:id="@+id/radio_Pesco"
+                android:id="@+id/Radio_Pesco"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="5dp"
@@ -150,7 +150,7 @@
                 android:textSize="16sp" />
 
             <RadioButton
-                android:id="@+id/radio_etc"
+                android:id="@+id/Radio_etc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="5dp"
@@ -164,7 +164,7 @@
         </RadioGroup>
 
         <TextView
-            android:id="@+id/textView_select_VeganType"
+            android:id="@+id/Tv_SelectedVeganType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

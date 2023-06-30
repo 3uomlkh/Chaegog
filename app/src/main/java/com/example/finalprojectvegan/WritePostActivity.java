@@ -7,8 +7,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +19,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.finalprojectvegan.Model.FeedInfo;
 import com.example.finalprojectvegan.Model.WritePostInfo;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,52 +49,62 @@ import com.lakue.lakuepopupactivity.PopupResult;
 import com.lakue.lakuepopupactivity.PopupType;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class WritePostActivity extends AppCompatActivity {
 
     private static final int GALLERY = 101;
+    private static final int CAMERA = 100;
+    int imageFrom;
+    private String imagePath = "";
+    private File imageFile = null;
+    SimpleDateFormat imageDate = new SimpleDateFormat("yyyyMMdd_HHmmss");
+    Uri imageUri = null;
 
-    Button Btn_uploadPost, Btn_uploadImagePost;
-
-    ImageView imageView_uploadPost;
-
-    ProgressDialog dialog;
-
-    Uri uri;
-
-    Bitmap bitmap;
-    byte[] bytes;
-
+    private Button Btn_UploadPost;
+    private ImageView Iv_Add_UploadPost;
+    private EditText Et_Post_Title, Et_Post_Contents;
+    private Dialog dialog;
+    private Intent intent;
 
     private FirebaseUser firebaseUser;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_post);
 
-        imageView_uploadPost = findViewById(R.id.imageView_uploadPost);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseStorage = FirebaseStorage.getInstance();
+        db = FirebaseFirestore.getInstance();
 
-        Btn_uploadPost = findViewById(R.id.Btn_uploadPost);
+        Iv_Add_UploadPost = findViewById(R.id.Iv_Add_UploadPost);
+        Btn_UploadPost = findViewById(R.id.Btn_UploadPost);
 
-        Btn_uploadPost.setOnClickListener(new View.OnClickListener() {
+        Btn_UploadPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                uploadImage(bytes);
-                Toast.makeText(WritePostActivity.this, "게시물이 업로드 되었습니다.", Toast.LENGTH_SHORT).show();
-                finish();
+                if (imagePath.length() > 0 && imageFrom >= 100) {
+                    uploader();
+                    Toast.makeText(WritePostActivity.this, "게시물이 업로드 되었습니다.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }
         });
 
-        imageView_uploadPost.setOnClickListener(new View.OnClickListener() {
+        Iv_Add_UploadPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getBaseContext(), PopupActivity.class);
+                intent = new Intent(getBaseContext(), PopupActivity.class);
                 intent.putExtra("type", PopupType.SELECT);
                 intent.putExtra("gravity", PopupGravity.CENTER);
                 intent.putExtra("title", "사진을 불러올 기능을 선택하세요");
@@ -114,205 +128,126 @@ public class WritePostActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode == GALLERY && resultCode == RESULT_OK) {
-//            uri = data.getData();
-//            setImage(uri);
-//        }
-
-//        if (resultCode == RESULT_OK) {
-//            //데이터 받기
-//            if (requestCode == 2) {
-//                PopupResult result = (PopupResult) data.getSerializableExtra("result");
-//                if (result == PopupResult.LEFT) {
-//                    // 작성 코드
-//                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                    activityResultPicture.launch(intent);
-//
-//                } else if (result == PopupResult.RIGHT) {
-//                    // 작성 코드
-//                    Intent intent = new Intent(Intent.ACTION_PICK);
-//                    intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-//                    intent.setType("image/*");
-//                    startActivityForResult(intent, GALLERY);
-//                }
-////                else if (requestCode == 0 ) {
-////                    String returnValue = data.getStringExtra("some key");
-//////                    Log.d("로그 : ", "profilePath : " + profilePath);
-////                }
-//            }
-//            else if (requestCode == 0 ) {
-//                String returnValue = data.getStringExtra("some key");
-////                    Log.d("로그 : ", "profilePath : " + profilePath);
-//            }
-//        }
-//
-//        // 갤러리
-//        else if(requestCode == GALLERY && resultCode == RESULT_OK) {
-//            Uri uri = data.getData();
-//            setImage(uri);
-//
-//        }
 
         if (resultCode == RESULT_OK) {
             //데이터 받기
             if (requestCode == 2) {
                 PopupResult result = (PopupResult) data.getSerializableExtra("result");
                 if (result == PopupResult.LEFT) {
-                    // 작성 코드
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    activityResultPicture.launch(intent);
+                    // 카메라 선택한 경우
+                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        try {
+                            imageFile = createImageFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (imageFile != null) {
+                            imageUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.finalprojectvegan.fileprovider", imageFile);
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                            startActivityForResult(intent, CAMERA);
+                        }
+                    }
 
                 } else if (result == PopupResult.RIGHT) {
                     // 작성 코드
-                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    intent = new Intent(Intent.ACTION_PICK);
                     intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
                     intent.setType("image/*");
                     startActivityForResult(intent, GALLERY);
                 }
             } else if (requestCode == GALLERY) {
-                Uri uri = data.getData();
-                setImage(uri);
-
-            }
-        }
-
-    }
-
-    ActivityResultLauncher<Intent> activityResultPicture = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Bundle extras = result.getData().getExtras();
-                        bitmap = (Bitmap) extras.get("data");
-                        imageView_uploadPost.setImageBitmap(bitmap);
-
-                        bytes = bitmapToByteArray(bitmap);
-//                        image = InputImage.fromBitmap(bitmap, 0);
-                    }
+                imageUri = data.getData();
+                imagePath = data.getDataString();
+                if (imagePath.length() > 0) {
+                    Glide.with(this)
+                            .load(imagePath)
+                            .into(Iv_Add_UploadPost);
+                    imageFrom = requestCode;
                 }
             }
-    );
-
-//    public static String uri2path(Context context, Uri contentUri) {
-//        String[] proj = { MediaStore.Images.Media.DATA };
-//
-//        Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-//        cursor.moveToNext();
-//        @SuppressLint("Range") String path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
-//        Uri uri = Uri.fromFile(new File(path));
-//
-//        cursor.close();
-//        return path;
-//    }
-
-    private void setImage(Uri uri) {
-        try{
-            InputStream in = getContentResolver().openInputStream(uri);
-            bitmap = BitmapFactory.decodeStream(in);
-//            imageView_uploadPost.setImageBitmap(bitmap);
-            Glide.with(WritePostActivity.this).load(uri).override(500).into(imageView_uploadPost);
-
-//            image = InputImage.fromBitmap(bitmap, 0);
-            Log.e("uri", "uri : " + uri);
-
-            bytes = bitmapToByteArray(bitmap);
-
-//            uploadImage(bytes);
-//
-//            loadImage();
-
-//            byte[] bytes = bitmapToByteArray(bitmap);
-//
-//            uploadImage(bytes);
-
-//            dialog = new ProgressDialog(MypageActivity.this); //프로그레스 대화상자 객체 생성
-//            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); //프로그레스 대화상자 스타일 원형으로 설정
-//            dialog.setMessage("제출 중입니다."); //프로그레스 대화상자 메시지 설정
-//            dialog.show(); //프로그레스 대화상자 띄우기
-
-//            Handler handler = new Handler();
-//            handler.postDelayed(new Runnable(){
-//                @Override
-//                public void run() {
-//                    dialog.dismiss(); // 3초 시간지연 후 프로그레스 대화상자 닫기
-//                    Toast.makeText(WritePostActivity.this, "이미지 저장.", Toast.LENGTH_LONG).show();
-//                    loadImage();
-//                }
-//            }, 5000);
-
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
         }
     }
 
-    public void uploadImage(byte[] bytes) {
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-        StorageReference storageReference = firebaseStorage.getReference();
-
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (firebaseUser != null) {
-            StorageReference imageReference = storageReference.child("posts/" + firebaseUser.getUid() + "/postImage" + System.currentTimeMillis() + ".jpg");
-            UploadTask uploadTask = imageReference.putBytes(bytes);
-            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        Log.d("실패", "실패");
-                        throw task.getException();
-                    }
-                    return imageReference.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        uri = task.getResult();
-                        postUpdate(uri);
-                        Log.d("성공", "성공" + uri);
-                    } else {
-                        Log.d("실패2", "실패2");
-                    }
-                }
-            });
-        }
+    File createImageFile() throws IOException {
+        String timeStamp = imageDate.format(new Date());
+        String fileName = "IMAGE_" + timeStamp; // 이미지 파일 명
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File file = File.createTempFile(fileName, ".jpg", storageDir); // 파일 생성
+        imagePath = file.getAbsolutePath(); // 파일 절대경로 저장
+        return file;
     }
 
-    public byte[] bitmapToByteArray( Bitmap bitmap ) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
-        bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
-        byte[] byteArray = stream.toByteArray() ;
-        return byteArray ;
+    void uploader() {
+        UploadTask uploadTask = null; // 파일 업로드하는 객체
+        switch (imageFrom) {
+            case GALLERY: // 갤러리에서 가져온 경우
+                String timeStamp = imageDate.format(new Date());
+                String imageFileName = "IMAGE_" + timeStamp + "_.png"; // 새로운 파일명 생성 후
+                storageReference = firebaseStorage.getReference().child("Posts").child(imageFileName); // reference에 경로 세팅
+                uploadTask = storageReference.putFile(imageUri); // 업로드할 파일과 위치 설정
+                break;
+
+            case CAMERA: // 카메라에서 가져온 경우 createImage에서 생성한 이미지 우일명 이용
+                storageReference = firebaseStorage.getReference().child("Posts").child(imageFile.getName()); // reference에 경로 세팅
+                uploadTask = storageReference.putFile(Uri.fromFile(imageFile));
+                break;
+        }
+
+        // 파일 업로드
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("Upload", "success");
+                downloadUri(); // 업로드 성공시 업로드한 파일 Uri 다운받기
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Upload", "Failure");
+            }
+        });
+    }
+
+    void downloadUri() {
+        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Log.d("DownloadUri", "success");
+                Log.d("DownloadUri", "uri = " + uri);
+                postUpdate(uri);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("DownloadUri", "Failure");
+            }
+        });
     }
 
     private void postUpdate(Uri uri) {
 
-        final String title = ((EditText) findViewById(R.id.edit_post_title)).getText().toString();
-        final String contents = ((EditText) findViewById(R.id.edit_post_contents)).getText().toString();
+        final String title = ((EditText) findViewById(R.id.Et_Post_Title)).getText().toString();
+        final String content = ((EditText) findViewById(R.id.Et_Post_Content)).getText().toString();
 
-        if (title.length() > 0 && contents.length() > 0) {
-            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-            WritePostInfo writePostInfo = new WritePostInfo(title, contents, firebaseUser.getUid(), uri.toString(), new Date());
-            uploader(writePostInfo);
+        if (title.length() > 0 && content.length() > 0) {
+
+            DocumentReference documentReference = db.collection("posts").document();
+            FeedInfo feedInfo = new FeedInfo(title, content, firebaseUser.getUid(), documentReference.getId(), uri.toString(), new Date());
+
+            documentReference.set(feedInfo)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                        }
+                    });
         } else {
             Toast.makeText(this, "게시글 내용을 입력해주세요", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void uploader (WritePostInfo writePostInfo) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("posts").add(writePostInfo)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
-                });
     }
 }
