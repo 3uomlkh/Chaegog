@@ -12,12 +12,15 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.finalprojectvegan.Model.UserProfile;
 import com.example.finalprojectvegan.Model.UserVeganAllergyInfo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 
 public class RegisterStep4Activity extends AppCompatActivity {
 
@@ -27,8 +30,8 @@ public class RegisterStep4Activity extends AppCompatActivity {
     private Button Btn_RegisterFinish;
     private TextView Tv_SelectedAllergy;
     private int count = 0;
-    private String userId, userEmail, userPw, userVeganReason, userVeganType, userAllergy;
-
+    private String userId, userEmail, userPw, userVeganReason, userVeganType;
+    String userAllergy, similarAllergy;
     private ArrayList<String> Array_userAllergy;
 
     private FirebaseAuth firebaseAuth;
