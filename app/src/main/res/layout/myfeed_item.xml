@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="20dp"
+    android:visibility="visible"
+    android:layout_margin="10dp"
+    app:strokeColor="#000000"
+    app:strokeWidth="3dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+
+        <LinearLayout
+            android:layout_marginVertical="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/Tv_MyFeed_item_Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:fontFamily="@font/pretendardregular"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:padding="5dp"
+                android:textStyle="bold"
+                tools:text="타이틀" />
+
+            <TextView
+                android:id="@+id/Tv_MyFeed_item_CreatedAt"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="right"
+                android:layout_marginRight="15dp"
+                android:fontFamily="@font/pretendardregular"
+                tools:text="2022-09-25" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/Tv_MyFeed_item_Contents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:fontFamily="@font/pretendardregular"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:textStyle="normal"
+            tools:text="우선 물을 넉넉히 끓여 채소를 넣었을 때 물의 온도가 내려가지 않도록한다. 또 물이  팔팔 끓을 때 뚜껑을 열고 데쳐내야 하고, 삶을 때 끓는 물에 소금을 조금 넣으면 ...." />
+
+        <ImageView
+            android:id="@+id/Iv_MyFeed_item_Image"
+            android:layout_width="310dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:background="#00dfdfdf" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <CheckBox
+                android:id="@+id/Cb_item_MyFeedFavorite"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/custom_checkbox"
+                android:button="@null" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ic_baseline_comment_24"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="20dp"
+                android:id="@+id/Btn_item_MyFeedComment" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
