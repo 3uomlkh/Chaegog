@@ -11,16 +11,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="679dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true" >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="90dp"
+            android:layout_height="60dp"
             android:layout_marginHorizontal="10sp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
@@ -33,7 +33,7 @@
                 app:cardCornerRadius="100dp">
 
                 <ImageView
-                    android:id="@+id/imageView_profile2"
+                    android:id="@+id/Iv_HomeFeed_Profile"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -44,7 +44,7 @@
             </androidx.cardview.widget.CardView>
 
             <TextView
-                android:id="@+id/homefeed_item_publisher"
+                android:id="@+id/Tv_HomeFeed_Publisher"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -52,70 +52,99 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/pretendardregular"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 tools:text="작성자" />
 
             <TextView
-                android:id="@+id/homefeed_item_createdAt"
+                android:id="@+id/Tv_HomeFeed_CreatedAt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="10dp"
                 android:fontFamily="@font/pretendardregular"
                 tools:text="2022-09-25" />
 
         </LinearLayout>
 
         <ImageView
-            android:layout_width="match_parent"
+            android:layout_width="480dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:src="@drawable/ic_baseline_horizontal_rule_24" />
 
         <TextView
-            android:id="@+id/homefeed_item_title"
+            android:id="@+id/Tv_HomeFeed_Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="15dp"
             android:fontFamily="@font/pretendardregular"
             android:textColor="@color/black"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:padding="5dp"
             android:textStyle="bold"
             tools:text="타이틀" />
 
         <TextView
-            android:id="@+id/homefeed_item_contents"
+            android:id="@+id/Tv_HomeFeed_Content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minLines="1"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:maxLines="5"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:fontFamily="@font/pretendardregular"
             android:padding="5dp"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="13sp"
             android:textStyle="normal"
             tools:text="우선 물을 넉넉히 끓여 채소를 넣었을 때 물의 온도가 내려가지 않도록한다. 또 물이  팔팔 끓을 때 뚜껑을 열고 데쳐내야 하고, 삶을 때 끓는 물에 소금을 조금 넣으면 ...." />
 
         <ImageView
-            android:id="@+id/homefeed_item_imageView"
-            android:layout_width="350dp"
-            android:layout_height="350dp"
+            android:id="@+id/Iv_HomeFeed_Image"
+            android:layout_width="310dp"
+            android:layout_height="300dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:scaleType="centerInside"
             android:background="#00dfdfdf" />
 
-        <CheckBox
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:button="@null"
-            android:background="@drawable/custom_checkbox"
-            android:layout_gravity="right"
-            android:id="@+id/ProductFavorite"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <CheckBox
+                android:id="@+id/Cb_HomeFeedFavorite"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/custom_checkbox"
+                android:button="@null" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/Btn_HomeFeedComment"
+                android:layout_width="9dp"
+                android:layout_height="11dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ic_baseline_comment_24" />
+
+            <Button
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/more"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/Btn_HomeFeedEtc" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
 
 </androidx.cardview.widget.CardView>

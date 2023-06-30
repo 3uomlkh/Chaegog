@@ -22,103 +22,80 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterStep3Activity extends AppCompatActivity {
 
-    Button Btn_RegisterThirdToFourth;
-    RadioGroup radioGroup_veganType;
-    RadioButton radio_Vegan, radio_Lacto, radio_Ovo, radio_LactoOvo, radio_Pesco, radio_Pollo, radio_etc;
-    TextView textView_select_VeganType;
+    private Button Btn_Register3To4;
+    private RadioGroup Rg_veganType;
+    private TextView Tv_SelectedVeganType;
+    private String userId, userEmail, userPw, userVeganReason;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_step3);
 
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("userId");
+        userEmail = intent.getStringExtra("userEmail");
+        userPw = intent.getStringExtra("userPw");
+        userVeganReason = intent.getStringExtra("userVeganReason");
 
-        textView_select_VeganType = findViewById(R.id.textView_select_VeganType);
 
-        radio_Vegan = findViewById(R.id.radio_Vegan);
-        radio_Lacto = findViewById(R.id.radio_Lacto);
-        radio_Ovo = findViewById(R.id.radio_Ovo);
-        radio_LactoOvo = findViewById(R.id.radio_LactoOvo);
-        radio_Pesco = findViewById(R.id.radio_Pesco);
-        radio_Pollo = findViewById(R.id.radio_Pollo);
-        radio_etc = findViewById(R.id.radio_etc);
+        Rg_veganType = findViewById(R.id.Rg_veganType);
 
-        radioGroup_veganType = findViewById(R.id.radioGroup_veganType);
-        radioGroup_veganType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        Tv_SelectedVeganType = findViewById(R.id.Tv_SelectedVeganType);
+
+        Btn_Register3To4 = findViewById(R.id.Btn_Register3To4);
+        Btn_Register3To4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String userVeganType = Tv_SelectedVeganType.getText().toString();
+
+                // 선택 안한경우
+                if (userVeganType.equals("")) {
+                    Toast.makeText(RegisterStep3Activity.this, "선택해주세요", Toast.LENGTH_SHORT).show();
+                } else {
+                    // 선택 한 경우 petExtra를 이용해 정보 보내기 -> 회원가입 마지막 단계에서 합치기 위함
+                    Log.d("REGISTER3", "SUCCESS");
+                    Intent intent3 = new Intent(RegisterStep3Activity.this, RegisterStep4Activity.class);
+                    intent3.putExtra("userId", userId);
+                    intent3.putExtra("userEmail", userEmail);
+                    intent3.putExtra("userPw", userPw);
+                    intent3.putExtra("userVeganReason", userVeganReason);
+                    intent3.putExtra("userVeganType", userVeganType);
+                    startActivity(intent3);
+                }
+            }
+        });
+
+        // RadioButton 리스너 작성
+        Rg_veganType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch (i) {
-                    case R.id.radio_Vegan:
-                        textView_select_VeganType.setText("비건");
+                    case R.id.Radio_Vegan:
+                        Tv_SelectedVeganType.setText("비건");
                         break;
-                    case R.id.radio_Lacto:
-                        textView_select_VeganType.setText("락토");
+                    case R.id.Radio_Lacto:
+                        Tv_SelectedVeganType.setText("락토");
                         break;
-                    case R.id.radio_Ovo:
-                        textView_select_VeganType.setText("오보");
+                    case R.id.Radio_Ovo:
+                        Tv_SelectedVeganType.setText("오보");
                         break;
-                    case R.id.radio_LactoOvo:
-                        textView_select_VeganType.setText("락토오보");
+                    case R.id.Radio_LactoOvo:
+                        Tv_SelectedVeganType.setText("락토오보");
                         break;
-                    case R.id.radio_Pesco:
-                        textView_select_VeganType.setText("페스코");
+                    case R.id.Radio_Pesco:
+                        Tv_SelectedVeganType.setText("페스코");
                         break;
-                    case R.id.radio_Pollo:
-                        textView_select_VeganType.setText("폴로");
+                    case R.id.Radio_Pollo:
+                        Tv_SelectedVeganType.setText("폴로");
                         break;
-                    case R.id.radio_etc:
-                        textView_select_VeganType.setText("지향없음");
+                    case R.id.Radio_etc:
+                        Tv_SelectedVeganType.setText("지향없음");
                         break;
                 };
             }
         });
-
-
-        Btn_RegisterThirdToFourth = findViewById(R.id.Btn_RegisterThirdToFourth);
-        Btn_RegisterThirdToFourth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                if (textView_select_VeganType == null) {
-////                    Toast.makeText(getApplicationContext(), "선택해주세요", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    profileUpload();
-//                }
-
-                profileUpload();
-            }
-        });
-    }
-
-    private void profileUpload() {
-        String veganType = ((TextView) findViewById(R.id.textView_select_VeganType)).getText().toString();
-
-        if (veganType.length() > 0) {
-            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-            UserVeganTypeInfo userVeganTypeInfo = new UserVeganTypeInfo(veganType);
-            if (firebaseUser != null) {
-                db.collection("userVeganType").document(firebaseUser.getUid()).set(userVeganTypeInfo)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(getApplicationContext(), "회원정보 등록 성공", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(RegisterStep3Activity.this, RegisterStep4Activity.class);
-                                startActivity(intent);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), "회원정보 등록 실패", Toast.LENGTH_SHORT).show();
-                                Log.d("tag", "Error writing document", e);
-                            }
-                        });
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "선택해주세요", Toast.LENGTH_SHORT).show();
-        }
     }
 
 }

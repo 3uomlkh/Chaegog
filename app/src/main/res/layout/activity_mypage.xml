@@ -7,14 +7,6 @@
     android:orientation="vertical"
     tools:context=".MypageActivity">
 
-    <!--    <Button-->
-    <!--        android:id="@+id/Btn_Logout"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_gravity="right"-->
-    <!--        android:fontFamily="@font/pretendardregular"-->
-    <!--        android:text="로그아웃" />-->
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -48,7 +40,7 @@
             app:cardCornerRadius="100dp">
 
             <ImageView
-                android:id="@+id/imageView_profile"
+                android:id="@+id/Iv_Mypage_Profile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -67,7 +59,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/userID"
+                android:id="@+id/Tv_Mypage_UserId"
                 android:text="사용자 닉네임"
                 android:textColor="@color/black"
                 android:textSize="20dp"
@@ -76,7 +68,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/userVeganType"
+                android:id="@+id/Tv_Mypage_VeganType"
                 android:text="사용자 비건타입"
                 android:textColor="@color/black"
                 android:textSize="15dp"
@@ -85,7 +77,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/userAllergy"
+                android:id="@+id/Tv_Mypage_Allergy"
                 android:text="사용자 알러지"
                 android:textColor="@color/black"
                 android:textSize="15dp"
@@ -95,49 +87,16 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/Btn_EditAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:text="수정"/>
 
-<!--    <LinearLayout-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="100dp"-->
-<!--        android:orientation="horizontal" />-->
-<!--        android:background="#c8c8c8" >-->
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginLeft="50dp"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:orientation="vertical" >-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="20dp"-->
-<!--                android:textStyle="bold"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:text="사용자 닉네임" />-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="15dp"-->
-<!--                android:textStyle="normal"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:text="사용자 비건타입" />-->
-
-<!--        </LinearLayout>-->
-
-        <Button
-            android:id="@+id/changedetail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="center"
-            android:text="수정"/>
-
-<!--    </LinearLayout>-->
+    <!--    </LinearLayout>-->
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -156,7 +115,73 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
+            android:id="@+id/Btn_Mypage_Setting"
             android:text="설정" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_baseline_block_24" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/Btn_Mypage_BlockInfo"
+            android:text="차단" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/baseline_logout_24" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/Btn_Mypage_Logout"
+            android:text="로그아웃" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_baseline_delete_forever_24" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/Btn_Mypage_DeleteAccount"
+            android:text="계정삭제" />
 
     </LinearLayout>
 
@@ -177,6 +202,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
+            android:id="@+id/Btn_Mypage_help"
             android:text="도움말" />
 
     </LinearLayout>
@@ -191,246 +217,16 @@
         <ImageView
             android:layout_width="37dp"
             android:layout_height="37dp"
-            android:src="@drawable/ic_round_info_24" />
+            android:src="@drawable/info" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="7dp"
+            android:id="@+id/Btn_Mypage_Info"
             android:text="정보" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal" >
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/baseline_logout_24" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:id="@+id/Btn_Logout"
-            android:text="로그아웃" />
-
-    </LinearLayout>
 </LinearLayout>
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/mypage_userId"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_gravity="center"-->
-    <!--        android:layout_marginTop="20dp"-->
-    <!--        android:text="사용자계정"/>-->
-
-
-    <!--</LinearLayout>-->
-
-    <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--    xmlns:tools="http://schemas.android.com/tools"-->
-    <!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="match_parent"-->
-    <!--    tools:context=".FragMypage">-->
-
-
-    <!--    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
-
-    <!--    <TextView-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:layout_centerHorizontal="true"-->
-    <!--        android:layout_gravity="center_horizontal"-->
-    <!--        android:layout_marginStart="175dp"-->
-    <!--        android:layout_marginTop="28dp"-->
-    <!--        android:fontFamily="@font/pretendardregular"-->
-    <!--        android:lineSpacingExtra="2sp"-->
-    <!--        android:text="마이페이지"-->
-    <!--        android:textAlignment="center"-->
-    <!--        android:textSize="16sp"-->
-    <!--        android:textStyle="bold"-->
-    <!--        android:textColor="@color/black" />-->
-
-
-    <!--    <Button-->
-    <!--        android:id="@+id/Btn_Logout"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:layout_alignParentEnd="true"-->
-    <!--        android:layout_gravity="right"-->
-    <!--        android:layout_marginTop="263dp"-->
-    <!--        android:layout_marginEnd="36dp"-->
-    <!--        android:backgroundTint="@color/green"-->
-    <!--        android:fontFamily="@font/pretendardregular"-->
-    <!--        android:text="수정"-->
-    <!--        android:textColor="@color/white" />-->
-
-    <!--&lt;!&ndash;    <ImageView&ndash;&gt;-->
-    <!--&lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
-    <!--&lt;!&ndash;        android:layout_height="150dp"&ndash;&gt;-->
-    <!--&lt;!&ndash;        android:layout_alignParentStart="true"&ndash;&gt;-->
-    <!--&lt;!&ndash;        android:layout_alignParentTop="true"&ndash;&gt;-->
-    <!--&lt;!&ndash;        android:layout_alignParentEnd="true"&ndash;&gt;-->
-    <!--&lt;!&ndash;        android:layout_marginStart="2dp"&ndash;&gt;-->
-    <!--&lt;!&ndash;        android:layout_marginTop="85dp"&ndash;&gt;-->
-    <!--&lt;!&ndash;        android:layout_marginEnd="-1dp"&ndash;&gt;-->
-    <!--&lt;!&ndash;        android:background="#f5f5f5" >&ndash;&gt;-->
-
-    <!--    <androidx.cardview.widget.CardView-->
-    <!--        android:layout_width="100dp"-->
-    <!--        android:layout_height="100dp"-->
-    <!--        android:layout_gravity="center"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:layout_alignParentEnd="true"-->
-    <!--        android:layout_marginStart="2dp"-->
-    <!--        android:layout_marginTop="85dp"-->
-    <!--        android:layout_marginEnd="-1dp"-->
-    <!--        app:cardCornerRadius="100dp">-->
-
-    <!--        <ImageView-->
-    <!--            android:id="@+id/imageView_profile"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_gravity="center"-->
-    <!--            android:adjustViewBounds="true"-->
-    <!--            android:src="@drawable/ic_baseline_account_circle_24" />-->
-    <!--        -->
-    <!--    </androidx.cardview.widget.CardView>-->
-    <!--        -->
-
-    <!--    <View-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="106dp"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:layout_alignParentEnd="true"-->
-    <!--        android:layout_centerVertical="true"-->
-    <!--        android:layout_marginStart="0dp"-->
-    <!--        android:layout_marginTop="234dp"-->
-    <!--        android:layout_marginEnd="-1dp"-->
-    <!--        android:background="#dfdfdf" />-->
-
-    <!--    <View-->
-    <!--        android:layout_width="68.6dp"-->
-    <!--        android:layout_height="68.6dp"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:layout_centerHorizontal="true"-->
-    <!--        android:layout_gravity="center_horizontal"-->
-    <!--        android:layout_marginStart="172dp"-->
-    <!--        android:layout_marginTop="127dp"-->
-    <!--        android:background="@drawable/personimage" />-->
-
-    <!--    <TextView-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:layout_marginStart="51dp"-->
-    <!--        android:layout_marginTop="262dp"-->
-    <!--        android:fontFamily="@font/pretendardregular"-->
-    <!--        android:lineSpacingExtra="4sp"-->
-    <!--        android:textColor="#1b1b1b"-->
-    <!--        android:textSize="20sp"-->
-    <!--        android:textStyle="bold"-->
-    <!--        tools:text="이채원" />-->
-
-    <!--    <TextView-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:layout_centerVertical="true"-->
-    <!--        android:layout_marginStart="78dp"-->
-    <!--        android:layout_marginTop="299dp"-->
-    <!--        android:fontFamily="@font/pretendardregular"-->
-    <!--        android:lineSpacingExtra="2sp"-->
-    <!--        android:textColor="#1b1b1b"-->
-    <!--        android:textSize="14sp"-->
-    <!--        android:textStyle="normal"-->
-    <!--        tools:text="비건" />-->
-
-    <!--    <TextView-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentBottom="true"-->
-    <!--        android:layout_marginStart="80dp"-->
-    <!--        android:layout_marginBottom="258dp"-->
-    <!--        android:fontFamily="@font/pretendardregular"-->
-    <!--        android:lineSpacingExtra="2sp"-->
-    <!--        android:textColor="#6d6d6d"-->
-    <!--        android:textSize="14sp"-->
-    <!--        android:textStyle="bold"-->
-    <!--        tools:text="설정" />-->
-
-    <!--    <TextView-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentBottom="true"-->
-    <!--        android:layout_marginStart="80dp"-->
-    <!--        android:layout_marginBottom="222dp"-->
-    <!--        android:fontFamily="@font/pretendardregular"-->
-    <!--        android:lineSpacingExtra="2sp"-->
-    <!--        android:textColor="#6d6d6d"-->
-    <!--        android:textSize="14sp"-->
-    <!--        android:textStyle="bold"-->
-    <!--        tools:text="도움말" />-->
-
-    <!--    <TextView-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentBottom="true"-->
-    <!--        android:layout_marginStart="80dp"-->
-    <!--        android:layout_marginBottom="188dp"-->
-    <!--        android:fontFamily="@font/pretendardregular"-->
-    <!--        android:lineSpacingExtra="2sp"-->
-    <!--        android:textColor="#6d6d6d"-->
-    <!--        android:textSize="14sp"-->
-    <!--        android:textStyle="bold"-->
-    <!--        tools:text="정보" />-->
-
-    <!--    <androidx.constraintlayout.utils.widget.ImageFilterView-->
-    <!--        android:layout_width="20dp"-->
-    <!--        android:layout_height="20dp"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentBottom="true"-->
-    <!--        android:layout_marginStart="44dp"-->
-    <!--        android:layout_marginBottom="258dp"-->
-    <!--        android:background="@drawable/setting" />-->
-
-    <!--    <androidx.constraintlayout.utils.widget.ImageFilterView-->
-    <!--        android:layout_width="20dp"-->
-    <!--        android:layout_height="20dp"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentBottom="true"-->
-    <!--        android:layout_marginStart="44dp"-->
-    <!--        android:layout_marginBottom="223dp"-->
-    <!--        android:background="@drawable/help" />-->
-
-    <!--    <ImageView-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentBottom="true"-->
-    <!--        android:layout_marginStart="42dp"-->
-    <!--        android:layout_marginBottom="186dp"-->
-    <!--        android:src="@drawable/ic_round_info_24" />-->
-
-    <!--</RelativeLayout>-->

@@ -43,7 +43,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
-        android:id="@+id/edit_register_id"
+        android:id="@+id/Et_Register_Id"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
@@ -97,11 +97,11 @@
         android:textColor="#424242"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/edit_register_id"
-        app:layout_constraintStart_toStartOf="@+id/edit_register_id" />
+        app:layout_constraintBottom_toTopOf="@+id/Et_Register_Id"
+        app:layout_constraintStart_toStartOf="@+id/Et_Register_Id" />
 
     <EditText
-        android:id="@+id/edit_register_email"
+        android:id="@+id/Et_Register_Email"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -115,7 +115,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_register_id" />
+        app:layout_constraintTop_toBottomOf="@+id/Et_Register_Id" />
 
     <TextView
         android:id="@+id/textView4"
@@ -128,11 +128,11 @@
         android:textColor="#424242"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/edit_register_email"
-        app:layout_constraintStart_toStartOf="@+id/edit_register_email" />
+        app:layout_constraintBottom_toTopOf="@+id/Et_Register_Email"
+        app:layout_constraintStart_toStartOf="@+id/Et_Register_Email" />
 
     <EditText
-        android:id="@+id/edit_register_password"
+        android:id="@+id/Et_Register_Pw"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -146,7 +146,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_register_email" />
+        app:layout_constraintTop_toBottomOf="@+id/Et_Register_Email" />
 
     <TextView
         android:id="@+id/textView5"
@@ -159,11 +159,11 @@
         android:textColor="#424242"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/edit_register_password"
-        app:layout_constraintStart_toStartOf="@+id/edit_register_password" />
+        app:layout_constraintBottom_toTopOf="@+id/Et_Register_Pw"
+        app:layout_constraintStart_toStartOf="@+id/Et_Register_Pw" />
 
     <EditText
-        android:id="@+id/edit_password_check"
+        android:id="@+id/Et_Register_PwCheck"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -177,7 +177,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_register_password" />
+        app:layout_constraintTop_toBottomOf="@+id/Et_Register_Pw" />
 
     <TextView
         android:id="@+id/textView6"
@@ -190,11 +190,11 @@
         android:textColor="#424242"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/edit_password_check"
-        app:layout_constraintStart_toStartOf="@+id/edit_password_check" />
+        app:layout_constraintBottom_toTopOf="@+id/Et_Register_PwCheck"
+        app:layout_constraintStart_toStartOf="@+id/Et_Register_PwCheck" />
 
     <Button
-        android:id="@+id/Btn_RegisterFirstToSecond"
+        android:id="@+id/Btn_Register1To2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/pretendardregular"

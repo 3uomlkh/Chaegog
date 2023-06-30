@@ -36,12 +36,11 @@ import java.util.HashMap;
 public class RegisterStep1Activity extends AppCompatActivity {
 
     // 변수 선언
-    private EditText edit_register_name, edit_register_id, edit_register_password, edit_register_email, edit_register_phonenum, edit_password_check;
-    private Button Btn_RegisterFirstToSecond;
+    private EditText Et_Register_Id, Et_Register_Email, Et_Register_Pw, Et_Register_PwCheck;
+    private Button Btn_Register1To2;
 
-    // Firebase 인증, Database 접근, 처리중 화면
+    // Firebase 인증, 처리중 화면
     private FirebaseAuth firebaseAuth;
-    DatabaseReference reference;
     ProgressDialog pd;
 
     @Override
@@ -49,18 +48,16 @@ public class RegisterStep1Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_step1);
 
-//        edit_register_name = findViewById(R.id.edit_register_name);
-        edit_register_id = findViewById(R.id.edit_register_id);
-        edit_register_password = findViewById(R.id.edit_register_password);
-        edit_register_email = findViewById(R.id.edit_register_email);
-//        edit_register_phonenum = findViewById(R.id.edit_register_phonenum);
-        edit_password_check = findViewById(R.id.edit_password_check);
-        Btn_RegisterFirstToSecond = findViewById(R.id.Btn_RegisterFirstToSecond);
-
+        // 변수 초기화
+        Et_Register_Id = findViewById(R.id.Et_Register_Id);
+        Et_Register_Email = findViewById(R.id.Et_Register_Email);
+        Et_Register_Pw = findViewById(R.id.Et_Register_Pw);
+        Et_Register_PwCheck = findViewById(R.id.Et_Register_PwCheck);
 
         firebaseAuth = FirebaseAuth.getInstance(); // 초기화
 
-        Btn_RegisterFirstToSecond.setOnClickListener(new View.OnClickListener() {
+        Btn_Register1To2 = findViewById(R.id.Btn_Register1To2);
+        Btn_Register1To2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -69,23 +66,21 @@ public class RegisterStep1Activity extends AppCompatActivity {
                 pd.setMessage("Please wait..");
                 pd.show();
 
-                // EditText에 현재 입력되어 있는 값을 get(가져오기)해준다.
-//                String userName = edit_register_name.getText().toString();
-                String userID = edit_register_id.getText().toString();
-                String userPassword = edit_register_password.getText().toString();
-                String passwordCheck = edit_password_check.getText().toString();
-                String userEmail = edit_register_email.getText().toString();
-//                int userPhonenum = Integer.parseInt(edit_register_phonenum.getText().toString());
+                // Et에 현재 입력되어 있는 값을 get(가져오기)해준다.
+                String userId = Et_Register_Id.getText().toString();
+                String userPw = Et_Register_Pw.getText().toString();
+                String userPwCheck = Et_Register_PwCheck.getText().toString();
+                String userEmail = Et_Register_Email.getText().toString();
 
-
-                if (TextUtils.isEmpty(userID) || TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPassword) || TextUtils.isEmpty(passwordCheck)){
+                // Et 양식 조건
+                if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPw) || TextUtils.isEmpty(userPwCheck)){
                     Toast.makeText(RegisterStep1Activity.this, "모든 양식을 채워주세요!", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (userPassword.length() < 6){
+                    if (userPw.length() < 6){
                         Toast.makeText(RegisterStep1Activity.this, "비밀번호는 최소 6자리 이상으로 해주세요!", Toast.LENGTH_SHORT).show();
                     } else {
-                        if (userPassword.equals(passwordCheck)) {
-                            register(userID, userEmail, userPassword);
+                        if (userPw.equals(userPwCheck)) {
+                            register(userId, userEmail, userPw);
                         } else {
                             Toast.makeText(RegisterStep1Activity.this, "비밀번호를 다시 확인해주세요", Toast.LENGTH_SHORT).show();
                         }
@@ -94,174 +89,65 @@ public class RegisterStep1Activity extends AppCompatActivity {
 
 
                 // 닷홈 서버와 php 통신하기
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            if (success) {
-//                                Toast.makeText(getApplicationContext(), "회원 정보 1단계 등록 완료", Toast.LENGTH_SHORT).show();
-//                                Intent intent = new Intent(RegisterStep1Activity.this, RegisterStep2Activity.class);
-//                                startActivity(intent);
+//                Response.Listener<String> responseListener = new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        try {
+//                            JSONObject jsonObject = new JSONObject(response);
+//                            boolean success = jsonObject.getBoolean("success");
+//                            if (success) {
+////                                Toast.makeText(getApplicationContext(), "회원 정보 1단계 등록 완료", Toast.LENGTH_SHORT).show();
+////                                Intent intent = new Intent(RegisterStep1Activity.this, RegisterStep2Activity.class);
+////                                startActivity(intent);
+//
+//                            } else {
+//                                Toast.makeText(getApplicationContext(), "회원 정보 1단계 등록 실패", Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                    }
+//                };
 
-                            } else {
-                                Toast.makeText(getApplicationContext(), "회원 정보 1단계 등록 실패", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                };
-
-                RegisterStep1Request registerStep1Request = new RegisterStep1Request(userID, userEmail, userPassword, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(RegisterStep1Activity.this);
-                queue.add(registerStep1Request);
-
+//                RegisterStep1Request registerStep1Request = new RegisterStep1Request(userID, userEmail, userPassword, responseListener);
+//                RequestQueue queue = Volley.newRequestQueue(RegisterStep1Activity.this);
+//                queue.add(registerStep1Request);
 
             }
         });
 
     }
 
-    private void register (String userID, String userEmail, String userPassword) {
-        firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword)
+    // 회원가입 정보 등록
+    private void register (String userId, String userEmail, String userPw) {
+
+        firebaseAuth.createUserWithEmailAndPassword(userEmail, userPw)
                 .addOnCompleteListener(RegisterStep1Activity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
-                            // Firebase 아이디 정보 변수에 담기.
-                            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                            String id = firebaseUser.getUid();
+                            Log.d("REGISTER1", "SUCCESS");
 
-                            // reference 초기화. child로 "Users"만들고, 그 안에 또 "userid"만든다..?
-                            reference = FirebaseDatabase.getInstance().getReference().child("Users").child(id);
-
-                            // HashMap 에 유저정보 담는다.
-                            HashMap<String, Object> hashMap = new HashMap<>();
-                            hashMap.put("id", id);
-                            hashMap.put("userID", userID.toLowerCase());
-                            hashMap.put("userEmail", userEmail);
-                            hashMap.put("bio", "");
-                            hashMap.put("imageurl", "https://w7.pngwing.com/pngs/858/581/png-transparent-profile-icon-user-computer-icons-system-chinese-wind-title-column-miscellaneous-service-logo.png");
-
-                            // DB에 자료 담기
-                            reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-
-                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                                        UserInfo userInfo = new UserInfo(userID, userEmail, userPassword);
-
-                                        db.collection("user").document(firebaseUser.getUid()).set(userInfo)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void unused) {
-                                                        Toast.makeText(getApplicationContext(), "회원정보 등록 성공", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Toast.makeText(getApplicationContext(), "회원정보 등록 실패", Toast.LENGTH_SHORT).show();
-                                                        Log.d("tag", "Error writing document", e);
-                                                    }
-                                                });
-
-                                        // 처리중 화면 종료
-                                        pd.dismiss();
-                                        Intent intent = new Intent(RegisterStep1Activity.this, RegisterStep2Activity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
-                                    }
-                                }
-                            });
-
-//                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//                            UserInfo userInfo = new UserInfo(userID, userEmail, userPassword);
-//
-//                            db.collection("user").document(firebaseUser.getUid()).set(userInfo)
-//                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                        @Override
-//                                        public void onSuccess(Void unused) {
-//                                            Toast.makeText(getApplicationContext(), "회원정보 등록 성공", Toast.LENGTH_SHORT).show();
-//                                Intent intent = new Intent(RegisterStep1Activity.this, RegisterStep2Activity.class);
-//                                startActivity(intent);
-//                                        }
-//                                    })
-//                                    .addOnFailureListener(new OnFailureListener() {
-//                                        @Override
-//                                        public void onFailure(@NonNull Exception e) {
-//                                            Toast.makeText(getApplicationContext(), "회원정보 등록 실패", Toast.LENGTH_SHORT).show();
-//                                            Log.d("tag", "Error writing document", e);
-//                                        }
-//                                    });
-////            }
-//                            }
-
-//                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//                            UserInfo userInfo = new UserInfo(userID, userEmail, userPassword);
-//
-//                            db.collection("user").document(firebaseUser.getUid()).set(userInfo)
-//                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                        @Override
-//                                        public void onSuccess(Void unused) {
-//                                            Toast.makeText(getApplicationContext(), "회원정보 등록 성공", Toast.LENGTH_SHORT).show();
-////                                Intent intent = new Intent(RegisterStep2Activity.this, RegisterStep3Activity.class);
-////                                startActivity(intent);
-//                                        }
-//                                    })
-//                                    .addOnFailureListener(new OnFailureListener() {
-//                                        @Override
-//                                        public void onFailure(@NonNull Exception e) {
-//                                            Toast.makeText(getApplicationContext(), "회원정보 등록 실패", Toast.LENGTH_SHORT).show();
-//                                            Log.d("tag", "Error writing document", e);
-//                                        }
-//                                    });
-//            }
-//                            }
+                            // 처리중 화면 종료
+                            pd.dismiss();
+                            Intent intent = new Intent(RegisterStep1Activity.this, RegisterStep2Activity.class);
+                            intent.putExtra("userId", userId);
+                            intent.putExtra("userEmail", userEmail);
+                            intent.putExtra("userPw", userPw);
+                            startActivity(intent);
 
                         } else {
 
+                            Log.d("REGISTER1", "FAILURE");
+
                             // 유저입력 정보가 유효하지 않을경우
                             pd.dismiss();
-                            Toast.makeText(RegisterStep1Activity.this, "You can't register with this email or password", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterStep1Activity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-
-//        profileUpload();
-
-
-//        profileUpload();
-//        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//        UserInfo userInfo = new UserInfo(userID, userEmail, userPassword);
-//
-//        db.collection("user").document(firebaseUser.getUid()).set(userInfo)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void unused) {
-//                        Toast.makeText(getApplicationContext(), "회원정보 등록 성공", Toast.LENGTH_SHORT).show();
-////                                Intent intent = new Intent(RegisterStep2Activity.this, RegisterStep3Activity.class);
-////                                startActivity(intent);
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(getApplicationContext(), "회원정보 등록 실패", Toast.LENGTH_SHORT).show();
-//                        Log.d("tag", "Error writing document", e);
-//                    }
-//                });
     }
 }

@@ -54,7 +54,7 @@
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:weightSum="1"
-        app:layout_constraintBottom_toTopOf="@+id/textView_select_allergy"
+        app:layout_constraintBottom_toTopOf="@+id/Tv_SelectedAllergy"
         app:layout_constraintTop_toBottomOf="@+id/textView2">
 
         <LinearLayout
@@ -65,55 +65,55 @@
             android:orientation="vertical">
 
             <CheckBox
-                android:id="@+id/checkbox_memil"
+                android:id="@+id/Cb_memil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="메밀" />
 
             <CheckBox
-                android:id="@+id/checkbox_mil"
+                android:id="@+id/Cb_mil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="밀" />
 
             <CheckBox
-                android:id="@+id/checkbox_daedu"
+                android:id="@+id/Cb_daedu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="대두" />
 
             <CheckBox
-                android:id="@+id/checkbox_hodu"
+                android:id="@+id/Cb_hodu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="호두" />
 
             <CheckBox
-                android:id="@+id/checkbox_peanut"
+                android:id="@+id/Cb_peanut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="땅콩" />
 
             <CheckBox
-                android:id="@+id/checkbox_peach"
+                android:id="@+id/Cb_peach"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="복숭아" />
 
             <CheckBox
-                android:id="@+id/checkbox_tomato"
+                android:id="@+id/Cb_tomato"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="토마토" />
 
             <CheckBox
-                android:id="@+id/checkbox_poultry"
+                android:id="@+id/Cb_poultry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="난류(가금류)" />
 
             <CheckBox
-                android:id="@+id/checkbox_milk"
+                android:id="@+id/Cb_milk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="우유" />
@@ -127,55 +127,55 @@
             android:orientation="vertical">
 
             <CheckBox
-                android:id="@+id/checkbox_shrimp"
+                android:id="@+id/Cb_shrimp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="새우" />
 
             <CheckBox
-                android:id="@+id/checkbox_mackerel"
+                android:id="@+id/Cb_mackerel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="고등어" />
 
             <CheckBox
-                android:id="@+id/checkbox_mussel"
+                android:id="@+id/Cb_mussel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="홍합" />
 
             <CheckBox
-                android:id="@+id/checkbox_abalone"
+                android:id="@+id/Cb_abalone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="전복" />
 
             <CheckBox
-                android:id="@+id/checkbox_oyster"
+                android:id="@+id/Cb_oyster"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="굴" />
 
             <CheckBox
-                android:id="@+id/checkbox_shellfish"
+                android:id="@+id/Cb_shellfish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="조개류" />
 
             <CheckBox
-                android:id="@+id/checkbox_crab"
+                android:id="@+id/Cb_crab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="게" />
 
             <CheckBox
-                android:id="@+id/checkbox_squid"
+                android:id="@+id/Cb_squid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="오징어" />
 
             <CheckBox
-                android:id="@+id/checkbox_sulfurous"
+                android:id="@+id/Cb_sulfurous"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="아황산 포함식품" />
@@ -184,7 +184,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView_select_allergy"
+        android:id="@+id/Tv_SelectedAllergy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"

@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -53,23 +54,31 @@ import com.lakue.lakuepopupactivity.PopupType;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-//import com.example.finalprojectvegan.Camera2BasicFragment;
-
-//import static com.example.finalprojectvegan.Util.INTENT_PATH;
+import java.util.Date;
 
 public class MypageActivity extends AppCompatActivity {
 
-    final private static String TAG = "tag";
     private static final int CAMERA = 100;
     private static final int GALLERY = 101;
 
-    private TextView Btn_Logout;
-    TextView userID, userVeganType, userAllergy;
-    private ImageView imageView_profile;
-    InputImage image;
-    Button changedetail;
+    private TextView Btn_Logout, Btn_DeleteAccount, Btn_Info, Btn_BlockInfo, Btn_setting, Btn_help;
+    private TextView userID, userVeganType, userAllergy;
+    private ImageView Iv_Mypage_Profile;
+    private Button Btn_EditAccount;
+
+    private String imagePath = "";
+    private File imageFile = null;
+    private Uri imageUri = null;
+    private int imageFrom;
+    SimpleDateFormat imageDate = new SimpleDateFormat("yyyyMMdd_HHmmss");
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
+    private FirebaseFirestore db;
 
     ProgressDialog dialog;
 
@@ -77,27 +86,34 @@ public class MypageActivity extends AppCompatActivity {
     String USER_VEGAN_TYPE;
     String USER_ALLERGY;
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    InputImage image;
 
-    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage);
 
-//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//        String user = firebaseUser.toString();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        String user = firebaseUser.toString();
 
         getFirebaseProfileImage(firebaseUser);
 
-        imageView_profile = findViewById(R.id.imageView_profile);
-        userID = (TextView) findViewById(R.id.userID);
-        userVeganType = (TextView) findViewById(R.id.userVeganType);
-        userAllergy = (TextView) findViewById(R.id.userAllergy);
-        changedetail = (Button) findViewById(R.id.changedetail);
+        Iv_Mypage_Profile = findViewById(R.id.Iv_Mypage_Profile);
+        userID = findViewById(R.id.Tv_Mypage_UserId);
+        userVeganType = findViewById(R.id.Tv_Mypage_VeganType);
+        userAllergy = findViewById(R.id.Tv_Mypage_Allergy);
 
-        changedetail.setOnClickListener(new View.OnClickListener() {
+        Btn_EditAccount = findViewById(R.id.Btn_EditAccount);
+        Btn_Logout = findViewById(R.id.Btn_Mypage_Logout);
+        Btn_help = findViewById(R.id.Btn_Mypage_help);
+        Btn_Info = findViewById(R.id.Btn_Mypage_Info);
+        Btn_setting = findViewById(R.id.Btn_Mypage_Setting);
+        Btn_BlockInfo = findViewById(R.id.Btn_Mypage_BlockInfo);
+        Btn_DeleteAccount = findViewById(R.id.Btn_Mypage_DeleteAccount);
+
+        Btn_EditAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MypageActivity.this, RoadingActivity.class);
@@ -200,41 +216,32 @@ public class MypageActivity extends AppCompatActivity {
                     }
                 });
 
-        Btn_Logout = findViewById(R.id.Btn_Logout);
-
         Btn_Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
+                firebaseAuth.signOut();
                 Intent intent = new Intent(MypageActivity.this, LoginActivity.class);
                 startActivity(intent);
-//                SharedPreferences sh = getSharedPreferences("temp", MODE_PRIVATE);
-//                SharedPreferences.Editor editor = sh.edit();
-//                editor.clear();
-//                editor.commit();
             }
         });
 
-        imageView_profile.setOnClickListener(new View.OnClickListener() {
+        Iv_Mypage_Profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(MypageActivity.this, CameraActivity.class);
-//                startActivity(intent);
 
                 Intent intent = new Intent(getBaseContext(), PopupActivity.class);
                 intent.putExtra("type", PopupType.SELECT);
                 intent.putExtra("gravity", PopupGravity.CENTER);
                 intent.putExtra("title", "사진을 불러올 기능을 선택하세요");
-//                intent.putExtra("content", "Popup Activity was made by Lakue");
                 intent.putExtra("buttonLeft", "카메라");
                 intent.putExtra("buttonRight", "갤러리");
                 startActivityForResult(intent, 2);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                        Log.d(TAG, "권한 설정 완료");
+                        Log.d("Image Permission", "권한 설정 완료");
                     } else {
-                        Log.d(TAG, "권한 설정 요청");
+                        Log.d("Image Permission", "권한 설정 요청");
                         ActivityCompat.requestPermissions(MypageActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                     }
                 }
@@ -250,34 +257,49 @@ public class MypageActivity extends AppCompatActivity {
             if (requestCode == 2) {
                 PopupResult result = (PopupResult) data.getSerializableExtra("result");
                 if (result == PopupResult.LEFT) {
-                    // 작성 코드
+                    // 카메라 선택
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    activityResultPicture.launch(intent);
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        try {
+                            imageFile = createImageFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (imageFile != null) {
+                            imageUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.finalprojectvegan.fileprovider", imageFile);
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                            startActivityForResult(intent, CAMERA);
+                        }
+                    }
 
                 } else if (result == PopupResult.RIGHT) {
-                    // 작성 코드
                     Intent intent = new Intent(Intent.ACTION_PICK);
                     intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
                     intent.setType("image/*");
                     startActivityForResult(intent, GALLERY);
                 }
-                else if (requestCode == 0 ) {
-                    String returnValue = data.getStringExtra("some key");
-//                    Log.d("로그 : ", "profilePath : " + profilePath);
-                }
             }
-        }
-
-        // 카메라 (삭제해도 오케이)
-        if(requestCode == CAMERA && resultCode == RESULT_OK) {
-
         }
         // 갤러리
         else if(requestCode == GALLERY && resultCode == RESULT_OK) {
-            Uri uri = data.getData();
-            setImage(uri);
-
+            imageUri = data.getData();
+            imagePath = data.getDataString();
+            if(imagePath.length() > 0) {
+                Glide.with(this)
+                        .load(imagePath)
+                        .into(Iv_Mypage_Profile);
+                imageFrom = requestCode;
+            }
         }
+    }
+
+    File createImageFile() throws IOException {
+        String timeStamp = imageDate.format(new Date());
+        String fileName = "PROFILE IMAGE_" + timeStamp;
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File file = File.createTempFile(fileName, ".jpg", storageDir);
+        imagePath = file.getAbsolutePath();
+        return file;
     }
 
     // 카메라
@@ -356,7 +378,7 @@ public class MypageActivity extends AppCompatActivity {
     }
 
     public void loadImage() {
-        imageView_profile = (ImageView) findViewById(R.id.imageView_profile);
+        Iv_Mypage_Profile = (ImageView) findViewById(R.id.imageView_profile);
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -370,7 +392,7 @@ public class MypageActivity extends AppCompatActivity {
             submitProfile.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Glide.with(MypageActivity.this).load(uri).centerCrop().override(300).into(imageView_profile);
+                    Glide.with(MypageActivity.this).load(uri).centerCrop().override(300).into(Iv_Mypage_Profile);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
