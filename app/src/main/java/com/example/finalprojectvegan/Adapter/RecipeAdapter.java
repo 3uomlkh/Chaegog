@@ -51,10 +51,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         String title = listData.get(i).getTitle();
         String image = listData.get(i).getImageUrl();
-        String itemKey = listData.get(i).getItemKeyList();
+        String clickUrl = url.substring(url.lastIndexOf("/")+1);
         ArrayList<String> bookmarkIdList = listData.get(i).getBookmarkIdList();
 
-        if (bookmarkIdList.contains(itemKey)) {
+        if (bookmarkIdList.contains(clickUrl)) {
             holder.saveImage.setImageResource(R.drawable.favorite_on);
         } else {
             holder.saveImage.setImageResource(R.drawable.favorite_off);
@@ -67,18 +67,18 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         holder.saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(bookmarkIdList.contains(itemKey)) {
+                if(bookmarkIdList.contains(clickUrl)) {
                     bookmarkRef
                             .child(mAuth.getCurrentUser().getUid())
                             .child("recipe_bookmark")
-                            .child(itemKey)
+                            .child(clickUrl)
                             .setValue(null);
                     Toast.makeText(view.getContext(), "북마크 삭제", Toast.LENGTH_SHORT).show();
                 } else {
                     bookmarkRef
                             .child(mAuth.getCurrentUser().getUid())
                             .child("recipe_bookmark")
-                            .child(itemKey)
+                            .child(clickUrl)
                             .setValue(new RecipeData(image, title, url));
                     Toast.makeText(view.getContext(), "북마크 저장", Toast.LENGTH_SHORT).show();
                 }

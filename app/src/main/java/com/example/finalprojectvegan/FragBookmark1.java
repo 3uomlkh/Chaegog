@@ -65,40 +65,42 @@ public class FragBookmark1 extends Fragment {
         adapter = new MapBookmarkAdapter();
 
         getBookmark();
+        recyclerView.setAdapter(adapter);
 
         return view;
     }
-    private void getCategoryData() {
-        mDatabase = FirebaseDatabase.getInstance().getReference("Maps");
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if(bookmarkIdList.contains(snapshot.getKey())) {
-                        itemKeyList.add(snapshot.getKey());
-                    }
-
-                }
-
-                for(int i=0; i<listName.size(); i++) {
-                    MapData data = new MapData(listName.get(i), listAddr.get(i), listCategory.get(i), listImage.get(i));
-                    data.setItemKeyList(itemKeyList.get(i));
-                    data.setBookmarkIdList(bookmarkIdList);
-                    adapter.addItem(data);
-                }
-
-                adapter.notifyDataSetChanged();
-                recyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("RecipeFragment", "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        mDatabase.addValueEventListener(postListener);
-    }
+//    private void getCategoryData() {
+//        mDatabase = FirebaseDatabase.getInstance().getReference("Maps");
+//        ValueEventListener postListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+////                    if(bookmarkIdList.contains(snapshot.getKey())) {
+////                        itemKeyList.add(snapshot.getKey());
+////                    }
+//                    itemKeyList.add(snapshot.getKey());
+//
+//                }
+//
+//                for(int i=0; i<listName.size(); i++) {
+//                    MapData data = new MapData(listName.get(i), listAddr.get(i), listCategory.get(i), listImage.get(i));
+//                    data.setItemKeyList(itemKeyList.get(i));
+//                    data.setBookmarkIdList(bookmarkIdList);
+//                    adapter.addItem(data);
+//                }
+//
+//                adapter.notifyItemRemoved(adapter.position);
+//                recyclerView.setAdapter(adapter);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.w("RecipeFragment", "loadPost:onCancelled", databaseError.toException());
+//            }
+//        };
+//        mDatabase.addValueEventListener(postListener);
+//    }
 
     private void getBookmark() {
         mDatabase = FirebaseDatabase.getInstance().getReference("bookmark");
@@ -107,6 +109,11 @@ public class FragBookmark1 extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 bookmarkIdList.clear();
+                listName.clear();
+                listImage.clear();
+                listAddr.clear();
+                listCategory.clear();
+                adapter.removeItem();
 
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
@@ -117,8 +124,14 @@ public class FragBookmark1 extends Fragment {
                     listCategory.add(snapshot.child("category").getValue().toString());
 
                 }
+                for(int i=0; i<listName.size(); i++) {
+                    MapData data = new MapData(listName.get(i), listAddr.get(i), listCategory.get(i), listImage.get(i));
+                    data.setBookmarkIdList(bookmarkIdList);
+                    adapter.addItem(data);
+                }
 
-                getCategoryData();
+                adapter.notifyItemRemoved(adapter.position);
+                //getCategoryData();
 
             }
 

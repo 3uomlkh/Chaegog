@@ -35,9 +35,9 @@ import java.util.ArrayList;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class FragHomeRecipe extends Fragment {
-    ArrayList<String> listTitle = new ArrayList<>();
-    ArrayList<String> listThumb = new ArrayList<>();
-    ArrayList<String> clickUrl = new ArrayList<>();
+    private ArrayList<String> listTitle = new ArrayList<>();
+    private ArrayList<String> listThumb = new ArrayList<>();
+    private ArrayList<String> clickUrl = new ArrayList<>();
     private ArrayList<String> itemKeyList = new ArrayList<>();
     private ArrayList<String> bookmarkIdList = new ArrayList<>();
     private DatabaseReference mDatabase;
@@ -68,23 +68,78 @@ public class FragHomeRecipe extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         recyclerView = view.findViewById(R.id.recipe_recyclerView);
-        recyclerView.setItemAnimator(null);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new RecipeAdapter();
 
         getBookmark();
-        getItemKeyList();
+        getRecipeData();
         //getData();
 
         return view;
+    }
+
+    private void getRecipeData() {
+        mDatabase = FirebaseDatabase.getInstance().getReference("recipe");
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    listTitle.add(snapshot.child("title").getValue().toString());
+                    listThumb.add(snapshot.child("imageUrl").getValue().toString());
+                    clickUrl.add(snapshot.child("clickUrl").getValue().toString());
+                }
+
+                for (int k = 0; k < listTitle.size(); k++) {
+
+                    RecipeData data = new RecipeData(listThumb.get(k), listTitle.get(k), clickUrl.get(k));
+                    data.setBookmarkIdList(bookmarkIdList);
+
+                    adapter.addItem(data);
+                }
+
+                recyclerView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("RecipeFragment", "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        mDatabase.addValueEventListener(postListener);
+    }
+
+    private void getBookmark() {
+        mDatabase = FirebaseDatabase.getInstance().getReference("bookmark");
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                bookmarkIdList.clear();
+
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    bookmarkIdList.add(snapshot.getKey());
+                }
+
+                Log.d("bookmarkIdList", bookmarkIdList.toString());
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("RecipeFragment", "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        mDatabase.child(mAuth.getCurrentUser().getUid()).child("recipe_bookmark").addValueEventListener(postListener);
     }
 
     private void getData() {
         JsoupAsyncTask jsoupAsyncTask = new JsoupAsyncTask();
         jsoupAsyncTask.execute();
     }
-
     private class JsoupAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -129,7 +184,6 @@ public class FragHomeRecipe extends Fragment {
                                 data.setTitle(listTitle.get(k));
                                 data.setImageUrl(listThumb.get(k));
                                 data.setClickUrl(clickUrl.get(k));
-                                data.setItemKeyList(itemKeyList.get(k));
                                 data.setBookmarkIdList(bookmarkIdList);
 
                                 adapter.addItem(data);
@@ -137,7 +191,7 @@ public class FragHomeRecipe extends Fragment {
 
                             Log.d("recipeDataSize", "listTitle : " + listTitle.size() + "");
                             Log.d("recipeDataSize", "listThumb : " + listThumb.size() + "");
-                            Log.d("recipeDataSize", "itemKeyList : " + itemKeyList.size() + "");
+                            Log.d("recipeDataSize", "bookmarkIdList : " + bookmarkIdList + "");
 
                             adapter.notifyDataSetChanged();
                         }
@@ -150,53 +204,4 @@ public class FragHomeRecipe extends Fragment {
         }
     }
 
-    private void getItemKeyList() {
-
-        mDatabase = FirebaseDatabase.getInstance().getReference("recipe");
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                itemKeyList.clear();
-
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    itemKeyList.add(snapshot.getKey());
-                }
-                recyclerView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-                getData();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("RecipeFragment", "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        mDatabase.addValueEventListener(postListener);
-    }
-
-    private void getBookmark() {
-        mDatabase = FirebaseDatabase.getInstance().getReference("bookmark");
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                bookmarkIdList.clear();
-
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    bookmarkIdList.add(snapshot.getKey());
-                }
-
-                Log.d("bookmarkIdList", bookmarkIdList.toString());
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("RecipeFragment", "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        mDatabase.child(mAuth.getCurrentUser().getUid()).child("recipe_bookmark").addValueEventListener(postListener);
-    }
 }
