@@ -11,6 +11,10 @@ public class UserProfile {
     private ArrayList<String> userAllergy;
     private String userProfileImg;
 
+    public UserProfile() {
+
+    }
+
     public UserProfile(String userId, String userEmail, String userPw, String userVeganReason, String userVeganType, ArrayList<String> userAllergy, String userProfileImg) {
         this.userId = userId;
         this.userEmail = userEmail;
