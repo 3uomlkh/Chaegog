@@ -23,6 +23,15 @@
             android:layout_gravity="center"
             android:text="리뷰"
             android:textColor="@color/black" />
+        <Button
+            android:id="@+id/Btn_uploadReview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:clickable="false"
+            android:textColor="@color/green"
+            android:background="#00ff0000"
+            android:text="등록" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -160,11 +169,12 @@
         android:hint="해당 식당에 대한 리뷰를 적어주세요."
         android:lines="10" />
 
-    <Button
-        android:id="@+id/Btn_uploadReview"
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:layout_margin="2dp"
-        android:text="등록" />
+<!--    <Button-->
+<!--        android:id="@+id/Btn_uploadReview"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="65dp"-->
+<!--        android:layout_margin="2dp"-->
+<!--        android:clickable="false"-->
+<!--        android:text="등록" />-->
 
 </LinearLayout>

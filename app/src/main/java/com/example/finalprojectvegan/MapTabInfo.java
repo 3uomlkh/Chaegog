@@ -30,7 +30,7 @@ public class MapTabInfo extends Fragment {
     private final ArrayList<String> itemKeyList = new ArrayList<>();
     private final ArrayList<String> bookmarkIdList = new ArrayList<>();
     private ArrayList<String> listName, listCategory, listAddr, listMenu, listTime,
-            listDayoff, listImage;
+            listDayoff, listImage, listPhone;
     public MapTabInfo() {
         // Required empty public constructor
     }
@@ -50,6 +50,7 @@ public class MapTabInfo extends Fragment {
         listTime = new ArrayList<>();
         listDayoff = new ArrayList<>();
         listImage = new ArrayList<>();
+        listPhone = new ArrayList<>();
     }
 
     @Override
@@ -63,10 +64,11 @@ public class MapTabInfo extends Fragment {
         key = bundle.getString("key");
 
         recyclerView = view.findViewById(R.id.restaurant_recyclerView);
-        recyclerView.setItemAnimator(null);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new RestaurantAdapter();
+
+        getBookmark();
 
         mDatabase = FirebaseDatabase.getInstance().getReference("Maps");
         mDatabase.addValueEventListener(new ValueEventListener() {
@@ -83,16 +85,15 @@ public class MapTabInfo extends Fragment {
                     listTime.add(snapshot.child("storeTime").getValue().toString());
                     listMenu.add(snapshot.child("storeMenu").getValue().toString());
                     listImage.add(snapshot.child("storeImage").getValue().toString());
+                    listPhone.add(snapshot.child("storePhonenum").getValue().toString());
                 }
                 recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
 
                 for(int i=0; i<listName.size(); i++) {
                     if(key.equals(itemKeyList.get(i))) {
-                        MapData data = new MapData(listName.get(i), listAddr.get(i), listCategory.get(i), listImage.get(i));
-                        data.setMenu(listMenu.get(i));
-                        data.setDayoff(listDayoff.get(i));
-                        data.setTime(listTime.get(i));
+                        MapData data = new MapData(listName.get(i), listAddr.get(i), listCategory.get(i),
+                                listImage.get(i), listDayoff.get(i), listTime.get(i), listMenu.get(i), listPhone.get(i));
                         data.setItemKeyList(itemKeyList.get(i));
                         data.setBookmarkIdList(bookmarkIdList);
                         adapter.addItem(data);
@@ -107,13 +108,10 @@ public class MapTabInfo extends Fragment {
             }
         });
 
-        getBookmark();
-
         return view;
     }
 
     private void getBookmark() {
-        Log.d("MapTabInfo4", "Map");
         mDatabase = FirebaseDatabase.getInstance().getReference("bookmark");
         ValueEventListener postListener = new ValueEventListener() {
             @Override

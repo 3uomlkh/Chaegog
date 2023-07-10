@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.finalprojectvegan.Model.MapData;
-import com.example.finalprojectvegan.Model.RecipeData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,17 +23,12 @@ import java.util.ArrayList;
 
 // 식당 북마크
 public class FragBookmark1 extends Fragment {
-    private ArrayList<String> itemKeyList = new ArrayList<>();
-    private ArrayList<String> bookmarkIdList = new ArrayList<>();
-    ArrayList<String> listName;
-    ArrayList<String> listAddr;
-    ArrayList<String> listCategory;
-    ArrayList<String> listImage;
+    private View view;
+    private ArrayList<String> listName, listAddr, listCategory, listImage, bookmarkIdList;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
-    private View view;
-    RecyclerView recyclerView;
-    MapBookmarkAdapter adapter;
+    private RecyclerView recyclerView;
+    private MapBookmarkAdapter adapter;
     public FragBookmark1() {
 
     }
@@ -47,17 +41,18 @@ public class FragBookmark1 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bookmarkIdList = new ArrayList<>();
         listName = new ArrayList<>();
         listAddr = new ArrayList<>();
         listCategory = new ArrayList<>();
-       listImage = new ArrayList<>();
+        listImage = new ArrayList<>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_frag_bookmark1, container, false);
         mAuth = FirebaseAuth.getInstance();
+        view = inflater.inflate(R.layout.fragment_frag_bookmark1, container, false);
 
         recyclerView = view.findViewById(R.id.bookmark1_recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -65,39 +60,9 @@ public class FragBookmark1 extends Fragment {
         adapter = new MapBookmarkAdapter();
 
         getBookmark();
+        recyclerView.setAdapter(adapter);
 
         return view;
-    }
-    private void getCategoryData() {
-        mDatabase = FirebaseDatabase.getInstance().getReference("Maps");
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if(bookmarkIdList.contains(snapshot.getKey())) {
-                        itemKeyList.add(snapshot.getKey());
-                    }
-
-                }
-
-                for(int i=0; i<listName.size(); i++) {
-                    MapData data = new MapData(listName.get(i), listAddr.get(i), listCategory.get(i), listImage.get(i));
-                    data.setItemKeyList(itemKeyList.get(i));
-                    data.setBookmarkIdList(bookmarkIdList);
-                    adapter.addItem(data);
-                }
-
-                adapter.notifyDataSetChanged();
-                recyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("RecipeFragment", "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        mDatabase.addValueEventListener(postListener);
     }
 
     private void getBookmark() {
@@ -107,6 +72,11 @@ public class FragBookmark1 extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 bookmarkIdList.clear();
+                listName.clear();
+                listImage.clear();
+                listAddr.clear();
+                listCategory.clear();
+                adapter.removeItem();
 
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
@@ -118,7 +88,13 @@ public class FragBookmark1 extends Fragment {
 
                 }
 
-                getCategoryData();
+                for(int i=0; i<listName.size(); i++) {
+                    MapData data = new MapData(listName.get(i), listAddr.get(i), listCategory.get(i), listImage.get(i));
+                    data.setBookmarkIdList(bookmarkIdList);
+                    adapter.addItem(data);
+                }
+
+                adapter.notifyItemRemoved(adapter.position);
 
             }
 

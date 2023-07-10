@@ -1,7 +1,5 @@
 package com.example.finalprojectvegan.Model;
 
-import android.net.Uri;
-
 import java.util.ArrayList;
 
 public class UserProfile {

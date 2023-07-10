@@ -1,9 +1,13 @@
 package com.example.finalprojectvegan;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +29,8 @@ import java.util.ArrayList;
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.ViewHolder>{
     private ArrayList<MapData> listData = new ArrayList<>();
     private FirebaseAuth mAuth;
+    private String name, addr, category, image, phone;
+    public int position;
 
     @NonNull
     @Override
@@ -36,17 +42,16 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     public void onBindViewHolder(@NonNull RestaurantAdapter.ViewHolder holder, int i) {
         holder.onBind(listData.get(i));
 
-        String name = listData.get(i).getName();
-        String addr = listData.get(i).getAddress();
-        String category = listData.get(i).getCategory();
-        String image = listData.get(i).getImageUrl();
+        position = holder.getAdapterPosition();
+
+        name = listData.get(i).getName();
+        addr = listData.get(i).getAddress();
+        category = listData.get(i).getCategory();
+        image = listData.get(i).getImageUrl();
+        phone = listData.get(i).getPhone().replaceAll("-", "");
 
         String itemKey = listData.get(i).getItemKeyList();
         ArrayList<String> bookmarkIdList = listData.get(i).getBookmarkIdList();
-        Log.d("RestRVA", "name : " + name);
-        Log.d("RestRVA", "itemKey : " + itemKey);
-        Log.d("RestRVA", "bookmarkList : " + bookmarkIdList.toString());
-
 
         if (bookmarkIdList.contains(itemKey)) {
             holder.saveImage.setImageResource(R.drawable.favorite_on);
@@ -77,6 +82,28 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
                 }
             }
         });
+
+        holder.mapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Context context = view.getContext();
+                Intent intent = new Intent(context, MapButtonActivity.class);
+                intent.putExtra("name", name);
+                intent.putExtra("addr", addr);
+                intent.putExtra("key", itemKey);
+                context.startActivity(intent);
+            }
+        });
+
+        holder.callBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Context context = view.getContext();
+                Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+                dialIntent.setData(Uri.parse( "tel:" + phone));
+                context.startActivity(dialIntent);
+            }
+        });
     }
 
     @Override
@@ -90,17 +117,14 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView name;
-        private TextView category;
-        private TextView menu;
-        private TextView addr;
-        private TextView time;
-        private TextView dayoff;
-        private ImageView saveImage;
-        private ImageView image;
+        private Button mapBtn, callBtn;
+        private TextView name, category, menu, addr, time, dayoff, dayoffTv;
+        private ImageView saveImage, image;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            mapBtn = itemView.findViewById(R.id.map_btn);
+            callBtn = itemView.findViewById(R.id.call_btn);
             name = itemView.findViewById(R.id.map_info_detail_name);
             image = itemView.findViewById(R.id.map_info_detail_image);
             category = itemView.findViewById(R.id.map_info_detail_category);
@@ -108,6 +132,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
             addr = itemView.findViewById(R.id.map_info_detail_addr);
             time = itemView.findViewById(R.id.map_info_detail_time);
             dayoff = itemView.findViewById(R.id.map_info_detail_dayoff);
+            dayoffTv =itemView.findViewById(R.id.map_info_detail_dayoff_tv);
             saveImage = itemView.findViewById(R.id.map_info_save_image);
         }
         void onBind(MapData data) {
@@ -116,7 +141,14 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
             menu.setText(data.getMenu());
             addr.setText(data.getAddress());
             time.setText(data.getTime());
+
+            if(data.getDayoff().trim().isEmpty()) {
+                dayoffTv.setVisibility(View.GONE);
+            } else {
+                dayoffTv.setVisibility(View.VISIBLE);
+            }
             dayoff.setText(data.getDayoff());
+
             Glide.with(itemView.getContext())
                     .load(data.getImageUrl())
                     .apply(new RequestOptions().transform(new CenterCrop(),

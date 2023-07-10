@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.finalprojectvegan.Adapter.ReviewAdapter;
@@ -27,7 +28,7 @@ import java.util.Date;
 public class MapInfoActivity extends AppCompatActivity {
     private Fragment fragment_info, fragment_menu, fragment_photo, fragment_review;
     private TabLayout tabs;
-    String name, addr, time, dayoff, category, menu, image, key;
+    String name, addr, time, dayoff, category, menu, image, key, phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +74,10 @@ public class MapInfoActivity extends AppCompatActivity {
         addr = intent.getStringExtra("addr");
         time = intent.getStringExtra("time");
         dayoff = intent.getStringExtra("dayOff");
+        image = intent.getStringExtra("image");
         category = intent.getStringExtra("category");
         menu = intent.getStringExtra("menu");
+        phone = intent.getStringExtra("phone");
         key = intent.getStringExtra("key");
 
         // Bundle에넣어 fragment로 보내기
@@ -83,9 +86,9 @@ public class MapInfoActivity extends AppCompatActivity {
         bundle.putString("image", image);
         bundle.putString("addr", addr);
         bundle.putString("time", time);
-        bundle.putString("dayOff", dayoff);
         bundle.putString("category", category);
         bundle.putString("menu", menu);
+        bundle.putString("phone", phone);
         bundle.putString("key", key);
         fragment_info.setArguments(bundle);
         fragment_menu.setArguments(bundle);

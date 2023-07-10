@@ -18,6 +18,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,15 +31,19 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.finalprojectvegan.Model.MapData;
 import com.example.finalprojectvegan.Model.RecipeData;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraPosition;
+import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
+import com.naver.maps.map.NaverMapOptions;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.LocationOverlay;
@@ -59,10 +65,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     double lat, lnt;
     String mapInfoName, mapInfoAddr, mapInfoTime, mapInfoDayoff,
             mapInfoImage, mapInfoCategory, mapInfoMenu, mapInfoPhonenum, mapInfoKey;
-    TextView getMapInfoName, getMapInfoAddr, getMapInfoTime, getMapInfoDayoff;
-    ImageView getMapInfoImage;
+    TextView getMapInfoName, getMapInfoAddr, getMapInfoTime, getMapInfoDayoff, mapInfoDayoffTv;
+    ImageView getMapInfoImage, mapSearchImage;
     ImageButton mapInfoButton;
-    LinearLayout mapInfoLayout;
+    FloatingActionButton mapSearchBtn;
+    LinearLayout mapInfoLayout, mapSearchLayout;
     View map_fragment;
     private DatabaseReference mDatabase;
     private ArrayList<String> mapNameList = new ArrayList<>();
@@ -90,7 +97,28 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         getMapInfoDayoff = findViewById(R.id.map_info_day_off);
         getMapInfoImage = findViewById(R.id.map_info_image);
         mapInfoButton = findViewById(R.id.map_info_button);
+        mapInfoDayoffTv = findViewById(R.id.map_info_day_off_tv);
 
+//        final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//        if(location != null) {
+//            myLatitude = location.getLatitude();
+//            myLongitude = location.getLongitude();
+//        }
+//
+//        FragmentManager fm = getSupportFragmentManager();
+//        MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map_fragment);
+//        if (mapFragment == null) {
+//            mapFragment = MapFragment.newInstance();
+//            fm.beginTransaction().add(R.id.map_fragment, mapFragment).commit();
+//        }
+//
+//        mapFragment.getMapAsync(this);
+//
+//        mLocationSource = new FusedLocationSource(this, PERMISSION_REQUEST_CODE);
         FragmentManager fm = getSupportFragmentManager();
         MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map_fragment);
         if (mapFragment == null) {
@@ -107,16 +135,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             return;
         }
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if(location != null) {
-                myLongitude = location.getLongitude();
-                myLatitude = location.getLatitude();
-            }
+        if(location != null) {
+            myLongitude = location.getLongitude();
+            myLatitude = location.getLatitude();
+        }
 
         }
 
         @Override
         public void onMapReady (@NonNull NaverMap naverMap){
             Log.d(TAG, "onMapReady");
+
+            mapSearchBtn = findViewById(R.id.map_search_btn);
+            mapSearchBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MapActivity.this, MapSearchActivity.class);
+                    startActivity(intent);
+                }
+            });
 
             mapInfoLayout = findViewById(R.id.map_info_layout);
             map_fragment = findViewById(R.id.map_fragment);
@@ -142,20 +179,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                     }
                     for(int i=0; i < mapNameList.size(); i++){
+                        Log.d("map_list", mapNameList.toString());
                         Marker[] markers = new Marker[mapNameList.size()];
 
                         markers[i] = new Marker();
                         lat = Double.parseDouble(mapLatList.get(i));
                         lnt = Double.parseDouble(mapLntList.get(i));
-                        markers[i].setPosition(new LatLng(lat, lnt));
+//                        markers[i].setPosition(new LatLng(lat, lnt));
 //                        markers[i].setCaptionText(mapNameList.get(i));
 //                        markers[i].setMap(naverMap);
-                        Log.d("map_distance", myLatitude + ", " + myLongitude);
+                        Log.d("my_location", myLatitude + " , " + myLongitude);
+
                         distance = new ArrayList<Integer>();
                         distance.add(getDistance(myLatitude ,myLongitude, lat, lnt));
                         for(int k=0; k<distance.size(); k++) {
                             if(distance.get(k) <= 1000) {
                                 Log.d("map_distance", distance.get(k) + "m - " + mapNameList.get(i));
+                                markers[i].setPosition(new LatLng(lat, lnt));
                                 markers[i].setCaptionText(mapNameList.get(i));
                                 markers[i].setMap(naverMap);
                             }
@@ -200,7 +240,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 getMapInfoName.setText(mapInfoName);
                                 getMapInfoAddr.setText(mapInfoAddr);
                                 getMapInfoTime.setText(mapInfoTime);
+
+                                if(mapInfoDayoff.trim().isEmpty()) {
+                                    mapInfoDayoffTv.setVisibility(View.GONE);
+                                } else {
+                                    mapInfoDayoffTv.setVisibility(View.VISIBLE);
+                                }
                                 getMapInfoDayoff.setText(mapInfoDayoff);
+
                                 startLoadingImage();
 
                                 // visibility가 gone으로 되어있던 정보창 레이아웃을 visible로 변경
@@ -264,14 +311,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-            if (mLocationSource.onRequestPermissionsResult(
-                    requestCode, permissions, grantResults)) {
-                if (!mLocationSource.isActivated()) { // 권한 거부됨
-                    mNaverMap.setLocationTrackingMode(LocationTrackingMode.None);
+//            if (mLocationSource.onRequestPermissionsResult(
+//                    requestCode, permissions, grantResults)) {
+//                if (!mLocationSource.isActivated()) { // 권한 거부됨
+//                    mNaverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+//                }
+//                return;
+//            }
+            if (requestCode == PERMISSION_REQUEST_CODE) {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mNaverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
                 }
-                return;
             }
-            super.onRequestPermissionsResult(
-                    requestCode, permissions, grantResults);
         }
     }
