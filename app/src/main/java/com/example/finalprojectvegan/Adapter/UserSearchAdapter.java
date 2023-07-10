@@ -13,19 +13,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.example.finalprojectvegan.Model.RecipeData;
-import com.example.finalprojectvegan.Model.User;
-import com.example.finalprojectvegan.Model.WriteReviewInfo;
+import com.example.finalprojectvegan.Model.UserProfile;
 import com.example.finalprojectvegan.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -33,7 +26,7 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
     private Context mContext;
     private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
-    private ArrayList<User> mUsers = new ArrayList<>();;
+    private ArrayList<UserProfile> mUsers = new ArrayList<>();;
     @NonNull
     @Override
     public UserSearchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -60,7 +53,7 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
         return mUsers.size();
     }
 
-    public void addItem(User data) {
+    public void addItem(UserProfile data) {
         mUsers.add(data);
     }
 
@@ -81,8 +74,8 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
             userProfile = itemView.findViewById(R.id.image_profile);
             //followBtn = itemView.findViewById(R.id.btn_follow);
         }
-        void onBind(User data) {
-            userName.setText(data.getId());
+        void onBind(UserProfile data) {
+            userName.setText(data.getUserId());
             userEmail.setText(data.getUserEmail());
         }
     }

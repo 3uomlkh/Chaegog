@@ -132,6 +132,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 searchText = searchEditText.getText().toString();
+                hideKeyboard();
                 if(searchText.equals("")) {
                     Toast.makeText(SearchActivity.this, "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 } else {
@@ -235,7 +236,7 @@ public class SearchActivity extends AppCompatActivity {
                         recipeAdapter.addItem(data);
                     }
                 }
-                recipeAdapter.notifyItemChanged(recipeAdapter.position);
+                recipeAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -286,7 +287,7 @@ public class SearchActivity extends AppCompatActivity {
                         mapAdapter.addItem(data);
                     }
                 }
-                mapAdapter.notifyItemChanged(mapAdapter.position);
+                mapAdapter.notifyDataSetChanged();
             }
 
             @Override

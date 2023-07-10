@@ -10,6 +10,10 @@ public class UserProfile {
     private String userVeganType;
     private ArrayList<String> userAllergy;
 
+    public UserProfile() {
+
+    }
+
     public UserProfile(String userId, String userEmail, String userPw, String userVeganReason, String userVeganType, ArrayList<String> userAllergy) {
         this.userId = userId;
         this.userEmail = userEmail;

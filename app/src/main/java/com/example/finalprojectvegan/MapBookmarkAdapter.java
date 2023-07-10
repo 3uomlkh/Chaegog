@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,8 +19,11 @@ import com.bumptech.glide.Glide;
 import com.example.finalprojectvegan.Model.MapData;
 import com.example.finalprojectvegan.Model.RecipeData;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -27,6 +31,7 @@ public class MapBookmarkAdapter extends RecyclerView.Adapter<MapBookmarkAdapter.
 
     private ArrayList<MapData> listData = new ArrayList<>();
     private FirebaseAuth mAuth;
+    int position;
 
     @NonNull
     @Override
@@ -37,6 +42,8 @@ public class MapBookmarkAdapter extends RecyclerView.Adapter<MapBookmarkAdapter.
     @Override
     public void onBindViewHolder(@NonNull MapBookmarkAdapter.ViewHolder holder, int i) {
         holder.onBind(listData.get(i));
+        String itemKey = listData.get(i).getItemKeyList();
+        ArrayList<String> bookmarkIdList = listData.get(i).getBookmarkIdList();
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,22 +58,22 @@ public class MapBookmarkAdapter extends RecyclerView.Adapter<MapBookmarkAdapter.
                 intent.putExtra("category", listData.get(i).getCategory());
                 intent.putExtra("menu", listData.get(i).getMenu());
                 intent.putExtra("phone", listData.get(i).getPhone());
-                intent.putExtra("key", listData.get(i).getItemKeyList());
+                intent.putExtra("key", bookmarkIdList.get(i));
                 context.startActivity(intent);
             }
         });
 
-        String itemKey = listData.get(i).getItemKeyList();
-        ArrayList<String> bookmarkIdList = listData.get(i).getBookmarkIdList();
-        Log.d("" +
-                "", "itemKey : " + itemKey);
-        Log.d("MapBookmarkRVA", "bookmarkList : " + bookmarkIdList.toString());
 
-        if (bookmarkIdList.contains(itemKey)) {
-            holder.saveImage.setImageResource(R.drawable.favorite_on);
-        } else {
-            holder.saveImage.setImageResource(R.drawable.favorite_off);
-        }
+//        Log.d("" +
+//                "", "itemKey : " + itemKey);
+//        Log.d("MapBookmarkRVA", "bookmarkList : " + bookmarkIdList.toString());
+
+//        if (bookmarkIdList.contains(itemKey)) {
+//            holder.saveImage.setImageResource(R.drawable.favorite_on);
+//        } else {
+//            holder.saveImage.setImageResource(R.drawable.favorite_off);
+//        }
+        holder.saveImage.setImageResource(R.drawable.favorite_on);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -74,10 +81,11 @@ public class MapBookmarkAdapter extends RecyclerView.Adapter<MapBookmarkAdapter.
         holder.saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                position = holder.getAdapterPosition();
                 bookmarkRef
                         .child(mAuth.getCurrentUser().getUid())
                         .child("map_bookmark")
-                        .child(itemKey)
+                        .child(bookmarkIdList.get(position))
                         .setValue(null);
                 Toast.makeText(view.getContext(), "북마크 삭제", Toast.LENGTH_SHORT).show();
             }

@@ -20,19 +20,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 // 레시피 북마크
 public class FragBookmark3 extends Fragment {
-    private ArrayList<String> bookmarkIdList = new ArrayList<>();
-    ArrayList<String> listTitle = new ArrayList<>();
-    ArrayList<String> listThumb = new ArrayList<>();
-    ArrayList<String> clickUrl = new ArrayList<>();
+    private View view;
+    ArrayList<String> listTitle, listThumb, clickUrl, bookmarkIdList;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
-    private View view;
-    RecyclerView recyclerView;
-    BookmarkAdapter adapter;
+    private RecyclerView recyclerView;
+    private RecipeBookmarkAdapter adapter;
     public FragBookmark3() {
 
     }
@@ -45,6 +41,10 @@ public class FragBookmark3 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bookmarkIdList = new ArrayList<>();
+        listTitle = new ArrayList<>();
+        listThumb = new ArrayList<>();
+        clickUrl = new ArrayList<>();
     }
 
     @Override
@@ -52,21 +52,20 @@ public class FragBookmark3 extends Fragment {
                              Bundle savedInstanceState) {
 
         mAuth = FirebaseAuth.getInstance();
-
         view = inflater.inflate(R.layout.fragment_frag_bookmark3, container, false);
 
-        adapter = new BookmarkAdapter();
         recyclerView = view.findViewById(R.id.bookmark3_recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new RecipeBookmarkAdapter();
 
-        getBookmarkData();
+        getBookmark();
         recyclerView.setAdapter(adapter);
 
         return view;
     }
 
-    private void getBookmarkData() {
+    private void getBookmark() {
         mDatabase = FirebaseDatabase.getInstance().getReference("bookmark");
         ValueEventListener postListener = new ValueEventListener() {
             @Override
@@ -83,22 +82,17 @@ public class FragBookmark3 extends Fragment {
                     listTitle.add(snapshot.child("title").getValue().toString());
                     listThumb.add(snapshot.child("imageUrl").getValue().toString());
                     clickUrl.add(snapshot.child("clickUrl").getValue().toString());
-
-                    Log.d("bookKey",snapshot.getKey());
                 }
+
                 for(int i=0; i<listTitle.size(); i++) {
                     RecipeData data = new RecipeData(listThumb.get(i), listTitle.get(i), clickUrl.get(i));
-
                     data.setBookmarkIdList(bookmarkIdList);
-
                     adapter.addItem(data);
-
                 }
 
                 adapter.notifyItemRemoved(adapter.position);
 
             }
-
 
             @Override
             public void onCancelled(DatabaseError databaseError) {

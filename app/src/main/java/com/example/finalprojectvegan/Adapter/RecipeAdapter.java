@@ -38,6 +38,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecipeAdapter.ViewHolder holder, int i) {
         holder.onBind(listData.get(i));
+
         String defaultUrl = "https://www.10000recipe.com";
         String url = listData.get(i).getClickUrl();
         holder.title.setOnClickListener(new View.OnClickListener() {

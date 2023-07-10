@@ -14,15 +14,23 @@ public class MapData {
     private String itemKeyList;
     private ArrayList<String> bookmarkIdList;
 
+    public MapData(String name, String address, String category, String image, String dayoff, String time, String menu, String phone) {
+        this.name = name;
+        this.address = address;
+        this.category = category;
+        this.imageUrl = image;
+        this.dayoff = dayoff;
+        this.time = time;
+        this.menu = menu;
+        this.phone = phone;
+    }
     public MapData(String name, String address, String category, String image) {
         this.name = name;
         this.address = address;
         this.category = category;
         this.imageUrl = image;
     }
-    public MapData() {
 
-    }
     public String getName() {
         return name;
     }
