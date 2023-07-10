@@ -35,9 +35,6 @@ public class FragHomeFeed extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    ImageView imageView_profile;
-    ;
-
     public FragHomeFeed() {
         // Required empty public constructor
     }
@@ -50,6 +47,7 @@ public class FragHomeFeed extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     public static FragHomeFeed newInstance() {
         return new FragHomeFeed();
     }
@@ -68,33 +66,10 @@ public class FragHomeFeed extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_frag_home_feed, container, false);
 
-//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//
-//        imageView_profile = view.findViewById(R.id.imageView_profile);
-//
-//        FirebaseStorage storage = FirebaseStorage.getInstance();
-//        StorageReference storageReference = storage.getReference();
-//        StorageReference pathReference = storageReference.child("users");
-//
-//        if (pathReference == null) {
-//            Toast.makeText(getActivity(), "저장소에 사진이 없습니다.", Toast.LENGTH_SHORT).show();
-//        } else {
-//            StorageReference submitProfile = storageReference.child("users/" + firebaseUser.getUid() + "/profileImage.jpg");
-//            submitProfile.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                @Override
-//                public void onSuccess(Uri uri) {
-//                    Glide.with(getActivity()).load(uri).into(imageView_profile);
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//
-//                }
-//            });
-//        }
-
+        // firebase 초기화
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        // posts DB로부터 정보 가져오기
         db.collection("posts")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -102,11 +77,14 @@ public class FragHomeFeed extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
 
+                            // FeedInfo 형식으로 리스트 선언
                             ArrayList<FeedInfo> FeedList = new ArrayList<>();
 
-
+                            // document 실행
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                Log.d("success", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+//                                Log.d("success", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+
+                                // 선언한 리스트에 정보 추가하기 -> DB로부터 가져온 정보들(제목, 내용, 작성자, 포스트ID, 사진, 날짜)
                                 FeedList.add(new FeedInfo(
                                         documentSnapshot.getData().get("title").toString(),
                                         documentSnapshot.getData().get("content").toString(),
@@ -116,6 +94,8 @@ public class FragHomeFeed extends Fragment {
                                         new Date(documentSnapshot.getDate("createdAt").getTime())));
 
                             }
+
+                            // 연결할 RecyclerView 선언
                             RecyclerView recyclerView = view.findViewById(R.id.homefeed_recyclerView);
                             recyclerView.setHasFixedSize(true);
                             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -129,36 +109,6 @@ public class FragHomeFeed extends Fragment {
                     }
                 });
 
-//        db.collection("user")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//
-//                            ArrayList<UserInfo> postUserList = new ArrayList<>();
-//
-//
-//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-//                                Log.d("success", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-//                                postUserList.add(new UserInfo(
-//                                        documentSnapshot.getData().get("userID").toString(),
-//                                        documentSnapshot.getData().get("userEmail").toString(),
-//                                        documentSnapshot.getData().get("userPassword").toString()));
-//                            }
-//                            RecyclerView recyclerView = view.findViewById(R.id.homefeed_recyclerView);
-//                            recyclerView.setHasFixedSize(true);
-//                            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//
-//                            RecyclerView.Adapter mAdapter = new UserInfoAdapter(getActivity(), postUserList);
-//                            recyclerView.setAdapter(mAdapter);
-//
-//                        } else {
-//                            Log.d("error", "Error getting documents", task.getException());
-//                        }
-//                    }
-//                });
-//
         return view;
     }
 }

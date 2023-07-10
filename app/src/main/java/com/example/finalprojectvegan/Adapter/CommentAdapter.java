@@ -1,8 +1,6 @@
 package com.example.finalprojectvegan.Adapter;
 
-import android.content.Context;
 import android.graphics.Color;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,22 +11,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finalprojectvegan.Model.UserInfo;
 import com.example.finalprojectvegan.Model.WriteCommentInfo;
 import com.example.finalprojectvegan.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.w3c.dom.Comment;
-
 import java.util.ArrayList;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
@@ -67,7 +61,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                             Log.d("Comment-UID", uid);
                             Log.d("Comment-user", user);
 
-                            ArrayList<UserInfo> CommentUserList = new ArrayList<>();
                             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                             if (firebaseUser != null) {
 
@@ -79,11 +72,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
                                     if (documentSnapshot.getId().equals(user)) {
                                         if (documentSnapshot.getId().equals(uid)) {
-                                            CommentUserList.add(new UserInfo(
-                                                    documentSnapshot.getData().get("userID").toString(),
-                                                    documentSnapshot.getData().get("userEmail").toString(),
-                                                    documentSnapshot.getData().get("userPassword").toString()
-                                            ));
+
                                             Log.d("USERNAME", documentSnapshot.getData().get("userID").toString());
 //                                            TextView commentPublisherName = view.findViewById(R.id.commentPublisherName);
                                             commentPublisherName.setText(documentSnapshot.getData().get("userID").toString());

@@ -5,11 +5,14 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -77,6 +80,7 @@ public class WritePostActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private FirebaseFirestore db;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,74 +108,143 @@ public class WritePostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                intent = new Intent(getBaseContext(), PopupActivity.class);
-                intent.putExtra("type", PopupType.SELECT);
-                intent.putExtra("gravity", PopupGravity.CENTER);
-                intent.putExtra("title", "사진을 불러올 기능을 선택하세요");
-                intent.putExtra("buttonLeft", "카메라");
-                intent.putExtra("buttonRight", "갤러리");
-                startActivityForResult(intent, 2);
+                dialog = new Dialog(WritePostActivity.this);
+                dialog.setContentView(R.layout.dialog_cam);
+                dialog.show();
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//                        Log.d(TAG, "권한 설정 완료");
-                    } else {
-//                        Log.d(TAG, "권한 설정 요청");
-                        ActivityCompat.requestPermissions(WritePostActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                Button Btn_Camera = dialog.findViewById(R.id.Btn_Camera);
+                Btn_Camera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+
+                        boolean hasCamPerm = checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+                        if (!hasCamPerm) {
+                            ActivityCompat.requestPermissions(WritePostActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                        }
+                        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            try {
+                                imageFile = createImageFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if (imageFile != null) {
+                                imageUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.finalprojectvegan.fileprovider", imageFile);
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                startActivityForResult(intent, CAMERA);
+                            }
+
+                        }
                     }
-                }
+                });
+
+                Button Btn_Gallery =dialog.findViewById(R.id.Btn_Gallery);
+                Btn_Gallery.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+
+                        boolean hasWritePerm = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+                        if (hasWritePerm) {
+                            ActivityCompat.requestPermissions(WritePostActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                        }
+                        intent = new Intent(Intent.ACTION_PICK);
+                        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                        intent.setType("image/*");
+                        startActivityForResult(intent, GALLERY);
+                    }
+                });
+
+
+
+//                intent = new Intent(getBaseContext(), PopupActivity.class);
+//                intent.putExtra("type", PopupType.SELECT);
+//                intent.putExtra("gravity", PopupGravity.CENTER);
+//                intent.putExtra("title", "사진을 불러올 기능을 선택하세요");
+//                intent.putExtra("buttonLeft", "카메라");
+//                intent.putExtra("buttonRight", "갤러리");
+//                startActivityForResult(intent, 2);
+//
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+////                        Log.d(TAG, "권한 설정 완료");
+//                    } else {
+////                        Log.d(TAG, "권한 설정 요청");
+//                        ActivityCompat.requestPermissions(WritePostActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+//                    }
+//                }
 
             }
         });
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
-            //데이터 받기
-            if (requestCode == 2) {
-                PopupResult result = (PopupResult) data.getSerializableExtra("result");
-                if (result == PopupResult.LEFT) {
-                    // 카메라 선택한 경우
-                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        try {
-                            imageFile = createImageFile();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        if (imageFile != null) {
-                            imageUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.finalprojectvegan.fileprovider", imageFile);
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                            startActivityForResult(intent, CAMERA);
-                        }
-                    }
-
-                } else if (result == PopupResult.RIGHT) {
-                    // 작성 코드
-                    intent = new Intent(Intent.ACTION_PICK);
-                    intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-                    intent.setType("image/*");
-                    startActivityForResult(intent, GALLERY);
-                }
-            } else if (requestCode == GALLERY) {
-                imageUri = data.getData();
-                imagePath = data.getDataString();
-                if (imagePath.length() > 0) {
-                    Glide.with(this)
-                            .load(imagePath)
-                            .into(Iv_Add_UploadPost);
-                    imageFrom = requestCode;
-                }
+        if (resultCode == Activity.RESULT_OK) { // 결과 있을 경우
+            if (requestCode == GALLERY) { // 갤러리 선택한 경우
+                imageUri = data.getData(); // 이미지 Uri 정보
+                imagePath = data.getDataString(); // 이미지 위치 경로 정보
+            } // 카메라 선택한 경우는 아래 createImageFile에서 imageFile 생성해주기 때문에 여기선 불필요
+            if (imagePath.length() > 0) { // 저장한 파일 경로를 Glide 사용해 Iv에 세팅
+                Glide.with(this)
+                        .load(imagePath)
+                        .into(Iv_Add_UploadPost);
+                imageFrom = requestCode;
             }
         }
     }
 
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (resultCode == RESULT_OK) {
+//            //데이터 받기
+//            if (requestCode == 2) {
+//                PopupResult result = (PopupResult) data.getSerializableExtra("result");
+//                if (result == PopupResult.LEFT) {
+//                    // 카메라 선택한 경우
+//                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                    if (intent.resolveActivity(getPackageManager()) != null) {
+//                        try {
+//                            imageFile = createImageFile();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        if (imageFile != null) {
+//                            imageUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.finalprojectvegan.fileprovider", imageFile);
+//                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//                            startActivityForResult(intent, CAMERA);
+//                        }
+//                    }
+//
+//                } else if (result == PopupResult.RIGHT) {
+//                    // 작성 코드
+//                    intent = new Intent(Intent.ACTION_PICK);
+//                    intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+//                    intent.setType("image/*");
+//                    startActivityForResult(intent, GALLERY);
+//                }
+//            } else if (requestCode == GALLERY) {
+//                imageUri = data.getData();
+//                imagePath = data.getDataString();
+//                if (imagePath.length() > 0) {
+//                    Glide.with(this)
+//                            .load(imagePath)
+//                            .into(Iv_Add_UploadPost);
+//                    imageFrom = requestCode;
+//                }
+//            }
+//        }
+//    }
+
     File createImageFile() throws IOException {
         String timeStamp = imageDate.format(new Date());
-        String fileName = "IMAGE_" + timeStamp; // 이미지 파일 명
+        String fileName = "POST_IMAGE_" + timeStamp; // 이미지 파일 명
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File file = File.createTempFile(fileName, ".jpg", storageDir); // 파일 생성
         imagePath = file.getAbsolutePath(); // 파일 절대경로 저장
@@ -183,7 +256,7 @@ public class WritePostActivity extends AppCompatActivity {
         switch (imageFrom) {
             case GALLERY: // 갤러리에서 가져온 경우
                 String timeStamp = imageDate.format(new Date());
-                String imageFileName = "IMAGE_" + timeStamp + "_.png"; // 새로운 파일명 생성 후
+                String imageFileName = "POST_IMAGE_" + timeStamp + "_.png"; // 새로운 파일명 생성 후
                 storageReference = firebaseStorage.getReference().child("Posts").child(imageFileName); // reference에 경로 세팅
                 uploadTask = storageReference.putFile(imageUri); // 업로드할 파일과 위치 설정
                 break;

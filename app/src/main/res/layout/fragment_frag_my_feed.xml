@@ -25,7 +25,7 @@
             app:cardCornerRadius="100dp">
 
             <ImageView
-                android:id="@+id/Iv_MyFeedProfile"
+                android:id="@+id/Iv_MyFeed_Profile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -30,11 +33,14 @@ public class RegisterStep4Activity extends AppCompatActivity {
     private Button Btn_RegisterFinish;
     private TextView Tv_SelectedAllergy;
     private int count = 0;
-    private String userId, userEmail, userPw, userVeganReason, userVeganType;
+    private String userId, userEmail, userPw, userVeganReason, userVeganType, userProfileImg;
     String userAllergy, similarAllergy;
     private ArrayList<String> Array_userAllergy;
 
     private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
 
     // 뒤로가기 버튼 클릭시 앱 종료
     @Override
@@ -50,6 +56,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
 
         // 인증 인스턴스 초기화
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
 
         // 변수 초기화
         Cb_memil = findViewById(R.id.Cb_memil);
@@ -102,6 +109,22 @@ public class RegisterStep4Activity extends AppCompatActivity {
         userVeganReason = intent.getStringExtra("userVeganReason");
         userVeganType = intent.getStringExtra("userVeganType");
 
+        firebaseStorage = FirebaseStorage.getInstance();
+
+        storageReference = firebaseStorage.getReference().child("users").child("basic").child("basic_tomato.png"); // reference에 경로 세팅
+        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Log.d("Download_ProfileUri", "success");
+                userProfileImg = uri.toString();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Download_ProfileUri", "failure");
+            }
+        });
+
         // 회원가입 버튼 클릭시
         Btn_RegisterFinish = findViewById(R.id.Btn_RegisterFinish);
         Btn_RegisterFinish.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +141,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
                 }
                 Log.d("LAST REGISTER", "SUCCESS");
                 // 함수 선언
-                updateUserProfile(userId, userEmail, userPw, userVeganReason, userVeganType, Array_userAllergy);
+                updateUserProfile(userId, userEmail, userPw, userVeganReason, userVeganType, Array_userAllergy, userProfileImg);
                 Intent intent3 = new Intent(RegisterStep4Activity.this, LoginActivity.class);
                 startActivity(intent3);
             }
@@ -127,12 +150,12 @@ public class RegisterStep4Activity extends AppCompatActivity {
 
     // db에 회원정보 저장하는 함수
     // Firebase Firestore에 회원가입 단계의 모든 정보를 한번에 저장한다.
-    private void updateUserProfile(String userId, String userEmail, String userPw, String userVeganReason, String userVeganType, ArrayList Array_userAllergy) {
+    private void updateUserProfile(String userId, String userEmail, String userPw, String userVeganReason, String userVeganType, ArrayList Array_userAllergy, String userProfileImg) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        UserProfile userProfile = new UserProfile(userId, userEmail, userPw, userVeganReason, userVeganType, Array_userAllergy);
+        UserProfile userProfile = new UserProfile(userId, userEmail, userPw, userVeganReason, userVeganType, Array_userAllergy, userProfileImg);
 
         if (firebaseUser != null){
             db.collection("users").document(firebaseUser.getUid()).set(userProfile)

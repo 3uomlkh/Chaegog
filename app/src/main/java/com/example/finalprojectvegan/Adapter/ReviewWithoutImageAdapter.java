@@ -11,11 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.finalprojectvegan.Model.UserInfo;
+
 import com.example.finalprojectvegan.Model.WriteReviewInfo;
 import com.example.finalprojectvegan.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -75,15 +76,8 @@ public class ReviewWithoutImageAdapter extends RecyclerView.Adapter<ReviewWithou
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
 
-                            ArrayList<UserInfo> postUserList = new ArrayList<>();
-
-
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 Log.d("success", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                                postUserList.add(new UserInfo(
-                                        documentSnapshot.getData().get("userID").toString(),
-                                        documentSnapshot.getData().get("userEmail").toString(),
-                                        documentSnapshot.getData().get("userPassword").toString()));
 
                                 TextView publisherTextView = cardView.findViewById(R.id.review_item_publisher2);
                                 String user = mDataset.get(holder.getAdapterPosition()).getPublisher();

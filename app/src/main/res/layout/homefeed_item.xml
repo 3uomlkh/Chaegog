@@ -35,10 +35,9 @@
                 <ImageView
                     android:id="@+id/Iv_HomeFeed_Profile"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="70dp"
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
-                    android:padding="10dp"
                     android:src="@drawable/personimage" />
 
             </androidx.cardview.widget.CardView>
@@ -129,8 +128,8 @@
 
             <Button
                 android:id="@+id/Btn_HomeFeedComment"
-                android:layout_width="9dp"
-                android:layout_height="11dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_marginTop="6dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/ic_baseline_comment_24" />

@@ -3,6 +3,7 @@ package com.example.finalprojectvegan;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,10 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.finalprojectvegan.Adapter.MyFeedAdapter;
 import com.example.finalprojectvegan.Model.FeedInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,7 +46,8 @@ public class FragMyFeed extends Fragment {
     private String mParam2;
 
     TextView Tv_MyFeed_UerId, Tv_MyFeed_VeganType, Tv_MyFeed_Allergy, Tv_Notice;
-    ImageView Iv_MyFeedProfile;
+
+    ImageView Iv_MyFeed_Profile;
 
     FirebaseUser firebaseUser;
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
@@ -49,6 +56,7 @@ public class FragMyFeed extends Fragment {
     String USER_ID;
     String USER_VEGAN_TYPE;
     String USER_ALLERGY;
+    String USER_PROFILE_IMG;
     String Uid;
 
     public FragMyFeed() {
@@ -82,10 +90,11 @@ public class FragMyFeed extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_frag_my_feed, container, false);
 
         Tv_Notice = view.findViewById(R.id.Tv_Notice);
-        Iv_MyFeedProfile = view.findViewById(R.id.Iv_MyFeedProfile);
         Tv_MyFeed_UerId = view.findViewById(R.id.Tv_MyFeed_UerId);
         Tv_MyFeed_VeganType = view.findViewById(R.id.Tv_MyFeed_VeganType);
         Tv_MyFeed_Allergy = view.findViewById(R.id.Tv_MyFeed_Allergy);
+
+        Iv_MyFeed_Profile = view.findViewById(R.id.Iv_MyFeed_Profile);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -110,9 +119,13 @@ public class FragMyFeed extends Fragment {
                                         USER_ID = documentSnapshot.getData().get("userId").toString();
                                         USER_VEGAN_TYPE = documentSnapshot.getData().get("userVeganType").toString();
                                         USER_ALLERGY = documentSnapshot.getData().get("userAllergy").toString().replaceAll("\\[|\\]", "").replaceAll(", ",", ");
+                                        USER_PROFILE_IMG = documentSnapshot.getData().get("userProfileImg").toString();
                                         Tv_MyFeed_UerId.setText(USER_ID);
                                         Tv_MyFeed_VeganType.setText(USER_VEGAN_TYPE);
                                         Tv_MyFeed_Allergy.setText(USER_ALLERGY);
+                                        Glide.with(FragMyFeed.this)
+                                                .load(USER_PROFILE_IMG)
+                                                .into(Iv_MyFeed_Profile);
                                     }
                                 }
                             }

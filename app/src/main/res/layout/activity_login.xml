@@ -63,7 +63,7 @@
         android:textStyle="normal" />
 
     <EditText
-        android:id="@+id/edit_login_email"
+        android:id="@+id/Et_Login_Email"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -76,7 +76,7 @@
         android:textStyle="normal" />
 
     <EditText
-        android:id="@+id/edit_login_password"
+        android:id="@+id/Et_Login_Password"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

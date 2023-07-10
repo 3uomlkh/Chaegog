@@ -28,8 +28,11 @@
         android:theme="@style/Theme.FinalProjectVegan"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".SearchActivity"
+            android:name=".EditProfileActivity"
             android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".SearchActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".EditReviewActivity"
             android:exported="false" />
@@ -131,8 +134,8 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <provider
-            android:authorities="com.example.finalprojectvegan.fileprovider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.finalprojectvegan.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

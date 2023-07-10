@@ -52,11 +52,12 @@ import kotlin.jvm.functions.Function2;
 public class LoginActivity extends AppCompatActivity {
 
     // 변수 선언
-    private EditText edit_login_email, edit_login_password;
+    private EditText Et_Login_Email, Et_Login_Password;
     private Button Btn_Login, Btn_Register, Btn_LoginKakao;
     private TextView Btn_PasswordReset;
 
     private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
     DatabaseReference reference;
 
     ProgressDialog pd;
@@ -84,21 +85,22 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Log.d("getKeyHash", "" + getKeyHash(LoginActivity.this));
+//        Log.d("getKeyHash", "" + getKeyHash(LoginActivity.this));
 
         SharedPreferences sh = getSharedPreferences("temp", MODE_PRIVATE);
 
 
 
         // 변수 초기화
-        edit_login_email = findViewById(R.id.edit_login_email);
-        edit_login_password = findViewById(R.id.edit_login_password);
+        Et_Login_Email = findViewById(R.id.Et_Login_Email);
+        Et_Login_Password = findViewById(R.id.Et_Login_Password);
         Btn_Login = findViewById(R.id.Btn_Login);
         Btn_Register = findViewById(R.id.Btn_Register);
         Btn_PasswordReset = findViewById(R.id.Btn_PasswordReset);
         Btn_LoginKakao = findViewById(R.id.Btn_LoginKakao);
 
         firebaseAuth = FirebaseAuth.getInstance(); // 초기화
+        firebaseUser = firebaseAuth.getCurrentUser();
 
         // 로그인 버튼 클릭시
         Btn_Login.setOnClickListener(new View.OnClickListener() {
@@ -111,14 +113,14 @@ public class LoginActivity extends AppCompatActivity {
                 pd.show();
 
                 // 문자열에 담기
-                String userEmail = edit_login_email.getText().toString();
+                String userEmail = Et_Login_Email.getText().toString();
 
                 // 로그인 할 때 사용자의 이메일을 저장함(추후 닉네임 저장으로 변경)
 //                SharedPreferences.Editor editor = sh.edit();
 //                editor.putString("userEmail", userEmail);
 //                editor.apply();
 
-                String userPassword = edit_login_password.getText().toString();
+                String userPassword = Et_Login_Password.getText().toString();
 
                 // 작성란 확인
                 if (TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPassword)){
@@ -129,28 +131,36 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-                                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users")
-                                                .child(firebaseAuth.getCurrentUser().getUid());
+//                                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                                        pd.dismiss();
 
-                                        // 데이터베이스 정보 불러오기
-                                        reference.addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                pd.dismiss();
-                                                Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                startActivity(intent);
-                                                finish();
-                                            }
+                                        Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(intent);
+//                                        updateUI(user);
 
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                                pd.dismiss();
-                                            }
-                                        });
+//                                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users")
+//                                                .child(firebaseAuth.getCurrentUser().getUid());
+//
+//                                        // 데이터베이스 정보 불러오기
+//                                        reference.addValueEventListener(new ValueEventListener() {
+//                                            @Override
+//                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                                pd.dismiss();
+//                                                Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                                startActivity(intent);
+//                                                finish();
+//                                            }
+//
+//                                            @Override
+//                                            public void onCancelled(@NonNull DatabaseError error) {
+//                                                pd.dismiss();
+//                                            }
+//                                        });
+
                                     } else {
                                         pd.dismiss();
                                         Toast.makeText(LoginActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
@@ -158,37 +168,41 @@ public class LoginActivity extends AppCompatActivity {
 //                                        if (task.getException() != null) {
 //                                            Toast.makeText(LoginActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
 //                                        }
+                                        Log.d("SIGNIN", "signInWithEmail:failure", task.getException());
+                                        Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                                Toast.LENGTH_SHORT).show();
+//                                        updateUI(null);
                                     }
                                 }
                             });
                 }
 
-                    Response.Listener<String> responseListener = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            if (success) {
-                                String userID = jsonObject.getString("userID");
-                                String userPassword = jsonObject.getString("userPassword");
-                                Toast.makeText(getApplicationContext(), "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.putExtra("userID", userID);
-                                intent.putExtra("userPassword", userPassword);
-                                startActivity(intent);
-                            } else {
-                                Toast.makeText(getApplicationContext(), "로그인에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                LoginRequest loginRequest = new LoginRequest(userEmail, userPassword, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-                queue.add(loginRequest);
+//                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        try {
+//                            JSONObject jsonObject = new JSONObject(response);
+//                            boolean success = jsonObject.getBoolean("success");
+//                            if (success) {
+//                                String userID = jsonObject.getString("userID");
+//                                String userPassword = jsonObject.getString("userPassword");
+//                                Toast.makeText(getApplicationContext(), "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show();
+//                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                                intent.putExtra("userID", userID);
+//                                intent.putExtra("userPassword", userPassword);
+//                                startActivity(intent);
+//                            } else {
+//                                Toast.makeText(getApplicationContext(), "로그인에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                };
+//                LoginRequest loginRequest = new LoginRequest(userEmail, userPassword, responseListener);
+//                RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+//                queue.add(loginRequest);
 
             }
         });
@@ -211,69 +225,69 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Btn_LoginKakao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(LoginActivity.this)) {
-                    UserApiClient.getInstance().loginWithKakaoTalk(LoginActivity.this, callback);
-                } else {
-                    UserApiClient.getInstance().loginWithKakaoAccount(LoginActivity.this, callback);
-                }
-            }
-        });
+//        Btn_LoginKakao.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(LoginActivity.this)) {
+//                    UserApiClient.getInstance().loginWithKakaoTalk(LoginActivity.this, callback);
+//                } else {
+//                    UserApiClient.getInstance().loginWithKakaoAccount(LoginActivity.this, callback);
+//                }
+//            }
+//        });
     }
 
-    public static String getKeyHash(final Context context) {
-        PackageManager pm = context.getPackageManager();
-        try {
-            PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
-            if (packageInfo == null)
-                return null;
+//    public static String getKeyHash(final Context context) {
+//        PackageManager pm = context.getPackageManager();
+//        try {
+//            PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+//            if (packageInfo == null)
+//                return null;
+//
+//            for (Signature signature : packageInfo.signatures) {
+//                try {
+//                    MessageDigest md = MessageDigest.getInstance("SHA");
+//                    md.update(signature.toByteArray());
+//                    return android.util.Base64.encodeToString(md.digest(), android.util.Base64.NO_WRAP);
+//                } catch (NoSuchAlgorithmException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
-            for (Signature signature : packageInfo.signatures) {
-                try {
-                    MessageDigest md = MessageDigest.getInstance("SHA");
-                    md.update(signature.toByteArray());
-                    return android.util.Base64.encodeToString(md.digest(), android.util.Base64.NO_WRAP);
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    Function2<OAuthToken, Throwable, Unit> callback = new Function2<OAuthToken, Throwable, Unit>() {
-        @Override
-        public Unit invoke(OAuthToken oAuthToken, Throwable throwable) {
-            updateKakaoLoginUi();
-            return null;
-        }
-    };
-
-    private void updateKakaoLoginUi() {
-        UserApiClient.getInstance().me(new Function2<User, Throwable, Unit>() {
-            @Override
-            public Unit invoke(User user, Throwable throwable) {
-                if (user != null) {
-                    Log.d("Kakao", "ID : " + user.getId());
-                    Log.d("Kakao", "EMAIL : " + user.getKakaoAccount().getEmail());
-                    Log.d("Kakao", "ninkname : " + user.getKakaoAccount().getProfile().getNickname());
-                    Intent intent = new Intent(LoginActivity.this, RegisterStep2Activity.class);
-//                    intent.putExtra("userID", user.getId());
-//                    intent.putExtra("userEmail", user.getKakaoAccount().getEmail());
-                    startActivity(intent);
-//                    register(user.getKakaoAccount().getEmail(), user.getKakaoAccount().getProfile().getNickname());
-                } else {
-
-                }
-                return null;
-            }
-        });
-    }
+//    Function2<OAuthToken, Throwable, Unit> callback = new Function2<OAuthToken, Throwable, Unit>() {
+//        @Override
+//        public Unit invoke(OAuthToken oAuthToken, Throwable throwable) {
+//            updateKakaoLoginUi();
+//            return null;
+//        }
+//    };
+//
+//    private void updateKakaoLoginUi() {
+//        UserApiClient.getInstance().me(new Function2<User, Throwable, Unit>() {
+//            @Override
+//            public Unit invoke(User user, Throwable throwable) {
+//                if (user != null) {
+//                    Log.d("Kakao", "ID : " + user.getId());
+//                    Log.d("Kakao", "EMAIL : " + user.getKakaoAccount().getEmail());
+//                    Log.d("Kakao", "ninkname : " + user.getKakaoAccount().getProfile().getNickname());
+//                    Intent intent = new Intent(LoginActivity.this, RegisterStep2Activity.class);
+////                    intent.putExtra("userID", user.getId());
+////                    intent.putExtra("userEmail", user.getKakaoAccount().getEmail());
+//                    startActivity(intent);
+////                    register(user.getKakaoAccount().getEmail(), user.getKakaoAccount().getProfile().getNickname());
+//                } else {
+//
+//                }
+//                return null;
+//            }
+//        });
+//    }
 //
 //    private void register (String userEmail, String userID) {
 //        firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword)

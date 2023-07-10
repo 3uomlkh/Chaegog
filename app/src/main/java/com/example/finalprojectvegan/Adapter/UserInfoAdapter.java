@@ -12,8 +12,9 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finalprojectvegan.Model.UserProfile;
 import com.example.finalprojectvegan.R;
-import com.example.finalprojectvegan.Model.UserInfo;
+import com.google.firebase.auth.UserInfo;
 
 import java.util.ArrayList;
 
@@ -21,11 +22,11 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
 
     Fragment fragment;
     private Context context;
-    private ArrayList<UserInfo> uDataset;
+    private ArrayList<UserProfile> uDataset;
 
     ImageView homefeed_item_imageView;
 
-    public UserInfoAdapter(Context context, ArrayList<UserInfo> userDataset) {
+    public UserInfoAdapter(Context context, ArrayList<UserProfile> userDataset) {
         uDataset = userDataset;
 
     }
@@ -68,7 +69,7 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
         CardView cardView = holder.cardView;
 
         TextView publisherTextView = cardView.findViewById(R.id.Tv_HomeFeed_Publisher);
-        publisherTextView.setText(uDataset.get(position).getUserID());
+        publisherTextView.setText(uDataset.get(position).getUserId());
 
 
     }

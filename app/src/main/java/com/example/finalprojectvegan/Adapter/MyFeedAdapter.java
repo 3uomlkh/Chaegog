@@ -2,6 +2,7 @@ package com.example.finalprojectvegan.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,25 +10,28 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.finalprojectvegan.CommentActivity;
 import com.example.finalprojectvegan.Model.FeedInfo;
+import com.example.finalprojectvegan.MypageActivity;
 import com.example.finalprojectvegan.R;
-import com.example.finalprojectvegan.Model.UserInfo;
-import com.example.finalprojectvegan.Model.WritePostInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,10 +46,9 @@ public class MyFeedAdapter extends RecyclerView.Adapter<MyFeedAdapter.ViewHolder
 
     private FirebaseUser firebaseUser;
     private FirebaseFirestore db;
+    private FirebaseStorage firebaseStorage;
 
-
-    ImageView Iv_MyFeed_Item;
-    ImageView imageView_profile2;
+    private ImageView Iv_MyFeed_Item, Iv_MyFeed_Profile;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -105,6 +108,8 @@ public class MyFeedAdapter extends RecyclerView.Adapter<MyFeedAdapter.ViewHolder
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         Iv_MyFeed_Item = cardView.findViewById(R.id.Iv_MyFeed_item_Image);
+        Iv_MyFeed_Profile = cardView.findViewById(R.id.Iv_MyFeed_Profile);
+
 
         db = FirebaseFirestore.getInstance();
         db.collection("users")

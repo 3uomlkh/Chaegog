@@ -188,8 +188,8 @@ public class MainActivity extends AppCompatActivity {
 //                Toast.makeText(getApplicationContext(), "검색창 클릭됨", Toast.LENGTH_SHORT).show();
 //                getSupportFragmentManager().beginTransaction().replace(R.id.main_layout,fragment_search).commitAllowingStateLoss();
 
-                Intent intent1 = new Intent(getApplicationContext(), SearchActivity.class);
-                startActivity(intent1);
+//                Intent intent1 = new Intent(getApplicationContext(), SearchActivity.class);
+//                startActivity(intent1);
                 return true;
             case R.id.action_settings:
 //                Toast.makeText(getApplicationContext(), "마이페이지 클릭됨", Toast.LENGTH_SHORT).show();

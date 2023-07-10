@@ -2,15 +2,12 @@ package com.example.finalprojectvegan.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -18,24 +15,22 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.finalprojectvegan.EditReviewActivity;
+import com.example.finalprojectvegan.Model.UserProfile;
 import com.example.finalprojectvegan.R;
-import com.example.finalprojectvegan.Model.UserInfo;
 import com.example.finalprojectvegan.Model.WriteReviewInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -152,14 +147,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
 
-                            ArrayList<UserInfo> postUserList = new ArrayList<>();
-
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 Log.d("success", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                                postUserList.add(new UserInfo(
-                                        documentSnapshot.getData().get("userID").toString(),
-                                        documentSnapshot.getData().get("userEmail").toString(),
-                                        documentSnapshot.getData().get("userPassword").toString()));
 
                                 TextView publisherTextView = cardView.findViewById(R.id.review_item_publisher);
                                 String reviewPublisher = reviewDataset.get(position).getPublisher();

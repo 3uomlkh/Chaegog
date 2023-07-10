@@ -20,7 +20,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -31,8 +30,7 @@ import android.widget.Toast;
 
 import com.example.finalprojectvegan.Model.FoodIngreData;
 import com.example.finalprojectvegan.Model.FoodIngreItem;
-import com.example.finalprojectvegan.Model.MapData;
-import com.example.finalprojectvegan.Model.UserInfo;
+import com.example.finalprojectvegan.Model.UserProfile;
 import com.example.finalprojectvegan.Model.UserVeganAllergyInfo;
 import com.example.finalprojectvegan.Model.UserVeganTypeInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,6 +39,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -58,9 +57,7 @@ import com.lakue.lakuepopupactivity.PopupActivity;
 import com.lakue.lakuepopupactivity.PopupGravity;
 import com.lakue.lakuepopupactivity.PopupResult;
 import com.lakue.lakuepopupactivity.PopupType;
-import com.yalantis.ucrop.view.CropImageView;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -179,7 +176,7 @@ public class OcrActivity extends AppCompatActivity {
 
                                 String uid = firebaseUser.getUid();
 
-                                ArrayList<UserInfo> postUserList = new ArrayList<>();
+                                ArrayList<UserProfile> postUserList = new ArrayList<>();
                                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                     Log.d("success", documentSnapshot.getId() + " => " + documentSnapshot.getData());
                                     if (documentSnapshot.getId().equals(uid)) {
