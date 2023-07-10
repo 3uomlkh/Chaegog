@@ -6,23 +6,23 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.finalprojectvegan.Adapter.MapSearchAdapter;
 import com.example.finalprojectvegan.Adapter.RecipeAdapter;
-import com.example.finalprojectvegan.Adapter.ReviewAdapter;
-import com.example.finalprojectvegan.Adapter.ReviewWithoutImageAdapter;
-import com.example.finalprojectvegan.Adapter.UserAdapter;
 import com.example.finalprojectvegan.Adapter.UserSearchAdapter;
 import com.example.finalprojectvegan.Model.MapData;
 import com.example.finalprojectvegan.Model.RecipeData;
-import com.example.finalprojectvegan.Model.User;
-import com.example.finalprojectvegan.Model.WriteReviewInfo;
+import com.example.finalprojectvegan.Model.UserProfile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
@@ -38,6 +38,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,7 +62,7 @@ public class SearchActivity extends AppCompatActivity {
     String searchText;
     RecyclerView recyclerView;
     RecipeAdapter recipeAdapter;
-    MapBookmarkAdapter mapAdapter;
+    MapSearchAdapter mapAdapter;
     UserSearchAdapter userSearchAdapter;
     Fragment fragment_search_recipe;
     int position;
@@ -82,8 +83,16 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-
-        //fragment_search_recipe = new SearchRecipeFragment();
+       searchEditText.setOnKeyListener(new View.OnKeyListener() {
+           @Override
+           public boolean onKey(View view, int i, KeyEvent keyEvent) {
+               if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) { // 키보드 엔터키 누르면 검색 버튼 눌림
+                   searchBtn.performClick();
+                   hideKeyboard();
+               }
+               return false;
+           }
+       });
 
         tabs = findViewById(R.id.search_tabs);
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -104,7 +113,7 @@ public class SearchActivity extends AppCompatActivity {
                 } else if (position == 3) {
                     searchEditText.setHint("식당");
                     TabPosition = 3;
-                    mapAdapter = new MapBookmarkAdapter();
+                    mapAdapter = new MapSearchAdapter();
                 }
 
             }
@@ -127,52 +136,43 @@ public class SearchActivity extends AppCompatActivity {
                     Toast.makeText(SearchActivity.this, "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 } else {
                     switch (TabPosition) {
-                        case 0:
-                            Toast.makeText(SearchActivity.this, "유저 검색", Toast.LENGTH_SHORT).show();
-                            getUserSearchResult();
+                        case 0: // 계정 검색
+                            Toast.makeText(SearchActivity.this, "계정 검색 준비중", Toast.LENGTH_SHORT).show();
+                            //getUserSearchResult();
                             break;
-                        case 1:
-                            Toast.makeText(SearchActivity.this, "레시피 검색", Toast.LENGTH_SHORT).show();
+                        case 1: // 레시피 검색
                             getRecipeBookmark();
+                            recyclerView.setAdapter(recipeAdapter);
                             break;
-                        case 2:
-                            Toast.makeText(SearchActivity.this, "제품 검색", Toast.LENGTH_SHORT).show();
+                        case 2: // 제품 검색
+                            Toast.makeText(SearchActivity.this, "제품 검색 준비중", Toast.LENGTH_SHORT).show();
                             break;
-                        case 3:
-                            Toast.makeText(SearchActivity.this, "식당 검색", Toast.LENGTH_SHORT).show();
+                        case 3: // 식당 검색
                             getMapBookmark();
+                            recyclerView.setAdapter(mapAdapter);
                             break;
                     }
-//                    Fragment selected = null;
-//                    if(TabPosition == 0){
-//
-//                    } else if(TabPosition == 1){
-//                        selected = fragment_search_recipe;
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString("searchText", searchText);
-//                        fragment_search_recipe.setArguments(bundle);
-//                    } else if(TabPosition == 2) {
-//
-//                    } else {
-//
-//                    }
-//                    getSupportFragmentManager().beginTransaction().replace(R.id.search_container, selected).commit();
                 }
             }
         });
+    }
+    void hideKeyboard()
+    {
+        InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void getUserSearchResult() {
         userSearchAdapter.removeItem();
 
-        db.collection("user")
+        db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
                         UserName = new ArrayList<>();
-                        //UserProfile = new ArrayList<>();
+                        UserProfile = new ArrayList<>();
                         UserEmail = new ArrayList<>();
                         if (task.isSuccessful()) {
 
@@ -180,14 +180,15 @@ public class SearchActivity extends AppCompatActivity {
                                 Log.d("search_user", documentSnapshot.getId() + " => " + documentSnapshot.getData().values());
                                 UserName.add(Objects.requireNonNull(documentSnapshot.getData().get("userID")).toString());
                                 UserEmail.add(Objects.requireNonNull(documentSnapshot.getData().get("userEmail")).toString());
+                                UserProfile.add(Objects.requireNonNull(documentSnapshot.getData().get("userProfileImg")).toString());
                             }
                             Log.d("user_name","name : " + UserName);
 
                             for(int i=0; i<UserName.size(); i++) {
                                 if (UserName.get(i).contains(searchText)) {
                                     Log.d("user_name","search : " + UserName.get(i));
-                                    User user = new User();
-                                    user.setId(UserName.get(i));
+                                    UserProfile user = new UserProfile();
+                                    user.setUserId(UserName.get(i));
                                     //user.setImageurl(UserProfile.get(i));
                                     user.setUserEmail(UserEmail.get(i));
 
@@ -214,10 +215,8 @@ public class SearchActivity extends AppCompatActivity {
                 recipeTitleArray = new ArrayList<>();
                 recipeUrlArray = new ArrayList<>();
                 recipeThumbArray = new ArrayList<>();
-                itemKeyList = new ArrayList<>();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                    itemKeyList.add(snapshot.getKey());
                     recipeTitleArray.add(snapshot.child("title").getValue().toString());
                     recipeUrlArray.add(snapshot.child("clickUrl").getValue().toString());
                     recipeThumbArray.add(snapshot.child("imageUrl").getValue().toString());
@@ -231,16 +230,12 @@ public class SearchActivity extends AppCompatActivity {
                         data.setTitle(recipeTitleArray.get(i));
                         data.setClickUrl(recipeUrlArray.get(i));
                         data.setImageUrl(recipeThumbArray.get(i));
-                        data.setItemKeyList(itemKeyList.get(i));
                         data.setBookmarkIdList(bookmarkIdList);
 
                         recipeAdapter.addItem(data);
-
-                        Log.d("recipe_search",recipeTitleArray.get(i));
                     }
                 }
-                recyclerView.setAdapter(recipeAdapter);
-//                recipeAdapter.notifyDataSetChanged();
+                recipeAdapter.notifyItemChanged(recipeAdapter.position);
             }
 
             @Override
@@ -278,26 +273,20 @@ public class SearchActivity extends AppCompatActivity {
                     MapDayoff.add(snapshot.child("storeDayOff").getValue().toString());
                     MapPhone.add(snapshot.child("storePhonenum").getValue().toString());
                     itemKeyList.add(snapshot.getKey());
-
-                    Log.d("map_search",MapName.toString());
                 }
 
                 for(int i=0; i<MapName.size(); i++) {
                     if(MapName.get(i).contains(searchText) || MapCategory.get(i).contains(searchText) || MapMenu.get(i).contains(searchText)) {
 
-                        MapData data = new MapData(MapName.get(i), MapAddr.get(i), MapCategory.get(i), MapImage.get(i));
-                        data.setItemKeyList(itemKeyList.get(i));
+                        MapData data = new MapData(MapName.get(i), MapAddr.get(i), MapCategory.get(i),
+                                MapImage.get(i), MapDayoff.get(i), MapTime.get(i), MapMenu.get(i), MapPhone.get(i));
                         data.setBookmarkIdList(bookmarkIdList);
-                        data.setTime(MapTime.get(i));
-                        data.setMenu(MapMenu.get(i));
-                        data.setDayoff(MapDayoff.get(i));
-                        data.setPhone(MapPhone.get(i));
                         data.setItemKeyList(itemKeyList.get(i));
 
                         mapAdapter.addItem(data);
                     }
                 }
-                recyclerView.setAdapter(mapAdapter);
+                mapAdapter.notifyItemChanged(mapAdapter.position);
             }
 
             @Override
@@ -321,7 +310,6 @@ public class SearchActivity extends AppCompatActivity {
                 }
 
                 getRecipeSearchResult();
-                //recipeAdapter.notifyDataSetChanged();
             }
 
             @Override
