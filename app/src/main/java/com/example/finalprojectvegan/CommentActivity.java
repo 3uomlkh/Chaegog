@@ -62,6 +62,7 @@ public class CommentActivity extends AppCompatActivity {
         FeedId = intent.getStringExtra("POSTSDocumentId");
         Log.d("DOCUMENTID_Receive", FeedId);
 
+        db = FirebaseFirestore.getInstance();
         db.collection("posts/" + FeedId + "/comments")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
