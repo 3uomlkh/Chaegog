@@ -45,6 +45,11 @@ public class CommentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_comment);
 
         Btn_UploadComment = findViewById(R.id.Btn_UploadComment);
+        Et_Comment = findViewById(R.id.Et_Comment);
+
+        db = FirebaseFirestore.getInstance();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         Btn_UploadComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,6 +75,7 @@ public class CommentActivity extends AppCompatActivity {
                                 commentList.add(new WriteCommentInfo(
                                         documentSnapshot.getData().get("comment").toString(),
                                         documentSnapshot.getData().get("publisher").toString(),
+                                        documentSnapshot.getId(),
                                         new Date(documentSnapshot.getDate("createdAt").getTime())
                                 ));
                             }
@@ -89,10 +95,10 @@ public class CommentActivity extends AppCompatActivity {
 
     private void uploadComment() {
 
-        final String comment = ((EditText) findViewById(R.id.Et_Comment)).getText().toString();
+        final String comment = Et_Comment.getText().toString();
 
         if (comment.length() > 0) {
-            WriteCommentInfo writeCommentInfo = new WriteCommentInfo(comment, firebaseUser.getUid(), new Date());
+            WriteCommentInfo writeCommentInfo = new WriteCommentInfo(comment, firebaseUser.getUid(), FeedId, new Date());
             uploader(writeCommentInfo);
         } else {
             Toast.makeText(this, "댓글 내용을 입력해주세요", Toast.LENGTH_SHORT).show();

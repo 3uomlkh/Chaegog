@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.finalprojectvegan.Model.WriteCommentInfo;
 import com.example.finalprojectvegan.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,16 +23,30 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
-//    private Context cContext;
     private ArrayList<WriteCommentInfo> cDataset;
+    private FirebaseFirestore db;
+    private FirebaseUser firebaseUser;
 
-    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
-//    private FirebaseUser firebaseUser;
+        public View view;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            view = itemView;
+        }
+    }
+
+    public CommentAdapter(ArrayList<WriteCommentInfo> commentDataset) {
+        cDataset = commentDataset;
+        notifyDataSetChanged();;
+    }
 
     @NonNull
     @Override
@@ -44,64 +59,56 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//        holder.onBind(cDataset.get(position));
 
         View view = holder.view;
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("comments")
+        db = FirebaseFirestore.getInstance();
+        db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            String uid = firebaseUser.getUid();
-                            String user = cDataset.get(holder.getAbsoluteAdapterPosition()).getPublisher();
-                            Log.d("Comment-UID", uid);
-                            Log.d("Comment-user", user);
 
-                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                             if (firebaseUser != null) {
 
                                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                    Log.d("success", documentSnapshot.getId() + "=> " + documentSnapshot.getData());
+                                    Log.d("CommentAdapter Success", documentSnapshot.getId() + " ==> " + documentSnapshot.getData());
+                                    Log.d("CommentAdapter Success", "FirebaseUser -> " + firebaseUser.getUid());
+                                    // CommentDataset에 들어있는 Publisher 이름과 users documentSnapshot으로부터 받아온 getId 값 일치하면
+                                    // CommentPublisher TV에 documentSnapshot으로부터 받아온 데이터 속 userId 값 배치하기
+                                    if (documentSnapshot.getId().equals(cDataset.get(holder.getAbsoluteAdapterPosition()).getPublisher())) {
+                                        TextView Tv_Comment_Publisher = view.findViewById(R.id.Tv_Comment_Publisher);
+                                        ImageView Iv_Comment_Profile = view.findViewById(R.id.Iv_Comment_Profile);
 
-
-                                    TextView commentPublisherName = view.findViewById(R.id.Tv_Comment_Publisher);
-
-                                    if (documentSnapshot.getId().equals(user)) {
-                                        if (documentSnapshot.getId().equals(uid)) {
-
-                                            Log.d("USERNAME", documentSnapshot.getData().get("userID").toString());
-//                                            TextView commentPublisherName = view.findViewById(R.id.commentPublisherName);
-                                            commentPublisherName.setText(documentSnapshot.getData().get("userID").toString());
+                                        Tv_Comment_Publisher.setText(documentSnapshot.getData().get("userId").toString());
+                                        // documentSnapshot의 getId 값이 현재 로그인한 유저의 Uid값과 동일하다면
+                                        // 댓글 닉네임 색상 변경해주기
+                                        if (documentSnapshot.getId().equals(firebaseUser.getUid())) {
+                                            Tv_Comment_Publisher.setTextColor(Color.parseColor("#ff6f60"));;
+                                        } else {
+                                            Tv_Comment_Publisher.setTextColor(Color.parseColor("#000000"));
                                         }
-                                        commentPublisherName.setTextColor(Color.parseColor("#ff6f60"));
-                                    }
-//                                    CommentUserList.add(new UserInfo(
-//                                            documentSnapshot.getData().get("userID").toString(),
-//                                            documentSnapshot.getData().get("userEmail").toString(),
-//                                            documentSnapshot.getData().get("userPassword").toString()
-//                                    ));
-//                                    TextView commentPublisherName = view.findViewById(R.id.commentPublisherName);
-//                                    commentPublisherName.setText(documentSnapshot.getData().get("userID").toString());
 
-//                                    if (documentSnapshot.getId().equals(user)) {
-//                                        // 글씨 색상 변경 넣어주기 (사용자 본인 댓글 표시)
-//                                        commentPublisherName.setText(documentSnapshot.getData().get("userID").toString());
-//                                    }
+                                        Glide.with(view)
+                                                .load(documentSnapshot.getData().get("userProfileImg").toString())
+                                                .into(Iv_Comment_Profile);
+                                    }
                                 }
                             }
                         }
                     }
                 });
 
-//        TextView commentPublisherName = view.findViewById(R.id.commentPublisherName);
-//        commentPublisherName.setText(cDataset.get(position).getPublisher());
+        // 댓글 내용 표시
+        TextView Comment = view.findViewById(R.id.Tv_Comment);
+        Comment.setText(cDataset.get(position).getComment());
 
-        TextView commentTextView = view.findViewById(R.id.Tv_Comment);
-        commentTextView.setText(cDataset.get(position).getComment());
+        // 댓글 작성 시간 표시
+        TextView CommentCreatedAt = view.findViewById(R.id.Tv_Comment_CreatedAt);
+        CommentCreatedAt.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(cDataset.get(position).getCreatedAt()));
+
     }
 
     @Override
@@ -109,30 +116,4 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         return cDataset.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        public View view;
-
-        public TextView commentTextView;
-        public TextView commentPublisherName;
-        public ImageView commentPublisherImage;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            view = itemView;
-
-            commentPublisherImage = (ImageView) itemView.findViewById(R.id.Iv_Comment_Profile);
-            commentPublisherName = (TextView) itemView.findViewById(R.id.Tv_Comment_Publisher);
-            commentTextView = (TextView) itemView.findViewById(R.id.Tv_Comment);
-
-        }
-    }
-
-    public CommentAdapter(ArrayList<WriteCommentInfo> commentDataset) {
-//        this.cDataset = list;
-        cDataset = commentDataset;
-//        this.context = context;
-        notifyDataSetChanged();;
-    }
 }

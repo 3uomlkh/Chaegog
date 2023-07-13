@@ -169,8 +169,8 @@
 
         <TextView
             android:id="@+id/Tv_Edit_VeganReason"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:visibility="invisible" />
 
     </LinearLayout>
@@ -296,8 +296,8 @@
         </RadioGroup>
             <TextView
                 android:id="@+id/Tv_Edit_VeganType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:visibility="invisible"/>
         </TableRow>
 
@@ -441,8 +441,8 @@
 
                     <TextView
                         android:id="@+id/Tv_Edit_Allergy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
                         android:visibility="invisible" />
 
                 </LinearLayout>

@@ -30,9 +30,9 @@
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".SearchActivity"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
         <activity
             android:name=".EditReviewActivity"
             android:exported="false" />
