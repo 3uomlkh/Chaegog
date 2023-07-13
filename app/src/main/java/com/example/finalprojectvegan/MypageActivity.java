@@ -44,6 +44,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -88,6 +89,8 @@ public class MypageActivity extends AppCompatActivity {
     private String USER_VEGAN_TYPE;
     private String USER_ALLERGY;
     private String USER_PROFILE_IMG;
+
+    private String DELETE_POST;
 
     private FirebaseUser firebaseUser;
     private FirebaseAuth firebaseAuth;
@@ -168,41 +171,138 @@ public class MypageActivity extends AppCompatActivity {
         Btn_Mypage_Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firebaseAuth.signOut();
-                Intent intent = new Intent(MypageActivity.this, LoginActivity.class);
-                startActivity(intent);
+
+                dialog = new Dialog(MypageActivity.this);
+                dialog.setContentView(R.layout.dialog_logout);
+                dialog.show();
+
+                Button Btn_Logout = dialog.findViewById(R.id.Btn_Logout);
+                Btn_Logout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+
+                        firebaseAuth.signOut();
+                        Intent intent = new Intent(MypageActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+                Button Btn_Cancle = dialog.findViewById(R.id.Btn_Cancle);
+                Btn_Cancle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
+
+//        db.collection("posts")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            if (firebaseUser != null) {
+//                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+//
+//                                    String publisher = documentSnapshot.getData().get("publisher").toString();
+//
+//                                    if (publisher.equals(firebaseUser.getUid())) {
+//                                        DELETE_POST = documentSnapshot.getData().get("postId").toString();
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                });
 
         Btn_Mypage_DeleteAccount = findViewById(R.id.Btn_Mypage_DeleteAccount);
         Btn_Mypage_DeleteAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                firebaseUser.delete()
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d("AccountDelete", "User account deleted.");
-                                }
-                            }
-                        });
+                dialog = new Dialog(MypageActivity.this);
+                dialog.setContentView(R.layout.dialog_accoutdelete);
+                dialog.show();
 
-                db.collection("users").document(firebaseUser.getUid())
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
+                Button Btn_DeleteAccount = dialog.findViewById(R.id.Btn_DeleteAccount);
+                Btn_DeleteAccount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
 
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
+                        firebaseUser.delete()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d("AccountDelete", "User account deleted.");
+                                        }
+                                    }
+                                });
 
-                            }
-                        });
+                        db.collection("posts")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            if (firebaseUser != null) {
+                                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+
+                                                    String publisher = documentSnapshot.getData().get("publisher").toString();
+
+                                                    if (publisher.equals(firebaseUser.getUid())) {
+                                                        DELETE_POST = documentSnapshot.getData().get("postId").toString();
+
+                                                        db.collection("posts").document(DELETE_POST)
+                                                                .delete()
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void unused) {
+
+                                                                    }
+                                                                })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+
+                                                                    }
+                                                                });
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+
+
+                        db.collection("users").document(firebaseUser.getUid())
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+                    }
+                });
+
+                Button Btn_Cancle = dialog.findViewById(R.id.Btn_Cancle);
+                Btn_Cancle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
 
             }
         });
