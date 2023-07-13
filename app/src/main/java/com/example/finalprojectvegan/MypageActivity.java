@@ -110,6 +110,7 @@ public class MypageActivity extends AppCompatActivity {
         userVeganType = findViewById(R.id.Tv_Mypage_VeganType);
         userAllergy = findViewById(R.id.Tv_Mypage_Allergy);
         Btn_EditAccount = findViewById(R.id.Btn_EditAccount);
+        Btn_Mypage_DeleteAccount = findViewById(R.id.Btn_Mypage_DeleteAccount);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -170,6 +171,39 @@ public class MypageActivity extends AppCompatActivity {
                 firebaseAuth.signOut();
                 Intent intent = new Intent(MypageActivity.this, LoginActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        Btn_Mypage_DeleteAccount = findViewById(R.id.Btn_Mypage_DeleteAccount);
+        Btn_Mypage_DeleteAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                firebaseUser.delete()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d("AccountDelete", "User account deleted.");
+                                }
+                            }
+                        });
+
+                db.collection("users").document(firebaseUser.getUid())
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+
             }
         });
 
