@@ -154,6 +154,7 @@ public class FragMyFeed extends Fragment {
                                         documentSnapshot.getData().get("publisher").toString(),
                                         documentSnapshot.getId(),
                                         documentSnapshot.getData().get("uri").toString(),
+                                        documentSnapshot.getLong("favorite"),
                                         new Date(documentSnapshot.getDate("createdAt").getTime())));
 
                             }

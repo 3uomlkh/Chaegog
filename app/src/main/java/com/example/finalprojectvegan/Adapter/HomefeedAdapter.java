@@ -33,6 +33,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,13 +44,15 @@ import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class HomefeedAdapter extends RecyclerView.Adapter<HomefeedAdapter.ViewHolder>{
 
     private ArrayList<FeedInfo> FeedDataset;
     private Context context;
-    private TextView Tv_HomeFeed_Title, Tv_HomeFeed_Content, Tv_HomeFeed_CreatedAt, Tv_HomeFeed_Publisher;
+    private TextView Tv_HomeFeed_Title, Tv_HomeFeed_Content, Tv_HomeFeed_CreatedAt, Tv_HomeFeed_Publisher, Tv_HomeFeed_Favorite;
     private ImageView Iv_HomeFeed_Image, Iv_HomeFeed_Profile;
     private String FeedId, USER_ID, USER_PROFILE_IMG;
 
@@ -73,13 +78,105 @@ public class HomefeedAdapter extends RecyclerView.Adapter<HomefeedAdapter.ViewHo
             Cb_HomeFeedFavorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                    if (checked) {
-                        Cb_HomeFeedFavorite.setEnabled(true);
+                    // 클릭된 view 파악
+                    int pos = getAbsoluteAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
 
-                        Log.d("CHECK", "눌림");
-                    } else {
-                        Log.d("CHECK", "해제");
+                        // 클릭한 view 알아내고 (pos) 해당 view의 FeedId값을 가져온다.
+                        FeedId = FeedDataset.get(pos).getPostId();
+                        Log.d("DOCUMENTID_Send", FeedId);
                     }
+                    if (checked) {
+
+                    }
+                    db.collection("posts").document(FeedId).collection("favorite")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                            String favoriteOnUser = documentSnapshot.getData().get("publisher").toString();
+                                            // 좋아요 컬렉션에 현재 사용자 Uid가 있으면 삭제
+                                            if (favoriteOnUser.equals(firebaseUser.getUid())) {
+                                                compoundButton.isChecked();
+                                                db.collection("posts").document(FeedId).collection("favorite").document(favoriteOnUser)
+                                                        .delete()
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void unused) {
+
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+
+                                                            }
+                                                        });
+                                                break;
+                                            } else {
+                                                // 없으면 추가
+                                                Map<String, Object> favorite = new HashMap<>();
+                                                favorite.put("userId", firebaseUser.getUid());
+                                                DocumentReference postDoc = db.collection("posts").document(FeedId);
+                                                DocumentReference favoriteDoc = postDoc.collection("favorite").document(firebaseUser.getUid());
+                                                favoriteDoc.set(favorite);
+                                                postDoc.update("favorite", FieldValue.increment(1));
+                                            }
+                                        }
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+//                    if (checked) {
+//                        db.collection("posts").document(FeedId).collection("favorite")
+//                                .get()
+//                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                        if (task.isSuccessful()) {
+//                                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+//                                                if (documentSnapshot.getData().get("publisher").equals(firebaseUser.getUid())) {
+//
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+//                                })
+//                                .addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//
+//                                    }
+//                                });
+//                        Cb_HomeFeedFavorite.setEnabled(true);
+//                        Log.d("CHECK", "눌림");
+//
+//                        db.collection("posts").document(FeedId)
+//                                .update("favorite", FieldValue.increment(1))
+//                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void unused) {
+//                                        Log.d("좋아요", "성공");
+//                                    }
+//                                });
+//                    } else {
+//                        Log.d("CHECK", "해제");
+//                        db.collection("posts").document(FeedId)
+//                                .update("favorite", FieldValue.increment(-1))
+//                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void unused) {
+//                                        Log.d("좋아요", "성공");
+//                                    }
+//                                });
+//                    }
                 }
             });
 
@@ -141,6 +238,7 @@ public class HomefeedAdapter extends RecyclerView.Adapter<HomefeedAdapter.ViewHo
         Tv_HomeFeed_Content = cardView.findViewById(R.id.Tv_HomeFeed_Content);
         Tv_HomeFeed_CreatedAt = cardView.findViewById(R.id.Tv_HomeFeed_CreatedAt);
         Tv_HomeFeed_Publisher = cardView.findViewById(R.id.Tv_HomeFeed_Publisher);
+        Tv_HomeFeed_Favorite = cardView.findViewById(R.id.Tv_HomeFeed_Favorite);
 
         // RecyclerView에 표시할 posts 내용들 Dataset에서 가져와서 넣기
         String user = FeedDataset.get(position).getPublisher();
@@ -148,10 +246,43 @@ public class HomefeedAdapter extends RecyclerView.Adapter<HomefeedAdapter.ViewHo
         String Content = FeedDataset.get(position).getContent();
         String CreatedAt = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(FeedDataset.get(position).getCreatedAt());
         String url = FeedDataset.get(position).getUri();
+        String favorite = FeedDataset.get(position).getFavorite().toString();
+//        Double favorite = FeedDataset.get(position).getFavorite();
+//        String Stfavorite = "0";
+
+//        db.collection("posts")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+//                                String Stfavorite = documentSnapshot.getData().get("favorite").toString();
+//                                Tv_HomeFeed_Favorite.setText(Stfavorite);
+//                            }
+//                        }
+//                    }
+//                });
+
+//        db.collection("posts")
+//                        .get()
+//                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                        if (task.isSuccessful()) {
+//                                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+//                                                String Stfavorite = documentSnapshot.getData().get("favorite").toString();
+//                                                Log.d("좋아요 수", Stfavorite);
+//                                                Tv_HomeFeed_Favorite.setText(Stfavorite);
+//                                            }
+//                                        }
+//                                    }
+//                                });
 
         Tv_HomeFeed_Title.setText(Title);
         Tv_HomeFeed_Content.setText(Content);
         Tv_HomeFeed_CreatedAt.setText(CreatedAt);
+        Tv_HomeFeed_Favorite.setText(favorite);
 
         Glide.with(cardView)
                 .load(url)

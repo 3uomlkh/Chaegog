@@ -93,7 +93,7 @@ public class RegisterStep3Activity extends AppCompatActivity {
                     case R.id.Radio_etc:
                         Tv_SelectedVeganType.setText("지향없음");
                         break;
-                };
+                }
             }
         });
     }
