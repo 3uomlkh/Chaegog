@@ -10,12 +10,13 @@ public class UserProfile {
     private String userVeganType;
     private ArrayList<String> userAllergy;
     private String userProfileImg;
+    private String userToken;
 
     public UserProfile() {
 
     }
 
-    public UserProfile(String userId, String userEmail, String userPw, String userVeganReason, String userVeganType, ArrayList<String> userAllergy, String userProfileImg) {
+    public UserProfile(String userId, String userEmail, String userPw, String userVeganReason, String userVeganType, ArrayList<String> userAllergy, String userProfileImg, String userToken) {
         this.userId = userId;
         this.userEmail = userEmail;
         this.userPw = userPw;
@@ -23,6 +24,7 @@ public class UserProfile {
         this.userVeganType = userVeganType;
         this.userAllergy = userAllergy;
         this.userProfileImg = userProfileImg;
+        this.userToken = userToken;
     }
 
     public String getUserId() {
@@ -79,5 +81,13 @@ public class UserProfile {
 
     public void setUserProfileImg(String userProfileImg) {
         this.userProfileImg = userProfileImg;
+    }
+
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 }

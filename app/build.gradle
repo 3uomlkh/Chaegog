@@ -79,7 +79,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
     // Firebase Project 연동 Authentication/Database/Storage
-    implementation platform('com.google.firebase:firebase-bom:30.3.2')
+    implementation platform('com.google.firebase:firebase-bom:32.1.0')
     implementation 'com.google.firebase:firebase-auth:21.0.8'
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-firestore:24.3.1'
@@ -99,4 +99,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+   // firebase cloud message
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-analytics'
 }

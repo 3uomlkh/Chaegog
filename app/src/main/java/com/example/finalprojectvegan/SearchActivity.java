@@ -138,8 +138,8 @@ public class SearchActivity extends AppCompatActivity {
                 } else {
                     switch (TabPosition) {
                         case 0: // 계정 검색
-                            Toast.makeText(SearchActivity.this, "계정 검색 준비중", Toast.LENGTH_SHORT).show();
-                            //getUserSearchResult();
+                            //Toast.makeText(SearchActivity.this, "계정 검색 준비중", Toast.LENGTH_SHORT).show();
+                            getUserSearchResult();
                             break;
                         case 1: // 레시피 검색
                             getRecipeBookmark();
@@ -173,13 +173,14 @@ public class SearchActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
                         UserName = new ArrayList<>();
-                        UserProfile = new ArrayList<>();
                         UserEmail = new ArrayList<>();
+                        UserProfile = new ArrayList<>();
+
                         if (task.isSuccessful()) {
 
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 Log.d("search_user", documentSnapshot.getId() + " => " + documentSnapshot.getData().values());
-                                UserName.add(Objects.requireNonNull(documentSnapshot.getData().get("userID")).toString());
+                                UserName.add(Objects.requireNonNull(documentSnapshot.getData().get("userId")).toString());
                                 UserEmail.add(Objects.requireNonNull(documentSnapshot.getData().get("userEmail")).toString());
                                 UserProfile.add(Objects.requireNonNull(documentSnapshot.getData().get("userProfileImg")).toString());
                             }
@@ -187,10 +188,10 @@ public class SearchActivity extends AppCompatActivity {
 
                             for(int i=0; i<UserName.size(); i++) {
                                 if (UserName.get(i).contains(searchText)) {
-                                    Log.d("user_name","search : " + UserName.get(i));
+                                    Log.d("user_name", "search : " + UserName.get(i));
                                     UserProfile user = new UserProfile();
                                     user.setUserId(UserName.get(i));
-                                    //user.setImageurl(UserProfile.get(i));
+                                    user.setUserProfileImg(UserProfile.get(i));
                                     user.setUserEmail(UserEmail.get(i));
 
                                     userSearchAdapter.addItem(user);

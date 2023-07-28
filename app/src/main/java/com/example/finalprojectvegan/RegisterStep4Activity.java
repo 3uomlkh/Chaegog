@@ -15,11 +15,14 @@ import android.widget.Toast;
 
 import com.example.finalprojectvegan.Model.UserProfile;
 import com.example.finalprojectvegan.Model.UserVeganAllergyInfo;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -33,7 +36,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
     private Button Btn_RegisterFinish;
     private TextView Tv_SelectedAllergy;
     private int count = 0;
-    private String userId, userEmail, userPw, userVeganReason, userVeganType, userProfileImg;
+    private String userId, userEmail, userPw, userVeganReason, userVeganType, userProfileImg, userToken;
     String userAllergy, similarAllergy;
     private ArrayList<String> Array_userAllergy;
 
@@ -140,8 +143,26 @@ public class RegisterStep4Activity extends AppCompatActivity {
                     userAllergy = Tv_SelectedAllergy.getText().toString();
                 }
                 Log.d("LAST REGISTER", "SUCCESS");
+
+                // fcm token 구하기
+                FirebaseMessaging.getInstance().getToken()
+                        .addOnCompleteListener(new OnCompleteListener<String>() {
+                            @Override
+                            public void onComplete(@NonNull Task<String> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.w("FirebaseMessaging", "Fetching FCM registration token failed", task.getException());
+                                    return;
+                                }
+
+                                // Get new FCM registration token
+                                userToken = task.getResult();
+                                Log.d("FirebaseMessaging", "Your device registration token is " + userToken);
+                                Toast.makeText(getApplicationContext(), "Your device registration token is " + userToken, Toast.LENGTH_SHORT).show();
+                                updateUserProfile(userId, userEmail, userPw, userVeganReason, userVeganType, Array_userAllergy, userProfileImg, userToken);
+                            }
+                        });
+
                 // 함수 선언
-                updateUserProfile(userId, userEmail, userPw, userVeganReason, userVeganType, Array_userAllergy, userProfileImg);
                 Intent intent3 = new Intent(RegisterStep4Activity.this, LoginActivity.class);
                 startActivity(intent3);
             }
@@ -150,12 +171,12 @@ public class RegisterStep4Activity extends AppCompatActivity {
 
     // db에 회원정보 저장하는 함수
     // Firebase Firestore에 회원가입 단계의 모든 정보를 한번에 저장한다.
-    private void updateUserProfile(String userId, String userEmail, String userPw, String userVeganReason, String userVeganType, ArrayList Array_userAllergy, String userProfileImg) {
+    private void updateUserProfile(String userId, String userEmail, String userPw, String userVeganReason, String userVeganType, ArrayList Array_userAllergy, String userProfileImg, String userToken) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        UserProfile userProfile = new UserProfile(userId, userEmail, userPw, userVeganReason, userVeganType, Array_userAllergy, userProfileImg);
+        UserProfile userProfile = new UserProfile(userId, userEmail, userPw, userVeganReason, userVeganType, Array_userAllergy, userProfileImg, userToken);
 
         if (firebaseUser != null){
             db.collection("users").document(firebaseUser.getUid()).set(userProfile)

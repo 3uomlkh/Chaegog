@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.DIAL_PHONE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -17,6 +18,7 @@
         android:name="android.hardware.camera"
         android:required="true" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -27,11 +29,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FinalProjectVegan"
         android:usesCleartextTraffic="true">
+        <service
+            android:name=".Fcm.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <activity
-            android:name=".EditProfileActivity"
+            android:name=".MapSearchActivity"
             android:exported="false" />
         <activity
-            android:name=".SearchActivity"
+            android:name=".MapButtonActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditProfileActivity"
             android:exported="false" />
         <activity
             android:name=".EditReviewActivity"
@@ -54,6 +66,9 @@
             android:exported="false" />
         <activity
             android:name=".WritePostActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SearchActivity"
             android:exported="false" />
         <activity
             android:name=".CommentActivity"
@@ -143,5 +158,6 @@
                 android:resource="@xml/external" />
         </provider>
     </application>
+
 
 </manifest>

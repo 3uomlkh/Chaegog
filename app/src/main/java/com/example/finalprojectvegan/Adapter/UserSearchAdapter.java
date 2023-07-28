@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.finalprojectvegan.Model.UserProfile;
 import com.example.finalprojectvegan.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -77,6 +79,10 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
         void onBind(UserProfile data) {
             userName.setText(data.getUserId());
             userEmail.setText(data.getUserEmail());
+            Glide.with(itemView)
+                    .load(data.getUserProfileImg())
+                    .override(800,800)
+                    .into(userProfile);
         }
     }
 }
