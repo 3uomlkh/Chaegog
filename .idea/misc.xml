@@ -110,14 +110,16 @@
         <entry key="app/src/main/res/layout/fragment_map_tab_review.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_roading.xml" value="0.19154367959004168" />
         <entry key="app/src/main/res/layout/fragment_user_search.xml" value="0.22313232421875" />
-        <entry key="app/src/main/res/layout/homefeed_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/homefeed_item.xml" value="0.21433715820312502" />
         <entry key="app/src/main/res/layout/myfeed_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/mypage_item.xml" value="0.10219879150390626" />
         <entry key="app/src/main/res/layout/product_item.xml" value="0.20471014492753623" />
+        <entry key="app/src/main/res/layout/progressdialog.xml" value="0.12454710144927536" />
         <entry key="app/src/main/res/layout/recipe_item.xml" value="0.12284701114488349" />
         <entry key="app/src/main/res/layout/review_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/user_item.xml" value="0.1408514492753623" />
         <entry key="app/src/main/res/menu/bottom_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/menu.xml" value="0.12037037037037036" />
         <entry key="app/src/main/res/menu/toolbar_menu.xml" value="0.23192749023437498" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />

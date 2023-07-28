@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
@@ -25,6 +26,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -92,6 +94,11 @@ public class WritePostActivity extends AppCompatActivity {
 
         Iv_Add_UploadPost = findViewById(R.id.Iv_Add_UploadPost);
         Btn_UploadPost = findViewById(R.id.Btn_UploadPost);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_writepost);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Btn_UploadPost.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,6 +184,16 @@ public class WritePostActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -302,11 +319,12 @@ public class WritePostActivity extends AppCompatActivity {
 
         final String title = ((EditText) findViewById(R.id.Et_Post_Title)).getText().toString();
         final String content = ((EditText) findViewById(R.id.Et_Post_Content)).getText().toString();
+        final Long favorite = Long.valueOf("0");
 
         if (title.length() > 0 && content.length() > 0) {
 
             DocumentReference documentReference = db.collection("posts").document();
-            FeedInfo feedInfo = new FeedInfo(title, content, firebaseUser.getUid(), documentReference.getId(), uri.toString(), new Date());
+            FeedInfo feedInfo = new FeedInfo(title, content, firebaseUser.getUid(), documentReference.getId(), uri.toString(), favorite, new Date());
 
             documentReference.set(feedInfo)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {

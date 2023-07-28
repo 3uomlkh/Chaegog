@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,8 @@ public class FragHomeFeed extends Fragment {
 
     private String mParam1;
     private String mParam2;
+
+    ProgressDialog progressDialog;
 
     public FragHomeFeed() {
         // Required empty public constructor
@@ -69,6 +72,17 @@ public class FragHomeFeed extends Fragment {
         // firebase 초기화
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.showDialog();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.closeDialog();
+            }
+        }, 2000);
+
         // posts DB로부터 정보 가져오기
         db.collection("posts")
                 .get()
@@ -91,6 +105,7 @@ public class FragHomeFeed extends Fragment {
                                         documentSnapshot.getData().get("publisher").toString(),
                                         documentSnapshot.getId(),
                                         documentSnapshot.getData().get("uri").toString(),
+                                        documentSnapshot.getLong("favorite"),
                                         new Date(documentSnapshot.getDate("createdAt").getTime())));
 
                             }
