@@ -1,20 +1,23 @@
 package com.example.finalprojectvegan.Model;
 
 import java.util.Date;
+import java.util.Map;
 
 public class FeedInfo {
     private String title, content, publisher, postId, uri;
-    private Long favorite;
     private Date createdAt;
 
-    public FeedInfo(String title, String content, String publisher, String postId, String uri, Long favorite, Date createdAt) {
+    public FeedInfo(String title, String content, String publisher, String postId, String uri, Date createdAt) {
         this.title = title;
         this.content = content;
         this.publisher = publisher;
         this.postId = postId;
         this.uri = uri;
-        this.favorite = favorite;
         this.createdAt = createdAt;
+    }
+
+    public FeedInfo() {
+
     }
 
     public String getTitle() {
@@ -57,14 +60,6 @@ public class FeedInfo {
         this.uri = uri;
     }
 
-    public Long getFavorite() {
-        return favorite;
-    }
-
-    public void setFavorite(Long favorite) {
-        this.favorite = favorite;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -72,4 +67,5 @@ public class FeedInfo {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+
 }

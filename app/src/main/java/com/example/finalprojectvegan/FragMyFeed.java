@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +60,8 @@ public class FragMyFeed extends Fragment {
     String USER_PROFILE_IMG;
     String Uid;
 
+    ProgressDialog progressDialog;
+
     public FragMyFeed() {
         // Required empty public constructor
     }
@@ -100,6 +103,17 @@ public class FragMyFeed extends Fragment {
 
 //        getFirebaseProfileImage(firebaseUser);
 
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.showDialog();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.closeDialog();
+            }
+        }, 3000);
+
         db = FirebaseFirestore.getInstance();
         db.collection("users")
                 .get()
@@ -135,49 +149,48 @@ public class FragMyFeed extends Fragment {
                     }
                 });
 
-        db.collection("posts")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                            ArrayList<FeedInfo> MyFeedList = new ArrayList<>();
-
-                            if (firebaseUser != null) {
-
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                Log.d("MYFEED POST", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                                MyFeedList.add(new FeedInfo(
-                                        documentSnapshot.getData().get("title").toString(),
-                                        documentSnapshot.getData().get("content").toString(),
-                                        documentSnapshot.getData().get("publisher").toString(),
-                                        documentSnapshot.getId(),
-                                        documentSnapshot.getData().get("uri").toString(),
-                                        documentSnapshot.getLong("favorite"),
-                                        new Date(documentSnapshot.getDate("createdAt").getTime())));
-
-                            }
-
-                                Tv_Notice.setVisibility(GONE);
-
-                                RecyclerView recyclerView = view.findViewById(R.id.Rv_MyFeed);
-                                recyclerView.setHasFixedSize(true);
-                                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-                                RecyclerView.Adapter mAdapter = new MyFeedAdapter(getActivity(), MyFeedList);
-                                recyclerView.setAdapter(mAdapter);
-
-                            }
-
-                            Tv_Notice.setVisibility(VISIBLE);
-
-                        } else {
-                            Log.d("error", "Error getting documents", task.getException());
-                        }
-                    }
-                });
-
+//        db.collection("posts")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//
+//                            ArrayList<FeedInfo> MyFeedList = new ArrayList<>();
+//
+//                            if (firebaseUser != null) {
+//
+//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+//                                Log.d("MYFEED POST", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+//                                MyFeedList.add(new FeedInfo(
+//                                        documentSnapshot.getData().get("title").toString(),
+//                                        documentSnapshot.getData().get("content").toString(),
+//                                        documentSnapshot.getData().get("publisher").toString(),
+//                                        documentSnapshot.getId(),
+//                                        documentSnapshot.getData().get("uri").toString(),
+//                                        new Date(documentSnapshot.getDate("createdAt").getTime())));
+//
+//                            }
+//
+//                                Tv_Notice.setVisibility(GONE);
+//
+//                                RecyclerView recyclerView = view.findViewById(R.id.Rv_MyFeed);
+//                                recyclerView.setHasFixedSize(true);
+//                                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//
+//                                RecyclerView.Adapter mAdapter = new MyFeedAdapter(getActivity(), MyFeedList);
+//                                recyclerView.setAdapter(mAdapter);
+//
+//                            }
+//
+//                            Tv_Notice.setVisibility(VISIBLE);
+//
+//                        } else {
+//                            Log.d("error", "Error getting documents", task.getException());
+//                        }
+//                    }
+//                });
+//
         return view;
     }
 

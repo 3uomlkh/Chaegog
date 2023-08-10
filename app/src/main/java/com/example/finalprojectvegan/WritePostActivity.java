@@ -1,9 +1,5 @@
 package com.example.finalprojectvegan;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -15,11 +11,8 @@ import androidx.core.content.FileProvider;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,32 +27,25 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.finalprojectvegan.Model.FeedFavorite;
 import com.example.finalprojectvegan.Model.FeedInfo;
-import com.example.finalprojectvegan.Model.WritePostInfo;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.lakue.lakuepopupactivity.PopupActivity;
-import com.lakue.lakuepopupactivity.PopupGravity;
-import com.lakue.lakuepopupactivity.PopupResult;
-import com.lakue.lakuepopupactivity.PopupType;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 public class WritePostActivity extends AppCompatActivity {
 
@@ -81,6 +67,8 @@ public class WritePostActivity extends AppCompatActivity {
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
     private FirebaseFirestore db;
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase firebaseDatabase;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -184,16 +172,6 @@ public class WritePostActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -319,17 +297,19 @@ public class WritePostActivity extends AppCompatActivity {
 
         final String title = ((EditText) findViewById(R.id.Et_Post_Title)).getText().toString();
         final String content = ((EditText) findViewById(R.id.Et_Post_Content)).getText().toString();
-        final Long favorite = Long.valueOf("0");
+        final int favoriteCount = Integer.parseInt("0");
+        final Map<String, Boolean> favoriteUser = null;
+
 
         if (title.length() > 0 && content.length() > 0) {
 
             DocumentReference documentReference = db.collection("posts").document();
-            FeedInfo feedInfo = new FeedInfo(title, content, firebaseUser.getUid(), documentReference.getId(), uri.toString(), favorite, new Date());
-
+            FeedInfo feedInfo = new FeedInfo(title, content, firebaseUser.getUid(), documentReference.getId(), uri.toString(), new Date());
             documentReference.set(feedInfo)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -337,8 +317,27 @@ public class WritePostActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
                         }
                     });
+
+//
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            databaseReference = firebaseDatabase.getReference("posts");
+
+            FeedFavorite feedFavorite = new FeedFavorite(favoriteCount, favoriteUser);
+            databaseReference.child(documentReference.getId()).child("post").setValue(feedFavorite);
+
         } else {
             Toast.makeText(this, "게시글 내용을 입력해주세요", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // 툴바의 뒤로가기 버튼 클릭 시 -> 해당 액티비티 종료
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

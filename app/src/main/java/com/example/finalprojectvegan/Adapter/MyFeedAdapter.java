@@ -149,7 +149,9 @@ public class MyFeedAdapter extends RecyclerView.Adapter<MyFeedAdapter.ViewHolder
 
 //                                            Double favorite = MyFeedDataset.get(holder.getAbsoluteAdapterPosition()).getFavorite();
 
-                                            Glide.with(cardView).load(url).override(800, 800).into(Iv_MyFeed_Item);
+                                            Glide.with(cardView)
+                                                    .load(url)
+                                                    .into(Iv_MyFeed_Item);
 
                                         } else {
                                             cardView.setVisibility(View.GONE);
