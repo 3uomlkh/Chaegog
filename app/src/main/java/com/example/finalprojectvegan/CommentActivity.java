@@ -28,6 +28,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -53,6 +55,8 @@ public class CommentActivity extends AppCompatActivity {
     private String FeedId;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore db;
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase firebaseDatabase;
     private String postPublisher, token, comment;
     PushNotification pushNotification;
     static String TOPIC = "/topics/myTopic";
@@ -139,6 +143,7 @@ public class CommentActivity extends AppCompatActivity {
 
     }
 
+    // 툴바에서 뒤로가기 아이콘 클릭시 -> 해당 액티비티 종료 후 게시물 화면으로 돌아간다.
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -224,5 +229,10 @@ public class CommentActivity extends AppCompatActivity {
                         Log.d("COMMENTSUPLOAD Failure", FeedId);;
                     }
                 });
+
+//        firebaseDatabase = FirebaseDatabase.getInstance();
+//        databaseReference = firebaseDatabase.getReference("posts");
+//        databaseReference.child(FeedId).child("comment").setValue(writeCommentInfo);
+
     }
 }
