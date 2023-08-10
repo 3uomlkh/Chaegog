@@ -29,13 +29,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FinalProjectVegan"
         android:usesCleartextTraffic="true">
-        <service
-            android:name=".Fcm.MyFirebaseMessagingService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+<!--        <service-->
+<!--            android:name=".Fcm.MyFirebaseMessagingService"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.google.firebase.MESSAGING_EVENT" />-->
+<!--            </intent-filter>-->
+<!--        </service>-->
         <activity
             android:name=".MapSearchActivity"
             android:exported="false" />
