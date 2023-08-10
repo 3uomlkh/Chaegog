@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.finalprojectvegan.Adapter.CommentAdapter;
+import com.example.finalprojectvegan.Fcm.NotificationAPI;
+import com.example.finalprojectvegan.Fcm.NotificationData;
+import com.example.finalprojectvegan.Fcm.PushNotification;
+import com.example.finalprojectvegan.Fcm.RetrofitInstance;
 import com.example.finalprojectvegan.Model.WriteCommentInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -28,18 +33,30 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class CommentActivity extends AppCompatActivity {
 
     private Button Btn_UploadComment;
     private EditText Et_Comment;
     private String FeedId;
-
     private FirebaseUser firebaseUser;
     private FirebaseFirestore db;
+    private String postPublisher, token, comment;
+    PushNotification pushNotification;
+    static String TOPIC = "/topics/myTopic";
+    RetrofitInstance retrofitInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +73,8 @@ public class CommentActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC);
 
         Btn_UploadComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +118,25 @@ public class CommentActivity extends AppCompatActivity {
                     }
                 });
 
+        db.collection("posts")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                if(documentSnapshot.getData().get("postId").equals(FeedId)) {
+                                    Log.d("CommentActivityFCM", "게시물 작성자 : " + documentSnapshot.getData().get("publisher").toString());
+                                    postPublisher = documentSnapshot.getData().get("publisher").toString();
+                                }
+                            }
+
+                        } else {
+                            Log.d("error", "Error getting documents", task.getException());
+                        }
+                    }
+                });
+
     }
 
     @Override
@@ -112,15 +150,61 @@ public class CommentActivity extends AppCompatActivity {
     }
 
     private void uploadComment() {
-
         final String comment = Et_Comment.getText().toString();
 
         if (comment.length() > 0) {
+            sendCommentToFCM();
             WriteCommentInfo writeCommentInfo = new WriteCommentInfo(comment, firebaseUser.getUid(), FeedId, new Date());
             uploader(writeCommentInfo);
         } else {
             Toast.makeText(this, "댓글 내용을 입력해주세요", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void sendCommentToFCM() {
+        final String comment = Et_Comment.getText().toString();
+
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                if (documentSnapshot.getId().equals(postPublisher)) { // user 테이블의 사용자 id가 댓글이 달린 게시글 작성자 id와 같다면
+                                    token = documentSnapshot.getData().get("userToken").toString(); // 해당 사용자의 토큰을 얻는다.
+
+                                    NotificationData data = new NotificationData("채곡채곡", "댓글이 달렸습니다 : " + comment);
+                                    pushNotification = new PushNotification(data, token);
+//                                    Log.d("pushNoti",  "알림 메세지 : " + pushNotification.getNotificationData().getTitle() + ", " + pushNotification.getNotificationData().getBody()
+//                                            +"\n" + "게시글 작성자 토큰 :  " + pushNotification.getTo());
+                                    SendNotification(pushNotification);
+                                }
+                            }
+
+                        } else {
+                            Log.d("error", "Error getting documents", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void SendNotification(PushNotification pushNotification) {
+
+        NotificationAPI api = RetrofitInstance.getClient().create(NotificationAPI.class);
+        retrofit2.Call<ResponseBody> responseBodyCall = api.sendNotification(pushNotification);
+        responseBodyCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.d("SendNotification","성공");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("SendNotification","실패");
+            }
+        });
+
     }
 
     private void uploader (WriteCommentInfo writeCommentInfo) {
