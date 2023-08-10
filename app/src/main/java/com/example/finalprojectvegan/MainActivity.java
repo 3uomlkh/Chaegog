@@ -12,7 +12,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.example.finalprojectvegan.Fcm.NotificationAPI;
+import com.example.finalprojectvegan.Fcm.NotificationData;
+import com.example.finalprojectvegan.Fcm.PushNotification;
+import com.example.finalprojectvegan.Fcm.RetrofitInstance;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,9 +25,18 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.ktx.Firebase;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
     Fragment fragment_search;
 
     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    PushNotification pushNotification;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

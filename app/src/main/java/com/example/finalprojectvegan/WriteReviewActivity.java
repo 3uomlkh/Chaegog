@@ -1,27 +1,16 @@
 package com.example.finalprojectvegan;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -38,8 +27,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.finalprojectvegan.Adapter.ReviewAdapter;
-import com.example.finalprojectvegan.Adapter.ReviewWithoutImageAdapter;
+import com.example.finalprojectvegan.Fcm.MyFirebaseMessagingService;
+import com.example.finalprojectvegan.Fcm.NotificationAPI;
+import com.example.finalprojectvegan.Fcm.NotificationData;
+import com.example.finalprojectvegan.Fcm.PushNotification;
 import com.example.finalprojectvegan.Model.WriteReviewInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -73,12 +64,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class WriteReviewActivity extends AppCompatActivity {
     ImageView add_image, imageView1, imageView2, imageView3;
     Button Btn_uploadReview;
     EditText editText_review;
     TextView restaurant_name_review;
-    String name, rating;
+    String name, rating, token;
     RatingBar ratingBar;
     final int CAMERA = 100;
     final int GALLERY = 101;
@@ -202,6 +197,42 @@ public class WriteReviewActivity extends AppCompatActivity {
                     } else {
                         ReviewUpdateWithoutImage();
                     }
+
+                    // 알림 test
+//        db.collection("users")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+//                                token = documentSnapshot.getData().get("userToken").toString();
+//
+//                                if (documentSnapshot.getId().equals(firebaseUser.getUid())) {
+//                                    Log.d("myToken!", token);
+//                                    pushNotification = new PushNotification(new NotificationData("채곡채곡", "내가 쓴 글에 댓글이 달렸어요!"), token);
+////                                    Call<NotificationAPI> call = (Call<NotificationAPI>) RetrofitInstance.getApi();
+////                                    call.enqueue(new Callback<NotificationAPI>(){
+////
+////                                        @Override
+////                                        public void onResponse(Call<NotificationAPI> call, Response<NotificationAPI> response) {
+////                                            Log.d("SendNotification", "Response : " + response);
+////                                        }
+////
+////                                        @Override
+////                                        public void onFailure(Call<NotificationAPI> call, Throwable t) {
+////                                        }
+////                                    });
+//                                    //sendNotification.SendNotification(pushNotification);
+//                                }
+//                            }
+//
+//                        } else {
+//                            Log.d("error", "Error getting documents", task.getException());
+//                        }
+//                    }
+//                });
+
                     Toast.makeText(WriteReviewActivity.this, "리뷰가 등록되었습니다.", Toast.LENGTH_SHORT).show();
                     finish();
                 }
