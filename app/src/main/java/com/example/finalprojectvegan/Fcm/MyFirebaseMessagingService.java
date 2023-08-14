@@ -14,6 +14,7 @@ import android.media.RingtoneManager;
 import android.media.session.MediaSession;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -53,12 +54,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "onMessageReceived: 1");
-            sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+            Log.d(TAG, remoteMessage.getNotification().getClickAction());
+            sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(),
+                    remoteMessage.getNotification().getClickAction());
         } else if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "onMessageReceived: 2");
             String title = remoteMessage.getData().get("title");
-            String body = remoteMessage.getData().get("message");
-            sendNotification(title, body);
+            String body = remoteMessage.getData().get("body");
+            String click_action = remoteMessage.getNotification().getClickAction();
+            sendNotification(title, body, click_action);
         }
 
 //        notificationManager
@@ -118,9 +122,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //        sendNotification(remoteMessage.getNotification().getBody());
 
     }
-    public void sendNotification(String title, String body) {
+    public void sendNotification(String title, String body, String click_action) {
         Log.d(TAG, "sendNotification: ");
-        Intent intent = new Intent(this, MainActivity.class);
+
+        Intent intent = new Intent(this, CommentActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("POSTSDocumentId", click_action);
+        intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,

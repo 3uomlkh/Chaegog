@@ -51,10 +51,9 @@ public class CommentActivity extends AppCompatActivity {
     private String FeedId;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore db;
-    private String postPublisher, token, comment;
+    private String postPublisher, token;
     PushNotification pushNotification;
     static String TOPIC = "/topics/myTopic";
-    RetrofitInstance retrofitInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +79,14 @@ public class CommentActivity extends AppCompatActivity {
         Intent intent = getIntent();
         FeedId = intent.getStringExtra("POSTSDocumentId");
         Log.d("DOCUMENTID_Receive", FeedId);
+
+        //fcm 메세지 클릭시
+        Bundle extras = intent.getExtras();
+        if(extras != null)
+        {
+            FeedId = extras.getString("POSTSDocumentId");
+            Log.d("Mybundle" , "fcm 클릭시 " + FeedId);
+        }
 
         db = FirebaseFirestore.getInstance();
         db.collection("posts/" + FeedId + "/comments")
@@ -119,7 +126,7 @@ public class CommentActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 if(documentSnapshot.getData().get("postId").equals(FeedId)) {
-                                    Log.d("CommentActivityFCM", "게시물 작성자 : " + documentSnapshot.getData().get("publisher").toString());
+                                    // 댓글이 달린 게시물의 작성자 id를 변수에 저장
                                     postPublisher = documentSnapshot.getData().get("publisher").toString();
                                 }
                             }
@@ -136,9 +143,14 @@ public class CommentActivity extends AppCompatActivity {
         final String comment = Et_Comment.getText().toString();
 
         if (comment.length() > 0) {
-            sendCommentToFCM();
-            WriteCommentInfo writeCommentInfo = new WriteCommentInfo(comment, firebaseUser.getUid(), FeedId, new Date());
-            uploader(writeCommentInfo);
+            if(postPublisher.equals(firebaseUser.getUid())) { // 게시물 작성자 == 댓글 작성자라면 알림을 보내지 않음
+                WriteCommentInfo writeCommentInfo = new WriteCommentInfo(comment, firebaseUser.getUid(), FeedId, new Date());
+                uploader(writeCommentInfo);
+            } else {
+                sendCommentToFCM();
+                WriteCommentInfo writeCommentInfo = new WriteCommentInfo(comment, firebaseUser.getUid(), FeedId, new Date());
+                uploader(writeCommentInfo);
+            }
         } else {
             Toast.makeText(this, "댓글 내용을 입력해주세요", Toast.LENGTH_SHORT).show();
         }
@@ -157,7 +169,7 @@ public class CommentActivity extends AppCompatActivity {
                                 if (documentSnapshot.getId().equals(postPublisher)) { // user 테이블의 사용자 id가 댓글이 달린 게시글 작성자 id와 같다면
                                     token = documentSnapshot.getData().get("userToken").toString(); // 해당 사용자의 토큰을 얻는다.
 
-                                    NotificationData data = new NotificationData("채곡채곡", "댓글이 달렸습니다 : " + comment);
+                                    NotificationData data = new NotificationData("채곡채곡", "댓글이 달렸습니다 : " + comment, FeedId);
                                     pushNotification = new PushNotification(data, token);
 //                                    Log.d("pushNoti",  "알림 메세지 : " + pushNotification.getNotificationData().getTitle() + ", " + pushNotification.getNotificationData().getBody()
 //                                            +"\n" + "게시글 작성자 토큰 :  " + pushNotification.getTo());
