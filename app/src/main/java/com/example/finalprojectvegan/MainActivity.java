@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +21,8 @@ import com.example.finalprojectvegan.Fcm.NotificationData;
 import com.example.finalprojectvegan.Fcm.PushNotification;
 import com.example.finalprojectvegan.Fcm.RetrofitInstance;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,28 +43,24 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-
     FloatingActionButton Btn_addFeed;
-
     // 객체 선언
     BottomNavigationView bottomNavigationView;
     Toolbar toolbar;
-
     Fragment fragment_homefeed;
     Fragment fragment_recipe;
     Fragment fragment_product;
     Fragment fragment_mypage;
     Fragment fragment_search;
-
     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    PushNotification pushNotification;
-    String token;
+    String userToken, refreshToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         Btn_addFeed = (FloatingActionButton) findViewById(R.id.Btn_addFeed);
         Btn_addFeed.setOnClickListener(new View.OnClickListener() {
@@ -189,7 +189,59 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("FirebaseMessaging", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        refreshToken = task.getResult();
+                        Log.d("MyToken", "My New Token : " + refreshToken);
+                    }
+                });
+
+        db.collection("users").document(firebaseUser.getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        userToken = documentSnapshot.get("userToken").toString();
+                        Log.d("MyToken", "My Old Token : " + userToken);
+                        if(!userToken.equals(refreshToken)) {
+                            myTokenUpdate();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
     }
+    public void myTokenUpdate() {
+        DocumentReference reference = db.collection("users").document(firebaseUser.getUid());
+
+        reference.update("userToken", refreshToken)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("myTokenUpdate", "Success");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("myTokenUpdate", "Error : ", e);
+                    }
+                });
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

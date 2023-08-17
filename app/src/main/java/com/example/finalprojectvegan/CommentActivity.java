@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -54,11 +56,19 @@ public class CommentActivity extends AppCompatActivity {
     private String postPublisher, token;
     PushNotification pushNotification;
     static String TOPIC = "/topics/myTopic";
-
+    private int myInt;
+    public SharedPreferences pref;
+    public SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
+
+        // SharedPreferences 초기화 후 저장해둔 값 불러오기
+        pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        editor = pref.edit();
+        myInt = pref.getInt("MyPrefInt", 1);
+
 
         Btn_UploadComment = findViewById(R.id.Btn_UploadComment);
         Et_Comment = findViewById(R.id.Et_Comment);
@@ -66,7 +76,7 @@ public class CommentActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC);
+//        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC);
 
         Btn_UploadComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,6 +153,10 @@ public class CommentActivity extends AppCompatActivity {
         final String comment = Et_Comment.getText().toString();
 
         if (comment.length() > 0) {
+            if(myInt == 0) {
+                WriteCommentInfo writeCommentInfo = new WriteCommentInfo(comment, firebaseUser.getUid(), FeedId, new Date());
+                uploader(writeCommentInfo);
+            } else {
             if(postPublisher.equals(firebaseUser.getUid())) { // 게시물 작성자 == 댓글 작성자라면 알림을 보내지 않음
                 WriteCommentInfo writeCommentInfo = new WriteCommentInfo(comment, firebaseUser.getUid(), FeedId, new Date());
                 uploader(writeCommentInfo);
@@ -150,6 +164,7 @@ public class CommentActivity extends AppCompatActivity {
                 sendCommentToFCM();
                 WriteCommentInfo writeCommentInfo = new WriteCommentInfo(comment, firebaseUser.getUid(), FeedId, new Date());
                 uploader(writeCommentInfo);
+            }
             }
         } else {
             Toast.makeText(this, "댓글 내용을 입력해주세요", Toast.LENGTH_SHORT).show();
@@ -171,8 +186,8 @@ public class CommentActivity extends AppCompatActivity {
 
                                     NotificationData data = new NotificationData("채곡채곡", "댓글이 달렸습니다 : " + comment, FeedId);
                                     pushNotification = new PushNotification(data, token);
-//                                    Log.d("pushNoti",  "알림 메세지 : " + pushNotification.getNotificationData().getTitle() + ", " + pushNotification.getNotificationData().getBody()
-//                                            +"\n" + "게시글 작성자 토큰 :  " + pushNotification.getTo());
+                                    Log.d("pushNoti",  "알림 메세지 : " + pushNotification.getNotificationData().getTitle() + ", " + pushNotification.getNotificationData().getBody()
+                                            +"\n" + "게시글 작성자 토큰 :  " + pushNotification.getTo());
                                     SendNotification(pushNotification);
                                 }
                             }

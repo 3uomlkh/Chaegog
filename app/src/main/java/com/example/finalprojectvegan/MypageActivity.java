@@ -71,7 +71,7 @@ public class MypageActivity extends AppCompatActivity {
     private static final int CAMERA = 100;
     private static final int GALLERY = 101;
 
-    private TextView Btn_Mypage_Logout, Btn_Mypage_DeleteAccount;
+    private TextView Btn_Mypage_Setting, Btn_Mypage_BlockInfo, Btn_Mypage_help, Btn_Mypage_Info;
     private TextView userID, userVeganType, userAllergy;
     private Button Btn_EditAccount;
     private ImageView Iv_Mypage_profile;
@@ -89,9 +89,6 @@ public class MypageActivity extends AppCompatActivity {
     private String USER_VEGAN_TYPE;
     private String USER_ALLERGY;
     private String USER_PROFILE_IMG;
-
-    private String DELETE_POST;
-
     private FirebaseUser firebaseUser;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
@@ -112,8 +109,10 @@ public class MypageActivity extends AppCompatActivity {
         userID = findViewById(R.id.Tv_Mypage_UserId);
         userVeganType = findViewById(R.id.Tv_Mypage_VeganType);
         userAllergy = findViewById(R.id.Tv_Mypage_Allergy);
+
+        // MyPage 내 버튼
+        Btn_Mypage_Setting = findViewById(R.id.Btn_Mypage_Setting);
         Btn_EditAccount = findViewById(R.id.Btn_EditAccount);
-        Btn_Mypage_DeleteAccount = findViewById(R.id.Btn_Mypage_DeleteAccount);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -167,36 +166,15 @@ public class MypageActivity extends AppCompatActivity {
             }
         });
 
-        Btn_Mypage_Logout = findViewById(R.id.Btn_Mypage_Logout);
-        Btn_Mypage_Logout.setOnClickListener(new View.OnClickListener() {
+        Btn_Mypage_Setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                dialog = new Dialog(MypageActivity.this);
-                dialog.setContentView(R.layout.dialog_logout);
-                dialog.show();
-
-                Button Btn_Logout = dialog.findViewById(R.id.Btn_Logout);
-                Btn_Logout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-
-                        firebaseAuth.signOut();
-                        Intent intent = new Intent(MypageActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-                Button Btn_Cancle = dialog.findViewById(R.id.Btn_Cancle);
-                Btn_Cancle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                    }
-                });
+                Intent intent = new Intent(MypageActivity.this, SettingActivity.class);
+                startActivity(intent);
             }
         });
+
+
 
 //        db.collection("posts")
 //                .get()
@@ -218,94 +196,6 @@ public class MypageActivity extends AppCompatActivity {
 //                    }
 //                });
 
-        Btn_Mypage_DeleteAccount = findViewById(R.id.Btn_Mypage_DeleteAccount);
-        Btn_Mypage_DeleteAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                dialog = new Dialog(MypageActivity.this);
-                dialog.setContentView(R.layout.dialog_accoutdelete);
-                dialog.show();
-
-                Button Btn_DeleteAccount = dialog.findViewById(R.id.Btn_DeleteAccount);
-                Btn_DeleteAccount.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-
-                        firebaseUser.delete()
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d("AccountDelete", "User account deleted.");
-                                        }
-                                    }
-                                });
-
-                        db.collection("posts")
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            if (firebaseUser != null) {
-                                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-
-                                                    String publisher = documentSnapshot.getData().get("publisher").toString();
-
-                                                    if (publisher.equals(firebaseUser.getUid())) {
-                                                        DELETE_POST = documentSnapshot.getData().get("postId").toString();
-
-                                                        db.collection("posts").document(DELETE_POST)
-                                                                .delete()
-                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(Void unused) {
-
-                                                                    }
-                                                                })
-                                                                .addOnFailureListener(new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(@NonNull Exception e) {
-
-                                                                    }
-                                                                });
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
-
-
-                        db.collection("users").document(firebaseUser.getUid())
-                                .delete()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-
-                                    }
-                                });
-                    }
-                });
-
-                Button Btn_Cancle = dialog.findViewById(R.id.Btn_Cancle);
-                Btn_Cancle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                    }
-                });
-
-            }
-        });
 
 //        Iv_Mypage_profile.setOnClickListener(new View.OnClickListener() {
 //            @Override
