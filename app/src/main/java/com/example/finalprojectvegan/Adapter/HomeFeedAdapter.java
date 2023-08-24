@@ -25,6 +25,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.finalprojectvegan.CommentActivity;
+import com.example.finalprojectvegan.EditFeedActivity;
 import com.example.finalprojectvegan.Fcm.NotificationAPI;
 import com.example.finalprojectvegan.Fcm.NotificationData;
 import com.example.finalprojectvegan.Fcm.PushNotification;
@@ -52,6 +53,8 @@ import java.util.List;
 import java.util.Locale;
 
 import okhttp3.ResponseBody;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,7 +70,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     private TextView Tv_HomeFeed_Title, Tv_HomeFeed_Content, Tv_HomeFeed_CreatedAt, Tv_HomeFeed_Publisher, Tv_HomeFeed_Favorite;
     private ImageView Iv_HomeFeed_Image, Iv_HomeFeed_Profile, Iv_HomeFeed_Favorite;
     private String FeedId, USER_ID, USER_PROFILE_IMG;
-    private String FeedPublisher, FeedTitle, FeedContent, FeedUri, blockUserID;
+    private String FeedPublisher, FeedTitle, FeedContent, FeedUri, blockUserID, FeedKey;
     private String postPublisher, token;
     private PushNotification pushNotification;
     private int favoriteCount;
@@ -193,228 +196,230 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 
             // 피드에서 더보기 선택시
 
-//            Btn_HomeFeedEtc = view.findViewById(R.id.Btn_HomeFeedEtc);
-//            Btn_HomeFeedEtc.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    PopupMenu popupMenu = new PopupMenu(context.getApplicationContext(), view);
+            Btn_HomeFeedEtc = view.findViewById(R.id.Btn_HomeFeedEtc);
+            Btn_HomeFeedEtc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu popupMenu = new PopupMenu(context.getApplicationContext(), view);
+
+                    int pos = getAbsoluteAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION){
+                        // 피드 dataset으로부터 클릭된 view의 작성자(publisher)를 가져온다
+                        FeedPublisher = feedInfoList.get(pos).getPublisher();
+                        // 현재 사용자 Uid와 게시물 작성자가 같은 경우(즉, 로그인한 사용자의 게시물인 경우)
+                        if (firebaseUser.getUid().equals(FeedPublisher)) {
+                            // myfeed_menu.xml 메뉴 구현 -> 수정/삭제
+                            popupMenu.getMenuInflater().inflate(R.menu.myfeed_menu, popupMenu.getMenu());
+                            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                    switch (menuItem.getItemId()) {
+                                        // 게시물 수정 클릭시
+                                        case R.id.feed_edit:
+                                            // putExtra()를 통해 각각 게시물의 id, title, content를 EditFeedActivity로 보내준다.
+                                            FeedId = feedInfoList.get(pos).getPostId();
+                                            FeedTitle = feedInfoList.get(pos).getTitle();
+                                            FeedContent = feedInfoList.get(pos).getContent();
+                                            FeedUri = feedInfoList.get(pos).getUri();
+                                            FeedKey = uidList.get(pos);
+                                            Log.d("EditInfo_Send", "Success");
+                                            Intent intent = new Intent(context, EditFeedActivity.class);
+                                            intent.putExtra("EditFeedId", FeedId);
+                                            intent.putExtra("EditFeedTitle", FeedTitle);
+                                            intent.putExtra("EditFeedContent", FeedContent);
+                                            intent.putExtra("EditFeedUri", FeedUri);
+                                            intent.putExtra("EditFeedKey", FeedKey);
+                                            context.startActivity(intent);
+                                            return true;
+
+                                        // 게시물 삭제 클릭시
+                                        case R.id.feed_delete:
+                                            // Dialog를 통해서 진행여부를 확인받는다.
+                                            AlertDialog.Builder DeleteDialogBuilder = new AlertDialog.Builder(context);
+                                            DeleteDialogBuilder.setTitle("게시물 삭제");
+                                            DeleteDialogBuilder.setMessage("정말 삭제하시겠습니까?");
+                                            DeleteDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    // POSTS db에서 현재 FeedId에 해당하는 document를 삭제한다.
+                                                    db.collection("POSTS").document(FeedId)
+                                                            .delete()
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void unused) {
+                                                                    Log.d("Post Delete Success", "Success");
+                                                                }
+                                                            });
+                                                }
+                                            });
+                                            DeleteDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                                }
+                                            });
+                                            DeleteDialogBuilder.show();
+                                            return true;
+                                        default:
+                                            return false;
+                                    }
+                                }
+                            });
+                            // 팝업 메뉴 보이기
+                            popupMenu.show();
+                        } else {
+                            // 현재 사용자 작성 게시물이 아닌 경우 -> feed_menu.xml 표시 -> 신고/차단
+                            popupMenu.getMenuInflater().inflate(R.menu.feed_menu, popupMenu.getMenu());
+                            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                    switch (menuItem.getItemId()) {
+                                        // 게시물 신고 클릭시
+                                        case R.id.feed_report:
+                                            // Dialog를 통해 진행여부 확인.
+                                            Report();
+                                            return true;
+
+                                        // 게시물 차단 클릭시
+                                        case R.id.feed_block:
+
+                                            Block(FeedPublisher);
+
+//                                            db.collection("BLOCKS")
+//                                                    .get()
+//                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                                        @Override
+//                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                                            if (task.isSuccessful()) {
+//                                                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+//                                                                    if (documentSnapshot.getId().equals(FeedPublisher)) {
+//                                                                        AlertDialog.Builder AlreadyBlockDialogBuilder = new AlertDialog.Builder(context);
+//                                                                        AlreadyBlockDialogBuilder.setTitle("사용자 차단");
+//                                                                        AlreadyBlockDialogBuilder.setMessage("이미 차단되어있습니다\n차단을 해제하시겠습니까?");
+//                                                                        AlreadyBlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                                                                            @Override
+//                                                                            public void onClick(DialogInterface dialogInterface, int i) {
 //
-//                    int pos = getAbsoluteAdapterPosition();
-//                    if (pos != RecyclerView.NO_POSITION){
-//                        // 피드 dataset으로부터 클릭된 view의 작성자(publisher)를 가져온다
-//                        FeedPublisher = feedInfoList.get(pos).getPublisher();
-//                        // 현재 사용자 Uid와 게시물 작성자가 같은 경우(즉, 로그인한 사용자의 게시물인 경우)
-//                        if (firebaseUser.getUid().equals(FeedPublisher)) {
-//                            // myfeed_menu.xml 메뉴 구현 -> 수정/삭제
-//                            popupMenu.getMenuInflater().inflate(R.menu.myfeed_menu, popupMenu.getMenu());
-//                            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                                @Override
-//                                public boolean onMenuItemClick(MenuItem menuItem) {
-//                                    switch (menuItem.getItemId()) {
-//                                        // 게시물 수정 클릭시
-//                                        case R.id.feed_edit:
-//                                            // putExtra()를 통해 각각 게시물의 id, title, content를 EditFeedActivity로 보내준다.
-//                                            FeedId = feedInfoList.get(pos).getPostId();
-//                                            FeedTitle = feedInfoList.get(pos).getTitle();
-//                                            FeedContent = feedInfoList.get(pos).getContent();
-//                                            FeedUri = feedInfoList.get(pos).getUri();
-//                                            Log.d("EditInfo_Send", "Success");
-//                                            Intent intent = new Intent(context, EditFeedActivity.class);
-//                                            intent.putExtra("EditFeedId", FeedId);
-//                                            intent.putExtra("EditFeedTitle", FeedTitle);
-//                                            intent.putExtra("EditFeedContent", FeedContent);
-//                                            intent.putExtra("EditFeedUri", FeedUri);
-//                                            context.startActivity(intent);
-//                                            return true;
+//                                                                            }
+//                                                                        });
+//                                                                        AlreadyBlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+//                                                                            @Override
+//                                                                            public void onClick(DialogInterface dialogInterface, int i) {
 //
-//                                        // 게시물 삭제 클릭시
-//                                        case R.id.feed_delete:
-//                                            // Dialog를 통해서 진행여부를 확인받는다.
-//                                            AlertDialog.Builder DeleteDialogBuilder = new AlertDialog.Builder(context);
-//                                            DeleteDialogBuilder.setTitle("게시물 삭제");
-//                                            DeleteDialogBuilder.setMessage("정말 삭제하시겠습니까?");
-//                                            DeleteDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                                @Override
-//                                                public void onClick(DialogInterface dialogInterface, int i) {
-//                                                    // POSTS db에서 현재 FeedId에 해당하는 document를 삭제한다.
-//                                                    db.collection("POSTS").document(FeedId)
-//                                                            .delete()
-//                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                                                @Override
-//                                                                public void onSuccess(Void unused) {
-//                                                                    Log.d("Post Delete Success", "Success");
+//                                                                            }
+//                                                                        });
+//                                                                        AlreadyBlockDialogBuilder.show();
+//                                                                    } else {
+//                                                                        AlertDialog.Builder BlockDialogBuilder = new AlertDialog.Builder(context);
+//                                                                        BlockDialogBuilder.setTitle("사용자 차단");
+//                                                                        BlockDialogBuilder.setMessage("정말 차단하시겠습니까?\n해당 계정의 모든 내용을 볼 수 없게됩니다");
+//                                                                        BlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                                                                            @Override
+//                                                                            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                                                                            }
+//                                                                        });
+//                                                                        BlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+//                                                                            @Override
+//                                                                            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                                                                            }
+//                                                                        });
+//                                                                        BlockDialogBuilder.show();
+//                                                                    }
 //                                                                }
-//                                                            });
-//                                                }
-//                                            });
-//                                            DeleteDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+//                                                            }
+//                                                        }
+//                                                    });
+
+//                                            AlertDialog.Builder BlockDialogBuilder = new AlertDialog.Builder(context);
+//                                            BlockDialogBuilder.setTitle("사용자 차단");
+//                                            BlockDialogBuilder.setMessage("정말 차단하시겠습니까?\n해당 계정의 모든 내용을 볼 수 없게됩니다");
+//                                            BlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 //                                                @Override
 //                                                public void onClick(DialogInterface dialogInterface, int i) {
 //
 //                                                }
 //                                            });
-//                                            DeleteDialogBuilder.show();
-//                                            return true;
-//                                        default:
-//                                            return false;
-//                                    }
-//                                }
-//                            });
-//                            // 팝업 메뉴 보이기
-//                            popupMenu.show();
-//                        } else {
-//                            // 현재 사용자 작성 게시물이 아닌 경우 -> feed_menu.xml 표시 -> 신고/차단
-//                            popupMenu.getMenuInflater().inflate(R.menu.feed_menu, popupMenu.getMenu());
-//                            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                                @Override
-//                                public boolean onMenuItemClick(MenuItem menuItem) {
-//                                    switch (menuItem.getItemId()) {
-//                                        // 게시물 신고 클릭시
-//                                        case R.id.feed_report:
-//                                            // Dialog를 통해 진행여부 확인.
-//                                            Report();
-//                                            return true;
+//                                            BlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(DialogInterface dialogInterface, int i) {
 //
-//                                        // 게시물 차단 클릭시
-//                                        case R.id.feed_block:
+//                                                }
+//                                            });
+//                                            BlockDialogBuilder.show();
+
+
+//                                            db.collection("USERS").document(firebaseUser.getUid()).collection("BLOCK")
+//                                                    .get()
+//                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                                        @Override
+//                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+//                                                                Log.d("DOCUMENTID", documentSnapshot.getId());
+//                                                                if (documentSnapshot.exists()) {
+//                                                                    documentSnapshot.getData().clear();
+//                                                                    Log.d("BLOCK Exist", "clear");
+//                                                                } else {
+//                                                                    db.collection("USERS").document(firebaseUser.getUid()).collection("BLOCK").document(FeedPublisher)
+//                                                                            .set(blockInfo)
+//                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                                                @Override
+//                                                                                public void onSuccess(Void unused) {
+//                                                                                    Log.d("BLOCK NoExist", "set");
+//                                                                                }
+//                                                                            })
+//                                                                            .addOnFailureListener(new OnFailureListener() {
+//                                                                                @Override
+//                                                                                public void onFailure(@NonNull Exception e) {
 //
-//                                            Block(FeedPublisher);
+//                                                                                }
+//                                                                            });
+//                                                                }
+//                                                            }
+//                                                        }
+//                                                    });
+
+//                                            db.collection("USERS").document(firebaseUser.getUid()).collection("BLOCK").document(FeedPublisher)
+//                                                    .set(blockInfo)
+//                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                        @Override
+//                                                        public void onSuccess(Void unused) {
 //
-////                                            db.collection("BLOCKS")
-////                                                    .get()
-////                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-////                                                        @Override
-////                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-////                                                            if (task.isSuccessful()) {
-////                                                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-////                                                                    if (documentSnapshot.getId().equals(FeedPublisher)) {
-////                                                                        AlertDialog.Builder AlreadyBlockDialogBuilder = new AlertDialog.Builder(context);
-////                                                                        AlreadyBlockDialogBuilder.setTitle("사용자 차단");
-////                                                                        AlreadyBlockDialogBuilder.setMessage("이미 차단되어있습니다\n차단을 해제하시겠습니까?");
-////                                                                        AlreadyBlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-////                                                                            @Override
-////                                                                            public void onClick(DialogInterface dialogInterface, int i) {
-////
-////                                                                            }
-////                                                                        });
-////                                                                        AlreadyBlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-////                                                                            @Override
-////                                                                            public void onClick(DialogInterface dialogInterface, int i) {
-////
-////                                                                            }
-////                                                                        });
-////                                                                        AlreadyBlockDialogBuilder.show();
-////                                                                    } else {
-////                                                                        AlertDialog.Builder BlockDialogBuilder = new AlertDialog.Builder(context);
-////                                                                        BlockDialogBuilder.setTitle("사용자 차단");
-////                                                                        BlockDialogBuilder.setMessage("정말 차단하시겠습니까?\n해당 계정의 모든 내용을 볼 수 없게됩니다");
-////                                                                        BlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-////                                                                            @Override
-////                                                                            public void onClick(DialogInterface dialogInterface, int i) {
-////
-////                                                                            }
-////                                                                        });
-////                                                                        BlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-////                                                                            @Override
-////                                                                            public void onClick(DialogInterface dialogInterface, int i) {
-////
-////                                                                            }
-////                                                                        });
-////                                                                        BlockDialogBuilder.show();
-////                                                                    }
-////                                                                }
-////                                                            }
-////                                                        }
-////                                                    });
+//                                                        }
+//                                                    })
+//                                                    .addOnFailureListener(new OnFailureListener() {
+//                                                        @Override
+//                                                        public void onFailure(@NonNull Exception e) {
 //
-////                                            AlertDialog.Builder BlockDialogBuilder = new AlertDialog.Builder(context);
-////                                            BlockDialogBuilder.setTitle("사용자 차단");
-////                                            BlockDialogBuilder.setMessage("정말 차단하시겠습니까?\n해당 계정의 모든 내용을 볼 수 없게됩니다");
-////                                            BlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-////                                                @Override
-////                                                public void onClick(DialogInterface dialogInterface, int i) {
-////
-////                                                }
-////                                            });
-////                                            BlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-////                                                @Override
-////                                                public void onClick(DialogInterface dialogInterface, int i) {
-////
-////                                                }
-////                                            });
-////                                            BlockDialogBuilder.show();
+//                                                        }
+//                                                    });
+//                                            db.collection("USERS").document(firebaseUser.getUid()).collection("BLOCK").document()
+//                                                    .set(blockInfo)
+//                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                        @Override
+//                                                        public void onSuccess(Void unused) {
 //
+//                                                        }
+//                                                    })
+//                                                    .addOnFailureListener(new OnFailureListener() {
+//                                                        @Override
+//                                                        public void onFailure(@NonNull Exception e) {
 //
-////                                            db.collection("USERS").document(firebaseUser.getUid()).collection("BLOCK")
-////                                                    .get()
-////                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-////                                                        @Override
-////                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-////                                                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-////                                                                Log.d("DOCUMENTID", documentSnapshot.getId());
-////                                                                if (documentSnapshot.exists()) {
-////                                                                    documentSnapshot.getData().clear();
-////                                                                    Log.d("BLOCK Exist", "clear");
-////                                                                } else {
-////                                                                    db.collection("USERS").document(firebaseUser.getUid()).collection("BLOCK").document(FeedPublisher)
-////                                                                            .set(blockInfo)
-////                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-////                                                                                @Override
-////                                                                                public void onSuccess(Void unused) {
-////                                                                                    Log.d("BLOCK NoExist", "set");
-////                                                                                }
-////                                                                            })
-////                                                                            .addOnFailureListener(new OnFailureListener() {
-////                                                                                @Override
-////                                                                                public void onFailure(@NonNull Exception e) {
-////
-////                                                                                }
-////                                                                            });
-////                                                                }
-////                                                            }
-////                                                        }
-////                                                    });
-//
-////                                            db.collection("USERS").document(firebaseUser.getUid()).collection("BLOCK").document(FeedPublisher)
-////                                                    .set(blockInfo)
-////                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-////                                                        @Override
-////                                                        public void onSuccess(Void unused) {
-////
-////                                                        }
-////                                                    })
-////                                                    .addOnFailureListener(new OnFailureListener() {
-////                                                        @Override
-////                                                        public void onFailure(@NonNull Exception e) {
-////
-////                                                        }
-////                                                    });
-////                                            db.collection("USERS").document(firebaseUser.getUid()).collection("BLOCK").document()
-////                                                    .set(blockInfo)
-////                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-////                                                        @Override
-////                                                        public void onSuccess(Void unused) {
-////
-////                                                        }
-////                                                    })
-////                                                    .addOnFailureListener(new OnFailureListener() {
-////                                                        @Override
-////                                                        public void onFailure(@NonNull Exception e) {
-////
-////                                                        }
-////                                                    });
-//
-//                                            return true;
-//                                        default:
-//                                            return false;
-//                                    }
-//                                }
-//                            });
-//                            popupMenu.show();
-//                        }
-//                    }
-//                }
-//            });
+//                                                        }
+//                                                    });
+
+                                            return true;
+                                        default:
+                                            return false;
+                                    }
+                                }
+                            });
+                            popupMenu.show();
+                        }
+                    }
+                }
+            });
 
             // 피드에서 댓글 아이콘 클릭시
             Btn_HomeFeedComment = view.findViewById(R.id.Btn_HomeFeedComment);
