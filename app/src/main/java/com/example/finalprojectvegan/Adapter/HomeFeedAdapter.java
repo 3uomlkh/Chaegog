@@ -66,7 +66,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     private TextView Tv_HomeFeed_Title, Tv_HomeFeed_Content, Tv_HomeFeed_CreatedAt, Tv_HomeFeed_Publisher, Tv_HomeFeed_Favorite;
     private ImageView Iv_HomeFeed_Image, Iv_HomeFeed_Profile, Iv_HomeFeed_Favorite;
     private String FeedId, USER_ID, USER_PROFILE_IMG;
-    private String FeedPublisher, FeedTitle, FeedContent, FeedUri, blockUserID;
+    private String FeedPublisher, FeedTitle, FeedContent, FeedUri, blockUserID, FeedKey;
     private String postPublisher, token;
     private PushNotification pushNotification;
     private int favoriteCount;
@@ -217,12 +217,14 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                             FeedTitle = feedInfoList.get(pos).getTitle();
                                             FeedContent = feedInfoList.get(pos).getContent();
                                             FeedUri = feedInfoList.get(pos).getUri();
+                                            FeedKey = uidList.get(pos);
                                             Log.d("EditInfo_Send", "Success");
                                             Intent intent = new Intent(context, EditFeedActivity.class);
                                             intent.putExtra("EditFeedId", FeedId);
                                             intent.putExtra("EditFeedTitle", FeedTitle);
                                             intent.putExtra("EditFeedContent", FeedContent);
                                             intent.putExtra("EditFeedUri", FeedUri);
+                                            intent.putExtra("EditFeedKey", FeedKey);
                                             context.startActivity(intent);
                                             return true;
 

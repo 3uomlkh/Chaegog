@@ -12,10 +12,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.finalprojectvegan.Model.FeedInfo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EditFeedActivity extends AppCompatActivity {
@@ -24,10 +30,11 @@ public class EditFeedActivity extends AppCompatActivity {
     private EditText Et_EditFeed_Title, Et_EditFeed_Contents;
     private ImageView Iv_EditFeedPhoto;
     private Button Btn_EditFeed;
-    private String FeedId, FeedPublisher, FeedTitle, FeedContent, FeedUri;
+    private String FeedId, FeedPublisher, FeedTitle, FeedContent, FeedUri, FeedKey;
     private FirebaseFirestore db;
     private FirebaseDatabase firebaseDatabase;
     private FirebaseUser firebaseUser;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,8 @@ public class EditFeedActivity extends AppCompatActivity {
 
         // 객체 초기화
         db = FirebaseFirestore.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("posts");
 
         Et_EditFeed_Title = findViewById(R.id.Et_EditFeed_Title);
         Et_EditFeed_Contents = findViewById(R.id.Et_EditFeed_Contents);
@@ -47,6 +56,7 @@ public class EditFeedActivity extends AppCompatActivity {
         FeedTitle = intent.getStringExtra("EditFeedTitle");
         FeedContent = intent.getStringExtra("EditFeedContent");
         FeedUri = intent.getStringExtra("EditFeedUri");
+        FeedKey = intent.getStringExtra("EditFeedKey");
 
         // 받아온 내용으로 수정 창에 원래 내용 나타내기
         Et_EditFeed_Title.setText(FeedTitle);
@@ -82,7 +92,22 @@ public class EditFeedActivity extends AppCompatActivity {
                             }
                         });
 
+                databaseReference.child("posts").child(FeedKey).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        FeedInfo feedInfo = snapshot.getValue(FeedInfo.class);
+                        String title = feedInfo.getTitle();
+                        title.replace(title, Et_EditFeed_Title.getText().toString());
+//                        title = Et_EditFeed_Title.getText().toString();
+                        feedInfo.setTitle(title);
+                        feedInfo.setContent(Content);
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 

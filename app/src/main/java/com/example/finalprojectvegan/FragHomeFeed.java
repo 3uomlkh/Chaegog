@@ -90,8 +90,9 @@ public class FragHomeFeed extends Fragment {
             @Override
             public void onRefresh() {
 //                FragmentManager fragmentManager = get
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.detach().attach(new FragHomeFeed()).commit();
+//                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//                fragmentTransaction.replace(R.id.homefeed_frame, new FragHomeFeed()).commit();
+//                homeFeedAdapter.notifyDataSetChanged();
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
