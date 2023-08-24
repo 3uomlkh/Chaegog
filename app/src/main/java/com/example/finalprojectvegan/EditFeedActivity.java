@@ -24,6 +24,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class EditFeedActivity extends AppCompatActivity {
 
     // 객체 선언
@@ -44,7 +47,7 @@ public class EditFeedActivity extends AppCompatActivity {
         // 객체 초기화
         db = FirebaseFirestore.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("posts");
+        databaseReference = firebaseDatabase.getReference();
 
         Et_EditFeed_Title = findViewById(R.id.Et_EditFeed_Title);
         Et_EditFeed_Contents = findViewById(R.id.Et_EditFeed_Contents);
@@ -92,22 +95,28 @@ public class EditFeedActivity extends AppCompatActivity {
                             }
                         });
 
-                databaseReference.child("posts").child(FeedKey).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        FeedInfo feedInfo = snapshot.getValue(FeedInfo.class);
-                        String title = feedInfo.getTitle();
-                        title.replace(title, Et_EditFeed_Title.getText().toString());
-//                        title = Et_EditFeed_Title.getText().toString();
-                        feedInfo.setTitle(title);
-                        feedInfo.setContent(Content);
-                    }
+                Map<String, Object> taskMap = new HashMap<String, Object>();
+                taskMap.put("title", Title);
+                taskMap.put("content", Content);
+                databaseReference.child("posts").child(FeedKey).updateChildren(taskMap);
+                finish();
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+//                databaseReference.child("posts").child(FeedKey).addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        FeedInfo feedInfo = snapshot.getValue(FeedInfo.class);
+//                        String title = feedInfo.getTitle();
+//                        title.replace(title, Et_EditFeed_Title.getText().toString());
+////                        title = Et_EditFeed_Title.getText().toString();
+//                        feedInfo.setTitle(title);
+//                        feedInfo.setContent(Content);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
             }
         });
 
