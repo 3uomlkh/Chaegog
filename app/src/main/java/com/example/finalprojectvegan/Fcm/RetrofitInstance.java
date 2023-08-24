@@ -9,7 +9,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitInstance {
     private static Retrofit retrofit;
-    private static NotificationAPI api;
 
     public static Retrofit getClient() {
         if(retrofit == null){
@@ -20,9 +19,4 @@ public class RetrofitInstance {
         }
         return retrofit;
     }
-
-//    public static NotificationAPI getApi() {
-//        api = retrofit.create(NotificationAPI.class);
-//        return api;
-//    }
 }

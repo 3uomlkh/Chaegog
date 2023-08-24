@@ -3,10 +3,11 @@ package com.example.finalprojectvegan.Fcm;
 public class NotificationData {
     public String title;
     public String body;
-
-    public NotificationData(String title, String body) {
+    public String click_action;
+    public NotificationData(String title, String body, String click_action) {
         this.title = title;
         this.body = body;
+        this.click_action = click_action;
     }
 
     public String getTitle() {

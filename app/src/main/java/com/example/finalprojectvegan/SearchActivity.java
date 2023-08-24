@@ -64,7 +64,6 @@ public class SearchActivity extends AppCompatActivity {
     RecipeAdapter recipeAdapter;
     MapSearchAdapter mapAdapter;
     UserSearchAdapter userSearchAdapter;
-    Fragment fragment_search_recipe;
     int position;
 
     @Override
@@ -86,14 +85,18 @@ public class SearchActivity extends AppCompatActivity {
        searchEditText.setOnKeyListener(new View.OnKeyListener() {
            @Override
            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-               if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) { // 키보드 엔터키 누르면 검색 버튼 눌림
+               if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER && keyEvent.getAction() == KeyEvent.ACTION_UP) { // 키보드 엔터키 누르면 검색 버튼 눌림
                    searchBtn.performClick();
                    hideKeyboard();
                }
                return false;
            }
        });
-
+       
+       // 탭 선택 안했을 시 계정 검색으로 하기
+        TabPosition = 0;
+        userSearchAdapter = new UserSearchAdapter();
+        
         tabs = findViewById(R.id.search_tabs);
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -138,7 +141,6 @@ public class SearchActivity extends AppCompatActivity {
                 } else {
                     switch (TabPosition) {
                         case 0: // 계정 검색
-                            //Toast.makeText(SearchActivity.this, "계정 검색 준비중", Toast.LENGTH_SHORT).show();
                             getUserSearchResult();
                             break;
                         case 1: // 레시피 검색
