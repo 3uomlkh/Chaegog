@@ -1,5 +1,7 @@
 package com.example.finalprojectvegan;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -27,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FragHomeFeed extends Fragment {
+    private int myInt;
+    private SharedPreferences pref;
 
     public static final String ARG_OBJECT = "object";
     private static final String ARG_PARAM1 = "param1";
@@ -75,6 +79,9 @@ public class FragHomeFeed extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_frag_home_feed, container, false);
 
+        pref = this.getActivity().getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        myInt = pref.getInt("MyPrefInt", 1);
+
         // firebase 초기화
         db = FirebaseFirestore.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -96,7 +103,7 @@ public class FragHomeFeed extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        homeFeedAdapter = new HomeFeedAdapter(getActivity(), feedInfoList, uidList);
+        homeFeedAdapter = new HomeFeedAdapter(getActivity(), feedInfoList, uidList, myInt);
         recyclerView.setAdapter(homeFeedAdapter);
 
         firebaseDatabase.getReference().child("posts").addValueEventListener(new ValueEventListener() {
