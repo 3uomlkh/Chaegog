@@ -1,9 +1,11 @@
 package com.example.finalprojectvegan.Adapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -55,6 +57,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHolder>{
+    private int myInt;
+    private SharedPreferences pref;
 
 //    private ArrayList<FeedInfo> FeedDataset = new ArrayList<>();
     private List<FeedInfo> feedInfoList = new ArrayList<>();
@@ -436,10 +440,11 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     }
 
      // 이전에 사용하던 내용 -> 좋아요 방식 변경하며 제거됨
-    public HomeFeedAdapter(Context context, List<FeedInfo> feedInfoList, List<String> uidList) {
+    public HomeFeedAdapter(Context context, List<FeedInfo> feedInfoList, List<String> uidList, int myInt) {
         this.feedInfoList = feedInfoList;
         this.uidList = uidList;
         this.context = context;
+        this.myInt = myInt;
     }
 
     @NonNull
@@ -592,6 +597,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     }
 
     private void onFavoriteClicked(DatabaseReference feedRef) {
+
         feedRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData currentData) {
@@ -608,7 +614,9 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                     // Star the post and add self to stars
                     feedInfo.setFavoriteCount(feedInfo.getFavoriteCount() + 1);
                     feedInfo.getFavorites().put(firebaseUser.getUid(), true);
-                    sendCommentToFCM();
+                    if(myInt == 1) { // 알림수신동의가 되어있다면 푸시알림 전송
+                        sendCommentToFCM();   
+                    }
                 }
 
                 // Set value and report transaction success
@@ -691,7 +699,4 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 
         }
     }
-
-
-
 }
