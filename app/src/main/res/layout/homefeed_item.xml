@@ -118,13 +118,14 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginLeft="20dp"
-                android:background="@drawable/custom_checkbox"
+                android:background="@drawable/favorite_off"
                 android:button="@null" />
 
             <TextView
                 android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:gravity="center"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
                 android:id="@+id/Tv_HomeFeed_Favorite" />
 
             <View
@@ -136,16 +137,15 @@
                 android:id="@+id/Btn_HomeFeedComment"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/ic_baseline_comment_24" />
 
             <Button
-                android:layout_width="25dp"
+                android:id="@+id/Btn_HomeFeedEtc"
+                android:layout_width="21dp"
                 android:layout_height="25dp"
-                android:background="@drawable/more"
                 android:layout_marginRight="10dp"
-                android:id="@+id/Btn_HomeFeedEtc" />
+                android:background="@drawable/more" />
 
         </LinearLayout>
 
