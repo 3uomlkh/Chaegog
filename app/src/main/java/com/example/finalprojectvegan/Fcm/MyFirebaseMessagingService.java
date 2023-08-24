@@ -44,17 +44,63 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
 
         if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, remoteMessage.getNotification().getClickAction());
-            sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(),
-                    remoteMessage.getNotification().getClickAction());
+            if(remoteMessage.getNotification().getClickAction() != null) {
+                Log.d(TAG, remoteMessage.getNotification().getClickAction());
+                sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(),
+                        remoteMessage.getNotification().getClickAction());
+            } else {
+                sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+            }
+
         } else if (remoteMessage.getData().size() > 0) {
             String title = remoteMessage.getData().get("title");
             String body = remoteMessage.getData().get("body");
-            String click_action = remoteMessage.getNotification().getClickAction();
-            sendNotification(title, body, click_action);
+            if(remoteMessage.getNotification().getClickAction() != null) {
+                String click_action = remoteMessage.getNotification().getClickAction();
+                sendNotification(title, body, click_action);
+            } else {
+                sendNotification(title, body);
+            }
         }
 
     }
+
+    public void sendNotification(String title, String body) {
+
+        Intent intent = new Intent(this, CommentActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+
+        String channelId = "test_channel";
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+    }
+
     public void sendNotification(String title, String body, String click_action) {
 
         Intent intent = new Intent(this, CommentActivity.class);

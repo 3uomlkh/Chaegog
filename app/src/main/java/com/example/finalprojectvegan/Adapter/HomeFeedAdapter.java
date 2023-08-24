@@ -24,6 +24,10 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.finalprojectvegan.CommentActivity;
 import com.example.finalprojectvegan.EditFeedActivity;
+import com.example.finalprojectvegan.Fcm.NotificationAPI;
+import com.example.finalprojectvegan.Fcm.NotificationData;
+import com.example.finalprojectvegan.Fcm.PushNotification;
+import com.example.finalprojectvegan.Fcm.RetrofitInstance;
 import com.example.finalprojectvegan.Model.FeedInfo;
 import com.example.finalprojectvegan.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,6 +50,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.ResponseBody;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHolder>{
 
 //    private ArrayList<FeedInfo> FeedDataset = new ArrayList<>();
@@ -56,6 +67,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     private ImageView Iv_HomeFeed_Image, Iv_HomeFeed_Profile, Iv_HomeFeed_Favorite;
     private String FeedId, USER_ID, USER_PROFILE_IMG;
     private String FeedPublisher, FeedTitle, FeedContent, FeedUri, blockUserID;
+    private String postPublisher, token;
+    private PushNotification pushNotification;
     private int favoriteCount;
 
     private FirebaseAuth firebaseAuth;
@@ -223,7 +236,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     // POSTS db에서 현재 FeedId에 해당하는 document를 삭제한다.
-                                                    db.collection("posts").document(FeedId)
+                                                    db.collection("POSTS").document(FeedId)
                                                             .delete()
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
@@ -481,6 +494,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 
                                         USER_ID = documentSnapshot.getData().get("userId").toString();
                                         USER_PROFILE_IMG = documentSnapshot.getData().get("userProfileImg").toString();
+                                        token = documentSnapshot.getData().get("userToken").toString();
 
                                         // 여기서 로그 찍어보면 다 나오는데
                                         Log.d("USER_ID", USER_ID);
@@ -537,6 +551,49 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 
     }
 
+    private void sendCommentToFCM() {
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                String currentUser = documentSnapshot.getId();
+                                if(firebaseUser.getUid().equals(currentUser)) {
+                                    String currentUserId = documentSnapshot.getData().get("userId").toString();
+                                    NotificationData data = new NotificationData("채곡채곡", currentUserId + "님이 좋아요를 눌렀습니다.");
+                                    pushNotification = new PushNotification(data, token);
+                                    SendNotification(pushNotification);
+                                }
+                            }
+
+                        } else {
+                            Log.d("error", "Error getting documents", task.getException());
+                        }
+                    }
+                });
+
+    }
+
+    public void SendNotification(PushNotification pushNotification) {
+
+        NotificationAPI api = RetrofitInstance.getClient().create(NotificationAPI.class);
+        retrofit2.Call<ResponseBody> responseBodyCall = api.sendNotification(pushNotification);
+        responseBodyCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.d("SendNotification","성공");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("SendNotification","실패");
+            }
+        });
+
+    }
+
     private void onFavoriteClicked(DatabaseReference feedRef) {
         feedRef.runTransaction(new Transaction.Handler() {
             @Override
@@ -554,6 +611,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                     // Star the post and add self to stars
                     feedInfo.setFavoriteCount(feedInfo.getFavoriteCount() + 1);
                     feedInfo.getFavorites().put(firebaseUser.getUid(), true);
+                    sendCommentToFCM();
                 }
 
                 // Set value and report transaction success
