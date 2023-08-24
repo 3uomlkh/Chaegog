@@ -223,7 +223,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     // POSTS db에서 현재 FeedId에 해당하는 document를 삭제한다.
-                                                    db.collection("POSTS").document(FeedId)
+                                                    db.collection("posts").document(FeedId)
                                                             .delete()
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
