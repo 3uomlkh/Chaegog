@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.finalprojectvegan.Model.FeedFavorite;
 import com.example.finalprojectvegan.Model.FeedInfo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -78,6 +77,7 @@ public class WritePostActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
         db = FirebaseFirestore.getInstance();
 
         Iv_Add_UploadPost = findViewById(R.id.Iv_Add_UploadPost);
@@ -150,8 +150,6 @@ public class WritePostActivity extends AppCompatActivity {
                         startActivityForResult(intent, GALLERY);
                     }
                 });
-
-
 
 //                intent = new Intent(getBaseContext(), PopupActivity.class);
 //                intent.putExtra("type", PopupType.SELECT);
@@ -304,7 +302,7 @@ public class WritePostActivity extends AppCompatActivity {
         if (title.length() > 0 && content.length() > 0) {
 
             DocumentReference documentReference = db.collection("posts").document();
-            FeedInfo feedInfo = new FeedInfo(title, content, firebaseUser.getUid(), documentReference.getId(), uri.toString(), new Date());
+            FeedInfo feedInfo = new FeedInfo(title, content, firebaseUser.getUid(), documentReference.getId(), uri.toString(), new Date(), favoriteCount, favoriteUser);
             documentReference.set(feedInfo)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -318,12 +316,10 @@ public class WritePostActivity extends AppCompatActivity {
                         }
                     });
 
-//
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("posts");
+            DatabaseReference FeedRef = firebaseDatabase.getReference();
+            FeedRef.child("posts").push().setValue(feedInfo);
 
-            FeedFavorite feedFavorite = new FeedFavorite(favoriteCount, favoriteUser);
-            databaseReference.child(documentReference.getId()).child("post").setValue(feedFavorite);
+
 
         } else {
             Toast.makeText(this, "게시글 내용을 입력해주세요", Toast.LENGTH_SHORT).show();
