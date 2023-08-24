@@ -204,7 +204,7 @@ public class CommentActivity extends AppCompatActivity {
                                 if (documentSnapshot.getId().equals(postPublisher)) { // user 테이블의 사용자 id가 댓글이 달린 게시글 작성자 id와 같다면
                                     token = documentSnapshot.getData().get("userToken").toString(); // 해당 사용자의 토큰을 얻는다.
 
-                                    NotificationData data = new NotificationData("채곡채곡", "댓글이 달렸습니다 : " + comment + FeedId);
+                                    NotificationData data = new NotificationData("채곡채곡", "댓글이 달렸습니다 : " + comment, FeedId);
                                     pushNotification = new PushNotification(data, token);
 //                                    Log.d("pushNoti",  "알림 메세지 : " + pushNotification.getNotificationData().getTitle() + ", " + pushNotification.getNotificationData().getBody()
 //                                            +"\n" + "게시글 작성자 토큰 :  " + pushNotification.getTo());
