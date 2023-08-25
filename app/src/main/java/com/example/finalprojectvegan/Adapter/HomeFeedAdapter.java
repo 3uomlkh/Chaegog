@@ -494,6 +494,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 
                                     if (documentSnapshot.getId().equals(feedInfoList.get(holder.getAbsoluteAdapterPosition()).getPublisher())) {
 
+                                        postPublisher = documentSnapshot.getId();
                                         USER_ID = documentSnapshot.getData().get("userId").toString();
                                         USER_PROFILE_IMG = documentSnapshot.getData().get("userProfileImg").toString();
                                         token = documentSnapshot.getData().get("userToken").toString();
@@ -614,8 +615,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                     // Star the post and add self to stars
                     feedInfo.setFavoriteCount(feedInfo.getFavoriteCount() + 1);
                     feedInfo.getFavorites().put(firebaseUser.getUid(), true);
-                    if(myInt == 1) { // 알림수신동의가 되어있다면 푸시알림 전송
-                        sendCommentToFCM();   
+                    if(myInt == 1 && !postPublisher.equals(firebaseUser.getUid())) { // 알림수신동의가 되어있다면 and 내 게시물이 아니라면 푸시알림 전송
+                        sendCommentToFCM();
                     }
                 }
 
