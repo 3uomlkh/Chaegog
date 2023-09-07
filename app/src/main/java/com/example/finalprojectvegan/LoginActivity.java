@@ -34,7 +34,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.kakao.sdk.auth.model.OAuthToken;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.User;
@@ -55,10 +57,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText Et_Login_Email, Et_Login_Password;
     private Button Btn_Login, Btn_Register, Btn_LoginKakao;
     private TextView Btn_PasswordReset;
-
+    private String userToken;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    DatabaseReference reference;
 
     ProgressDialog pd;
 
@@ -88,7 +89,6 @@ public class LoginActivity extends AppCompatActivity {
 //        Log.d("getKeyHash", "" + getKeyHash(LoginActivity.this));
 
         SharedPreferences sh = getSharedPreferences("temp", MODE_PRIVATE);
-
 
 
         // 변수 초기화
@@ -133,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
 
 //                                        FirebaseUser user = firebaseAuth.getCurrentUser();
+
                                         pd.dismiss();
 
                                         Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
@@ -237,6 +238,8 @@ public class LoginActivity extends AppCompatActivity {
 //            }
 //        });
     }
+
+
 
 //    public static String getKeyHash(final Context context) {
 //        PackageManager pm = context.getPackageManager();

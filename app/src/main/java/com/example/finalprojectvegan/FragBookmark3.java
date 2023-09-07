@@ -24,7 +24,7 @@ import java.util.ArrayList;
 // 레시피 북마크
 public class FragBookmark3 extends Fragment {
     private View view;
-    ArrayList<String> listTitle, listThumb, clickUrl, bookmarkIdList;
+    private ArrayList<String> listTitle, listThumb, clickUrl, bookmarkIdList;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private RecyclerView recyclerView;
