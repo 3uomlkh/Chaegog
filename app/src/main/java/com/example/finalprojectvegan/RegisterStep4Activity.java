@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.finalprojectvegan.Model.UserProfile;
-import com.example.finalprojectvegan.Model.UserVeganAllergyInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,6 +38,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
     private String userId, userEmail, userPw, userVeganReason, userVeganType, userProfileImg, userToken;
     String userAllergy, similarAllergy;
     private ArrayList<String> Array_userAllergy;
+    private ArrayList<String> Array_userVeganReason;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -103,6 +103,7 @@ public class RegisterStep4Activity extends AppCompatActivity {
 
         Tv_SelectedAllergy = findViewById(R.id.Tv_SelectedAllergy);
         Array_userAllergy = new ArrayList<>();
+        Array_userVeganReason = new ArrayList<>();
 
         // 앞선 Activity에서 보낸 정보 받아서 변수 초기화
         Intent intent = getIntent();
@@ -111,6 +112,29 @@ public class RegisterStep4Activity extends AppCompatActivity {
         userPw = intent.getStringExtra("userPw");
         userVeganReason = intent.getStringExtra("userVeganReason");
         userVeganType = intent.getStringExtra("userVeganType");
+
+        String[] veganReasons = userVeganReason.split(" ");
+        for (int i = 0; i < veganReasons.length; i++) {
+            if (veganReasons[i].equals("환경")) {
+                Array_userVeganReason.add("환경");
+                userVeganReason = userVeganType.replace("환경", "");
+            } else if (veganReasons[i].equals("동물권")) {
+                Array_userVeganReason.add("동물권");
+                userVeganReason = userVeganType.replace("동물권", "");
+            } else if (veganReasons[i].equals("건강")) {
+                Array_userVeganReason.add("건강");
+                userVeganReason = userVeganType.replace("건강", "");
+            } else if (veganReasons[i].equals("종교")) {
+                Array_userVeganReason.add("종교");
+                userVeganReason = userVeganType.replace("종교", "");
+            } else if (veganReasons[i].equals("기타")) {
+                Array_userVeganReason.add("기타");
+                userVeganReason = userVeganType.replace("기타", "");
+            } else {
+                Log.d("비건계기 배열로 변경", "오류 발생");
+            }
+        }
+        Log.d("비건계기", Array_userVeganReason + " 입니다");
 
         firebaseStorage = FirebaseStorage.getInstance();
 
@@ -158,7 +182,8 @@ public class RegisterStep4Activity extends AppCompatActivity {
                                 userToken = task.getResult();
                                 Log.d("FirebaseMessaging", "Your device registration token is " + userToken);
                                 Toast.makeText(getApplicationContext(), "Your device registration token is " + userToken, Toast.LENGTH_SHORT).show();
-                                updateUserProfile(userId, userEmail, userPw, userVeganReason, userVeganType, Array_userAllergy, userProfileImg, userToken);
+                                updateUserProfile(userId, userEmail, userPw, Array_userVeganReason, userVeganType, Array_userAllergy, userProfileImg, userToken);
+                                Log.d("로그인 정보", "비건계기 " + Array_userVeganReason + " 알러지 " + Array_userAllergy);
                             }
                         });
 
@@ -171,12 +196,12 @@ public class RegisterStep4Activity extends AppCompatActivity {
 
     // db에 회원정보 저장하는 함수
     // Firebase Firestore에 회원가입 단계의 모든 정보를 한번에 저장한다.
-    private void updateUserProfile(String userId, String userEmail, String userPw, String userVeganReason, String userVeganType, ArrayList Array_userAllergy, String userProfileImg, String userToken) {
+    private void updateUserProfile(String userId, String userEmail, String userPw, ArrayList Array_userVeganReason, String userVeganType, ArrayList Array_userAllergy, String userProfileImg, String userToken) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        UserProfile userProfile = new UserProfile(userId, userEmail, userPw, userVeganReason, userVeganType, Array_userAllergy, userProfileImg, userToken);
+        UserProfile userProfile = new UserProfile(userId, userEmail, userPw, Array_userVeganReason, userVeganType, Array_userAllergy, userProfileImg, userToken);
 
         if (firebaseUser != null){
             db.collection("users").document(firebaseUser.getUid()).set(userProfile)

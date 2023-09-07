@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,17 +56,20 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private Button Btn_EditAccount;
     private ImageView Iv_Edit_Mypage_Profile;
-    private EditText Et_Edit_Mypate_UserId;
+    private EditText Et_Edit_Mypage_UserId;
     private TextView Tv_Edit_VeganReason, Tv_Edit_VeganType, Tv_Edit_Allergy;
     private int count = 0;
+    private int countR = 0;
 
     private ArrayList<String> Array_Edit_userAllergy;
+    private ArrayList<String> Array_Edit_userVeganReason;
 
     private CheckBox Cb_Environment, Cb_Animal, Cb_Health, Cb_Religion, Cb_Etc;
     private RadioGroup Rg_veganType1, Rg_veganType2;
+    private RadioButton Radio_Vegan, Radio_Lacto, Radio_Ovo, Radio_LactoOvo, Radio_Pollo, Radio_Pesco, Radio_etc;
     private CheckBox Cb_memil, Cb_mil, Cb_daedu, Cb_hodu, Cb_peanut, Cb_peach, Cb_tomato, Cb_poultry, Cb_milk,
             Cb_shrimp, Cb_mackerel, Cb_mussel, Cb_abalone, Cb_oyster, Cb_shellfish, Cb_crab, Cb_squid, Cb_sulfurous;
-    private String userAllergy;
+    String Id, VeganReason, VeganType, Allergy, userVeganType, userAllergy;
 
     private Dialog dialog;
     private Intent intent;
@@ -90,16 +94,24 @@ public class EditProfileActivity extends AppCompatActivity {
 
         Btn_EditAccount = findViewById(R.id.Btn_EditAccount);
         Iv_Edit_Mypage_Profile = findViewById(R.id.Iv_Edit_Mypage_Profile);
-        Et_Edit_Mypate_UserId = findViewById(R.id.Et_Edit_Mypage_UserId);
+        Et_Edit_Mypage_UserId = findViewById(R.id.Et_Edit_Mypage_UserId);
 
         Tv_Edit_VeganReason = findViewById(R.id.Tv_Edit_VeganReason);
         Tv_Edit_VeganType = findViewById(R.id.Tv_Edit_VeganType);
         Tv_Edit_Allergy = findViewById(R.id.Tv_Edit_Allergy);
 
         Array_Edit_userAllergy = new ArrayList<>();
+        Array_Edit_userVeganReason = new ArrayList<>();
 
         Rg_veganType1 = findViewById(R.id.Rg_veganType1);
         Rg_veganType2 = findViewById(R.id.Rg_veganType2);
+        Radio_Vegan = findViewById(R.id.Radio_Vegan);
+        Radio_Lacto = findViewById(R.id.Radio_Lacto);
+        Radio_Ovo = findViewById(R.id.Radio_Ovo);
+        Radio_LactoOvo = findViewById(R.id.Radio_LactoOvo);
+        Radio_Pollo = findViewById(R.id.Radio_Pollo);
+        Radio_Pesco = findViewById(R.id.Radio_Pesco);
+        Radio_etc = findViewById(R.id.Radio_etc);
 
         Cb_Environment = findViewById(R.id.Cb_Environment);
         Cb_Animal = findViewById(R.id.Cb_Animal);
@@ -131,6 +143,12 @@ public class EditProfileActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
 
+//        Intent getIntent = getIntent();
+//        Id = getIntent.getStringExtra("userId");
+//        VeganType = getIntent.getStringExtra("userVeganType");
+//        Allergy = getIntent.getStringExtra("userAllergy");
+
+        // users DB에서 사용자 닉네임, 비건계기, 비건종류, 알러지 정보 가져오기
         loadProfile();
 
         Btn_EditAccount.setOnClickListener(new View.OnClickListener() {
@@ -139,10 +157,17 @@ public class EditProfileActivity extends AppCompatActivity {
                 if (imagePath.length() > 0 && imageFrom >= 100) {
                     upload();
                 }
-                updateUserId(Et_Edit_Mypate_UserId.getText().toString());
-                updateVeganReason(Tv_Edit_VeganReason.getText().toString());
+                updateUserId(Et_Edit_Mypage_UserId.getText().toString());
+                if (countR == 0) {
+                    Tv_Edit_VeganReason.append("없음");
+                    Array_Edit_userVeganReason.clear();
+                    Array_Edit_userVeganReason.add("없음");
+                }
+                updateVeganReason(Array_Edit_userVeganReason);
+//                updateVeganReason(Tv_Edit_VeganReason.getText().toString());
                 updateVeganType(Tv_Edit_VeganType.getText().toString());
                 if (count == 0) {
+                    // 카운트가 없을때, DB에서 받아온 알러지 정보를 그대로 다시 저장
                     Tv_Edit_Allergy.append(" 없음");
                     userAllergy = Tv_Edit_Allergy.getText().toString();
                     Array_Edit_userAllergy.clear();
@@ -406,9 +431,9 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
     }
 
-    void updateVeganReason(String veganReason) {
+    void updateVeganReason(ArrayList Array_Edit_userVeganReason) {
         DocumentReference documentReference = db.collection("users").document(firebaseUser.getUid());
-        documentReference.update("userVeganReason", veganReason)
+        documentReference.update("userVeganReason", Array_Edit_userVeganReason)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -467,10 +492,208 @@ public class EditProfileActivity extends AppCompatActivity {
                                     Log.d("MYPAGE EDIT LOAD", "success");
 
                                     if (documentSnapshot.getId().equals(firebaseUser.getUid())) {
-                                        Et_Edit_Mypate_UserId.setText(documentSnapshot.getData().get("userId").toString());
+                                        Id = documentSnapshot.getData().get("userId").toString();
+                                        VeganReason = documentSnapshot.getData().get("userVeganReason").toString();
+                                        VeganType = documentSnapshot.getData().get("userVeganType").toString();
+                                        Allergy = documentSnapshot.getData().get("userAllergy").toString();
+
+                                        Log.d("비건이유", VeganReason);
+                                        Log.d("알러지", Allergy);
+
                                         Glide.with(EditProfileActivity.this)
                                                 .load(documentSnapshot.getData().get("userProfileImg").toString())
                                                 .into(Iv_Edit_Mypage_Profile);
+
+                                        Et_Edit_Mypage_UserId.setText(Id);
+
+                                        if (VeganType.equals("비건")) {
+                                            Radio_Vegan.setChecked(true);
+                                        }  else if (VeganType.equals("락토")) {
+                                            Radio_Lacto.setChecked(true);
+                                        } else if (VeganType.equals("오보")) {
+                                            Radio_Ovo.setChecked(true);
+                                        } else if (VeganType.equals("락토오보")) {
+                                            Radio_LactoOvo.setChecked(true);
+                                        } else if (VeganType.equals("폴로")) {
+                                            Radio_Pollo.setChecked(true);
+                                        } else if (VeganType.equals("페스코")) {
+                                            Radio_Pesco.setChecked(true);
+                                        } else if (VeganType.equals("지향없음")) {
+                                            Radio_etc.setChecked(true);
+                                        }
+
+                                        String[] Reasons = VeganReason.split(",");
+                                        for (int i = 0; i < Reasons.length; i++) {
+                                            if (VeganReason.contains("환경")) {
+                                                Cb_Environment.setChecked(true);
+                                                Array_Edit_userVeganReason.add("환경");
+                                                countR++;
+                                                VeganReason = VeganReason.replace("환경", "");
+//                                                Tv_Edit_VeganReason.append(" 환경");
+                                            } else if (VeganReason.contains("동물권")) {
+                                                Cb_Animal.setChecked(true);
+                                                Array_Edit_userVeganReason.add("동물권");
+                                                countR++;
+                                                VeganReason = VeganReason.replace("동물권", "");
+
+//                                                Tv_Edit_VeganReason.append(" 동물권");
+                                            } else if (VeganReason.contains("건강")) {
+                                                Cb_Health.setChecked(true);
+                                                Array_Edit_userVeganReason.add("건강");
+                                                countR++;
+                                                VeganReason = VeganReason.replace("건강", "");
+
+//                                                Tv_Edit_VeganReason.append(" 건강");
+                                            } else if (VeganReason.contains("종교")) {
+                                                Cb_Religion.setChecked(true);
+                                                Array_Edit_userVeganReason.add("종교");
+                                                countR++;
+                                                VeganReason = VeganReason.replace("종교", "");
+
+//                                                Tv_Edit_VeganReason.append(" 종교");
+                                            } else if (VeganReason.contains("기타")) {
+                                                Cb_Etc.setChecked(true);
+                                                Array_Edit_userVeganReason.add("기타");
+                                                countR++;
+                                                VeganReason = VeganReason.replace("기타", "");
+
+//                                                Tv_Edit_VeganReason.append(" 기타");
+                                            }
+                                        }
+//                                        Array_Edit_userVeganReason
+
+
+                                        Log.d("알러지", Array_Edit_userAllergy + "배열");
+                                        String[] Allergys = Allergy.split(",");
+                                        for (int j = 0; j < Allergys.length; j++) {
+                                            if (Allergy.contains("메밀")) {
+                                                Cb_memil.setChecked(true);
+                                                Array_Edit_userAllergy.add("메밀");
+                                                count++;
+                                                Allergy = Allergy.replace("메밀", "");
+                                                Log.d("j", j + "메밀");
+                                            } else if (Allergy.contains("밀")) {
+                                                Cb_mil.setChecked(true);
+                                                Array_Edit_userAllergy.add("밀");
+                                                count++;
+                                                Allergy = Allergy.replace("밀", "");
+                                                Log.d("j", j + "밀");
+                                            } else if (Allergy.contains("대두")) {
+                                                Cb_daedu.setChecked(true);
+                                                Array_Edit_userAllergy.add("대두");
+                                                count++;
+                                                Allergy = Allergy.replace("대두", "");
+                                                Log.d("j", j + "대두");
+
+                                            } else if (Allergy.contains("호두")) {
+                                                Cb_hodu.setChecked(true);
+                                                Array_Edit_userAllergy.add("호두");
+                                                count++;
+                                                Allergy = Allergy.replace("호두", "");
+                                                Log.d("j", j + "호두");
+
+                                            } else if (Allergy.contains("땅콩")) {
+                                                Cb_peanut.setChecked(true);
+                                                Array_Edit_userAllergy.add("땅콩");
+                                                count++;
+                                                Allergy = Allergy.replace("땅콩", "");
+                                                Log.d("j", j + "땅콩");
+
+                                            } else if (Allergy.contains("복숭아")) {
+                                                Cb_peach.setChecked(true);
+                                                Array_Edit_userAllergy.add("복숭아");
+                                                count++;
+                                                Allergy = Allergy.replace("복숭아", "");
+                                                Log.d("j", j + "복숭아");
+
+                                            } else if (Allergy.contains("토마토")) {
+                                                Cb_tomato.setChecked(true);
+                                                Array_Edit_userAllergy.add("토마토");
+                                                count++;
+                                                Allergy = Allergy.replace("토마토", "");
+                                                Log.d("j", j + "토마토");
+
+                                            } else if (Allergy.contains("가금류")) {
+                                                Cb_poultry.setChecked(true);
+                                                Array_Edit_userAllergy.add("가금류");
+                                                count++;
+                                                Allergy = Allergy.replace("가금류", "");
+                                                Log.d("j", j + "가금류");
+
+                                            } else if (Allergy.contains("우유")) {
+                                                Cb_milk.setChecked(true);
+                                                Array_Edit_userAllergy.add("우유");
+                                                count++;
+                                                Allergy = Allergy.replace("우유", "");
+                                                Log.d("j", j + "우유");
+
+                                            } else if (Allergy.contains("새우")) {
+                                                Cb_shrimp.setChecked(true);
+                                                Array_Edit_userAllergy.add("새우");
+                                                count++;
+                                                Allergy = Allergy.replace("새우", "");
+                                                Log.d("j", j + "새우");
+
+                                            } else if (Allergy.contains("고등어")) {
+                                                Cb_mackerel.setChecked(true);
+                                                Array_Edit_userAllergy.add("고등어");
+                                                count++;
+                                                Allergy = Allergy.replace("고등어", " ");
+                                                Log.d("j", j + "고등어");
+
+                                            } else if (Allergy.contains("홍합")) {
+                                                Cb_mussel.setChecked(true);
+                                                Array_Edit_userAllergy.add("홍합");
+                                                count++;
+                                                Allergy = Allergy.replace("홍합", "");
+                                                Log.d("j", j + "홍합");
+
+                                            } else if (Allergy.contains("전복")) {
+                                                Cb_abalone.setChecked(true);
+                                                Array_Edit_userAllergy.add("전복");
+                                                count++;
+                                                Allergy = Allergy.replace("전복", "");
+                                                Log.d("j", j + "전복");
+
+                                            } else if (Allergy.contains("굴")) {
+                                                Cb_oyster.setChecked(true);
+                                                Array_Edit_userAllergy.add("굴");
+                                                count++;
+                                                Allergy = Allergy.replace("굴", "");
+                                                Log.d("j", j + "굴");
+
+                                            } else if (Allergy.contains("조개류")) {
+                                                Cb_shellfish.setChecked(true);
+                                                Array_Edit_userAllergy.add("조개류");
+                                                count++;
+                                                Allergy = Allergy.replace("조개류", "");
+                                                Log.d("j", j + "조개류");
+
+                                            } else if (Allergy.contains("게")) {
+                                                Cb_crab.setChecked(true);
+                                                Array_Edit_userAllergy.add("게");
+                                                count++;
+                                                Allergy = Allergy.replace("게", "");
+                                                Log.d("j", j + "게");
+
+                                            } else if (Allergy.contains("오징어")) {
+                                                Cb_squid.setChecked(true);
+                                                Array_Edit_userAllergy.add("오징어");
+                                                count++;
+                                                Allergy = Allergy.replace("오징어", "");
+                                                Log.d("j", j + "오징어");
+
+                                            } else if (Allergy.contains("아황산")) {
+                                                Cb_sulfurous.setChecked(true);
+                                                Array_Edit_userAllergy.add("아황산");
+                                                count++;
+                                                Allergy = Allergy.replace("아황산", "");
+                                                Log.d("j", j + "아황산");
+
+                                            }
+                                        }
+
+
                                     }
                                 }
                             }
@@ -493,40 +716,54 @@ public class EditProfileActivity extends AppCompatActivity {
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "환경", Toast.LENGTH_SHORT).show();
                         Tv_Edit_VeganReason.append(" 환경");
+                        Array_Edit_userVeganReason.add("환경");
                     } else {
                         Tv_Edit_VeganReason.setText("");
+                        Array_Edit_userVeganReason.remove("환경");
                     }
                     break;
                 case R.id.Cb_Animal:
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "동물권", Toast.LENGTH_SHORT).show();
                         Tv_Edit_VeganReason.append(" 동물권");
+                        Array_Edit_userVeganReason.add("동물권");
+
                     } else {
                         Tv_Edit_VeganReason.setText("");
+                        Array_Edit_userVeganReason.remove("동물권");
                     }
                     break;
                 case R.id.Cb_Health:
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "건강", Toast.LENGTH_SHORT).show();
                         Tv_Edit_VeganReason.append(" 건강");
+                        Array_Edit_userVeganReason.add("건강");
+
                     } else {
                         Tv_Edit_VeganReason.setText("");
+                        Array_Edit_userVeganReason.remove("건강");
                     }
                     break;
                 case R.id.Cb_Religion:
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "종교", Toast.LENGTH_SHORT).show();
                         Tv_Edit_VeganReason.append(" 종교");
+                        Array_Edit_userVeganReason.add("종교");
+
                     } else {
                         Tv_Edit_VeganReason.setText("");
+                        Array_Edit_userVeganReason.remove("종교");
                     }
                     break;
                 case R.id.Cb_Etc:
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "기타", Toast.LENGTH_SHORT).show();
                         Tv_Edit_VeganReason.append(" 기타");
+                        Array_Edit_userVeganReason.add("기타");
+
                     } else {
                         Tv_Edit_VeganReason.setText("");
+                        Array_Edit_userVeganReason.remove("기타");
                     }
                     break;
                 default:
