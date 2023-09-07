@@ -71,6 +71,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     private PushNotification pushNotification;
     private int favoriteCount;
 
+    private PopupMenu popupMenu;
+
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore db;
@@ -196,12 +198,17 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             Btn_HomeFeedEtc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    PopupMenu popupMenu = new PopupMenu(context.getApplicationContext(), view);
+                    popupMenu = new PopupMenu(context.getApplicationContext(), view);
 
                     int pos = getAbsoluteAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION){
                         // 피드 dataset으로부터 클릭된 view의 작성자(publisher)를 가져온다
                         FeedPublisher = feedInfoList.get(pos).getPublisher();
+                        FeedId = feedInfoList.get(pos).getPostId();
+                        FeedTitle = feedInfoList.get(pos).getTitle();
+                        FeedContent = feedInfoList.get(pos).getContent();
+                        FeedUri = feedInfoList.get(pos).getUri();
+                        FeedKey = uidList.get(pos);
                         // 현재 사용자 Uid와 게시물 작성자가 같은 경우(즉, 로그인한 사용자의 게시물인 경우)
                         if (firebaseUser.getUid().equals(FeedPublisher)) {
                             // myfeed_menu.xml 메뉴 구현 -> 수정/삭제
@@ -213,11 +220,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                         // 게시물 수정 클릭시
                                         case R.id.feed_edit:
                                             // putExtra()를 통해 각각 게시물의 id, title, content를 EditFeedActivity로 보내준다.
-                                            FeedId = feedInfoList.get(pos).getPostId();
-                                            FeedTitle = feedInfoList.get(pos).getTitle();
-                                            FeedContent = feedInfoList.get(pos).getContent();
-                                            FeedUri = feedInfoList.get(pos).getUri();
-                                            FeedKey = uidList.get(pos);
                                             Log.d("EditInfo_Send", "Success");
                                             Intent intent = new Intent(context, EditFeedActivity.class);
                                             intent.putExtra("EditFeedId", FeedId);
@@ -238,7 +240,10 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     // POSTS db에서 현재 FeedId에 해당하는 document를 삭제한다.
-                                                    db.collection("POSTS").document(FeedId)
+
+                                                    databaseReference.child("posts").child(uidList.get(pos)).removeValue();
+
+                                                    db.collection("posts").document(FeedId)
                                                             .delete()
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override

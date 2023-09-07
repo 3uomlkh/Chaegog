@@ -29,6 +29,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,6 +41,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class FragMyFeed extends Fragment {
 
@@ -46,13 +51,20 @@ public class FragMyFeed extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private RecyclerView recyclerView;
+    private List<FeedInfo> feedInfoList = new ArrayList<>();
+    private List<String> uidList = new ArrayList<>();
+    MyFeedAdapter myFeedAdapter;
+
     TextView Tv_MyFeed_UerId, Tv_MyFeed_VeganType, Tv_MyFeed_Allergy, Tv_Notice;
 
     ImageView Iv_MyFeed_Profile;
 
+    FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
-    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+    FirebaseDatabase firebaseDatabase;
     FirebaseFirestore db;
+    //    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
 
     String USER_ID;
     String USER_VEGAN_TYPE;
@@ -92,16 +104,17 @@ public class FragMyFeed extends Fragment {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_frag_my_feed, container, false);
 
+        db = FirebaseFirestore.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
         Tv_Notice = view.findViewById(R.id.Tv_Notice);
         Tv_MyFeed_UerId = view.findViewById(R.id.Tv_MyFeed_UerId);
         Tv_MyFeed_VeganType = view.findViewById(R.id.Tv_MyFeed_VeganType);
         Tv_MyFeed_Allergy = view.findViewById(R.id.Tv_MyFeed_Allergy);
 
         Iv_MyFeed_Profile = view.findViewById(R.id.Iv_MyFeed_Profile);
-
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-//        getFirebaseProfileImage(firebaseUser);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.showDialog();
@@ -112,9 +125,8 @@ public class FragMyFeed extends Fragment {
             public void run() {
                 progressDialog.closeDialog();
             }
-        }, 3000);
+        }, 2000);
 
-        db = FirebaseFirestore.getInstance();
         db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -149,6 +161,33 @@ public class FragMyFeed extends Fragment {
                     }
                 });
 
+        recyclerView = view.findViewById(R.id.Rv_MyFeed);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        myFeedAdapter = new MyFeedAdapter(getActivity(), feedInfoList, uidList);
+        recyclerView.setAdapter(myFeedAdapter);
+
+        firebaseDatabase.getReference().child("posts").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                feedInfoList.clear();
+                uidList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    FeedInfo feedInfo = dataSnapshot.getValue(FeedInfo.class);
+                    String uidKey = dataSnapshot.getKey();
+
+                    feedInfoList.add(feedInfo);
+                    uidList.add(uidKey);
+                }
+                myFeedAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 //        db.collection("posts")
 //                .get()
 //                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -193,6 +232,7 @@ public class FragMyFeed extends Fragment {
 //
         return view;
     }
+
 
 //    public void loadImage() {
 //
