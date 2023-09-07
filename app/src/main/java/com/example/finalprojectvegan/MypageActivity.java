@@ -75,6 +75,7 @@ public class MypageActivity extends AppCompatActivity {
     private TextView userID, userVeganType, userAllergy;
     private Button Btn_EditAccount;
     private ImageView Iv_Mypage_profile;
+    private String Id, VeganType, Allergy;
     String imagePath = "";
     File imageFile = null;
     Uri imageUri = null;
@@ -158,11 +159,19 @@ public class MypageActivity extends AppCompatActivity {
                     }
                 });
 
+        Id = userID.getText().toString();
+        VeganType = userVeganType.getText().toString();
+        Allergy = userAllergy.getText().toString();
+
         Btn_EditAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MypageActivity.this, EditProfileActivity.class);
+                intent.putExtra("userId", Id);
+                intent.putExtra("userVeganType", VeganType);
+                intent.putExtra("userAllergy", Allergy);
                 startActivity(intent);
+                Log.d("intent 넘겨주는 데이터", Id + VeganType + Allergy);
             }
         });
 
