@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,47 +32,29 @@ import java.util.List;
 public class FragHomeFeed extends Fragment {
     private int myInt;
     private SharedPreferences pref;
-
-    public static final String ARG_OBJECT = "object";
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private String mParam1;
-    private String mParam2;
-
     private RecyclerView recyclerView;
     private List<FeedInfo> feedInfoList = new ArrayList<>();
     private List<String> uidList = new ArrayList<>();
-    HomeFeedAdapter homeFeedAdapter;
-
+    private HomeFeedAdapter homeFeedAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private FirebaseFirestore db;
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
-
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     public FragHomeFeed() {
-        // Required empty public constructor
     }
 
     public static FragHomeFeed newInstance(String param1, String param2) {
         FragHomeFeed fragment = new FragHomeFeed();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -119,6 +102,7 @@ public class FragHomeFeed extends Fragment {
                     uidList.add(uidKey);
                 }
                 homeFeedAdapter.notifyDataSetChanged();
+
             }
 
             @Override
