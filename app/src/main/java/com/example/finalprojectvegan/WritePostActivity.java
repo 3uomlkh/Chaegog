@@ -296,13 +296,14 @@ public class WritePostActivity extends AppCompatActivity {
         final String title = ((EditText) findViewById(R.id.Et_Post_Title)).getText().toString();
         final String content = ((EditText) findViewById(R.id.Et_Post_Content)).getText().toString();
         final int favoriteCount = Integer.parseInt("0");
+        final int reportCount = Integer.parseInt("0");
         final Map<String, Boolean> favoriteUser = null;
-
+        final Map<String, Boolean> reportUser = null;
 
         if (title.length() > 0 && content.length() > 0) {
 
             DocumentReference documentReference = db.collection("posts").document();
-            FeedInfo feedInfo = new FeedInfo(title, content, firebaseUser.getUid(), documentReference.getId(), uri.toString(), new Date(), favoriteCount, favoriteUser);
+            FeedInfo feedInfo = new FeedInfo(title, content, firebaseUser.getUid(), documentReference.getId(), uri.toString(), new Date(), favoriteCount, favoriteUser, reportCount, reportUser);
             documentReference.set(feedInfo)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override

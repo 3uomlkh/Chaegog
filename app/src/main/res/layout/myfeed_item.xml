@@ -77,13 +77,20 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <CheckBox
-                android:id="@+id/Cb_item_MyFeedFavorite"
+            <ImageView
+                android:id="@+id/Iv_MyFeedFavorite"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginLeft="20dp"
-                android:background="@drawable/custom_checkbox"
+                android:background="@drawable/favorite_off"
                 android:button="@null" />
+
+            <TextView
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/Tv_MyFeed_Favorite" />
 
             <View
                 android:layout_width="0dp"
@@ -94,9 +101,15 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:background="@drawable/ic_baseline_comment_24"
-                android:layout_marginTop="6dp"
-                android:layout_marginRight="20dp"
-                android:id="@+id/Btn_item_MyFeedComment" />
+                android:layout_marginRight="10dp"
+                android:id="@+id/Btn_MyFeedComment" />
+
+            <Button
+                android:id="@+id/Btn_MyFeedEtc"
+                android:layout_width="21dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/more" />
 
         </LinearLayout>
 

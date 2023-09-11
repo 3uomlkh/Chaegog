@@ -9,10 +9,10 @@ public class FeedInfo {
     private String title, content, publisher, postId, uri;
     private Date createdAt;
     private ArrayList<String> favoriteIdList;
-    public int favoriteCount;
-    public Map<String, Boolean> favorites = new HashMap<>();
+    public int favoriteCount, reportCount;
+    public Map<String, Boolean> favorites, report = new HashMap<>();
 
-    public FeedInfo(String title, String content, String publisher, String postId, String uri, Date createdAt, int favoriteCount, Map<String, Boolean> favorites) {
+    public FeedInfo(String title, String content, String publisher, String postId, String uri, Date createdAt, int favoriteCount, Map<String, Boolean> favorites, int reportCount, Map<String, Boolean> report) {
         this.title = title;
         this.content = content;
         this.publisher = publisher;
@@ -21,6 +21,8 @@ public class FeedInfo {
         this.createdAt = createdAt;
         this.favoriteCount = favoriteCount;
         this.favorites = favorites;
+        this.reportCount = reportCount;
+        this.report = report;
     }
 
     public FeedInfo() {
@@ -89,5 +91,21 @@ public class FeedInfo {
 
     public void setFavorites(Map<String, Boolean> favorites) {
         this.favorites = favorites;
+    }
+
+    public int getReportCount() {
+        return reportCount;
+    }
+
+    public void setReportCount(int reportCount) {
+        this.reportCount = reportCount;
+    }
+
+    public Map<String, Boolean> getReport() {
+        return report;
+    }
+
+    public void setReport(Map<String, Boolean> report) {
+        this.report = report;
     }
 }

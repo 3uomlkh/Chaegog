@@ -96,19 +96,24 @@ public class FragHomeFeed extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                FragmentManager fragmentManager = get
-//                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-//                fragmentTransaction.replace(R.id.homefeed_frame, new FragHomeFeed()).commit();
-//                homeFeedAdapter.notifyDataSetChanged();
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(false);
+                        homeFeedAdapter.notifyDataSetChanged();
+
                     }
                 }, 500);
             }
         });
+
+        recyclerView = view.findViewById(R.id.homefeed_recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        homeFeedAdapter = new HomeFeedAdapter(getActivity(), feedInfoList, uidList);
+        recyclerView.setAdapter(homeFeedAdapter);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.showDialog();
@@ -118,15 +123,9 @@ public class FragHomeFeed extends Fragment {
             @Override
             public void run() {
                 progressDialog.closeDialog();
+                homeFeedAdapter.notifyDataSetChanged();
             }
-        }, 3000);
-
-        recyclerView = view.findViewById(R.id.homefeed_recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        homeFeedAdapter = new HomeFeedAdapter(getActivity(), feedInfoList, uidList, myInt);
-        recyclerView.setAdapter(homeFeedAdapter);
+        }, 2000);
 
         firebaseDatabase.getReference().child("posts").addValueEventListener(new ValueEventListener() {
             @Override
@@ -151,31 +150,5 @@ public class FragHomeFeed extends Fragment {
 
         return view;
     }
-
-    // 게시물 리로딩
-
-    public void refreshFeed() {
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-//                mAdapter.notifyItemInserted(FeedList.size());
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-    }
-
-//                            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//                                @Override
-//                                public void onRefresh() {
-//                                    mAdapter.notifyItemInserted(FeedList.size());
-//                                    mAdapter.notifyDataSetChanged();
-////                                   mAdapter.notifyItemChanged(0);
-//                                    recyclerView.setAdapter(mAdapter);
-//                                    swipeRefreshLayout.setRefreshing(false);
-//                                }
-//                            });
-//    }
 
 }

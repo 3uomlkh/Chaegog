@@ -17,6 +17,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -75,6 +76,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     private PushNotification pushNotification;
     private int favoriteCount;
 
+    private PopupMenu popupMenu;
+
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore db;
@@ -97,115 +100,23 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             firebaseDatabase = FirebaseDatabase.getInstance();
             databaseReference = firebaseDatabase.getReference();
 
-//            Tv_HomeFeed_Favorite = view.findViewById(R.id.Tv_HomeFeed_Favorite);
-
-            // 좋아요 버튼 클릭시
-//            Cb_HomeFeedFavorite = view.findViewById(R.id.Cb_HomeFeedFavorite);
-//            Cb_HomeFeedFavorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                @Override
-//                public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-//                    // 클릭된 view 파악
-//                    int pos = getAbsoluteAdapterPosition();
-//                    if (pos != RecyclerView.NO_POSITION) {
-//
-//                        // 클릭한 view 알아내고 (pos) 해당 view의 FeedId값을 가져온다.
-//                        FeedId = FeedDataset.get(pos).getPostId();
-//                        Log.d("DOCUMENTID_Send", FeedId);
-//
-//                    }
-//                    if (checked) {
-//
-//                    }
-//                    db.collection("posts").document(FeedId).collection("favorite")
-//                            .get()
-//                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                                    if (task.isSuccessful()) {
-//                                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-//                                            String favoriteOnUser = documentSnapshot.getData().get("publisher").toString();
-//                                            // 좋아요 컬렉션에 현재 사용자 Uid가 있으면 삭제
-//                                            if (favoriteOnUser.equals(firebaseUser.getUid())) {
-//                                                compoundButton.isChecked();
-//                                                db.collection("posts").document(FeedId).collection("favorite").document(favoriteOnUser)
-//                                                        .delete()
-//                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                                            @Override
-//                                                            public void onSuccess(Void unused) {
-//
-//                                                            }
-//                                                        })
-//                                                        .addOnFailureListener(new OnFailureListener() {
-//                                                            @Override
-//                                                            public void onFailure(@NonNull Exception e) {
-//
-//                                                            }
-//                                                        });
-//                                                break;
-//                                            } else {
-//                                                // 없으면 추가
-//                                                Map<String, Object> favorite = new HashMap<>();
-//                                                favorite.put("userId", firebaseUser.getUid());
-//                                                DocumentReference postDoc = db.collection("posts").document(FeedId);
-//                                                DocumentReference favoriteDoc = postDoc.collection("favorite").document(firebaseUser.getUid());
-//                                                favoriteDoc.set(favorite);
-//                                                postDoc.update("favorite", FieldValue.increment(1));
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            })
-//                            .addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//
-//                                }
-//                            });
-//                    if (checked) {
-//                        Cb_HomeFeedFavorite.setEnabled(true);
-//                        Log.d("CHECK", "눌림");
-//
-//                        favoriteUserList.add(firebaseUser.getUid());
-//                        count = String.valueOf(favoriteUserList.size());
-//
-////                        FeedFavorite feedFavorite = new FeedFavorite(count, favoriteUserList);
-////                        databaseReference.child(FeedId).child("favorite").setValue(feedFavorite);
-////                        db.collection("posts").document(FeedId)
-////                                .update("favorite", FieldValue.increment(1))
-////                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-////                                    @Override
-////                                    public void onSuccess(Void unused) {
-////                                        Log.d("좋아요", "성공");
-////                                    }
-////                                });
-//                    } else {
-//                        Log.d("CHECK", "해제");
-//                        favoriteUserList.remove(firebaseUser.getUid());
-//                        count = String.valueOf(favoriteUserList.size());
-////                        db.collection("posts").document(FeedId)
-////                                .update("favorite", FieldValue.increment(-1))
-////                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-////                                    @Override
-////                                    public void onSuccess(Void unused) {
-////                                        Log.d("좋아요", "성공");
-////                                    }
-////                                });
-//                    }
-//                }
-//            });
-
             // 피드에서 더보기 선택시
 
             Btn_HomeFeedEtc = view.findViewById(R.id.Btn_HomeFeedEtc);
             Btn_HomeFeedEtc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    PopupMenu popupMenu = new PopupMenu(context.getApplicationContext(), view);
+                    popupMenu = new PopupMenu(context.getApplicationContext(), view);
 
                     int pos = getAbsoluteAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION){
                         // 피드 dataset으로부터 클릭된 view의 작성자(publisher)를 가져온다
                         FeedPublisher = feedInfoList.get(pos).getPublisher();
+                        FeedId = feedInfoList.get(pos).getPostId();
+                        FeedTitle = feedInfoList.get(pos).getTitle();
+                        FeedContent = feedInfoList.get(pos).getContent();
+                        FeedUri = feedInfoList.get(pos).getUri();
+                        FeedKey = uidList.get(pos);
                         // 현재 사용자 Uid와 게시물 작성자가 같은 경우(즉, 로그인한 사용자의 게시물인 경우)
                         if (firebaseUser.getUid().equals(FeedPublisher)) {
                             // myfeed_menu.xml 메뉴 구현 -> 수정/삭제
@@ -217,11 +128,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                         // 게시물 수정 클릭시
                                         case R.id.feed_edit:
                                             // putExtra()를 통해 각각 게시물의 id, title, content를 EditFeedActivity로 보내준다.
-                                            FeedId = feedInfoList.get(pos).getPostId();
-                                            FeedTitle = feedInfoList.get(pos).getTitle();
-                                            FeedContent = feedInfoList.get(pos).getContent();
-                                            FeedUri = feedInfoList.get(pos).getUri();
-                                            FeedKey = uidList.get(pos);
                                             Log.d("EditInfo_Send", "Success");
                                             Intent intent = new Intent(context, EditFeedActivity.class);
                                             intent.putExtra("EditFeedId", FeedId);
@@ -242,7 +148,10 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     // POSTS db에서 현재 FeedId에 해당하는 document를 삭제한다.
-                                                    db.collection("POSTS").document(FeedId)
+
+                                                    databaseReference.child("posts").child(uidList.get(pos)).removeValue();
+
+                                                    db.collection("posts").document(FeedId)
                                                             .delete()
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
@@ -277,7 +186,27 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                         // 게시물 신고 클릭시
                                         case R.id.feed_report:
                                             // Dialog를 통해 진행여부 확인.
-                                            Report();
+                                            AlertDialog.Builder ReportDialogBuilder = new AlertDialog.Builder(context);
+                                            ReportDialogBuilder.setTitle("게시물 신고");
+                                            ReportDialogBuilder.setMessage("정말 신고하시겠습니까?");
+                                            ReportDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    Log.d("신고", "눌림");
+                                                    if (uidList.size() != 0 ) {
+                                                        Log.d("신고", "성공?");
+                                                        onReportClicked(firebaseDatabase.getReference().child("posts").child(uidList.get(pos)));
+                                                    }
+                                                }
+                                            });
+                                            ReportDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                                }
+                                            });
+                                            ReportDialogBuilder.show();
+//                                            Report();
                                             return true;
 
                                         // 게시물 차단 클릭시
@@ -475,7 +404,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
         CardView cardView = holder.cardView;
 
         db = FirebaseFirestore.getInstance();
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
         Iv_HomeFeed_Image = cardView.findViewById(R.id.Iv_HomeFeed_Image);
         Iv_HomeFeed_Profile = cardView.findViewById(R.id.Iv_HomeFeed_Profile);
         Iv_HomeFeed_Favorite = cardView.findViewById(R.id.Iv_HomeFeedFavorite);
@@ -525,7 +455,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                     }
                 });
 
-        // RecyclerView에 표시할 posts 내용들 Dataset에서 가져와서 넣기
+//        // RecyclerView에 표시할 posts 내용들 Dataset에서 가져와서 넣기
         Tv_HomeFeed_Title.setText(feedInfoList.get(position).getTitle());
         Tv_HomeFeed_Content.setText(feedInfoList.get(position).getContent());
         Tv_HomeFeed_Publisher.setText(feedInfoList.get(position).getPublisher());
@@ -540,10 +470,14 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                         new RoundedCorners(10)))
                 .into(Iv_HomeFeed_Image);
 
-        if (feedInfoList.get(position).getFavorites().containsKey(firebaseUser.getUid())) {
-            Iv_HomeFeed_Favorite.setImageResource(R.drawable.favorite_on);
+        if (feedInfoList.get(position).getFavorites() != null) {
+            if (feedInfoList.get(position).getFavorites().containsKey(firebaseUser.getUid())) {
+                Iv_HomeFeed_Favorite.setImageResource(R.drawable.thumb_up_on);
+            } else {
+                Iv_HomeFeed_Favorite.setImageResource(R.drawable.thumb_up_off);
+            }
         } else {
-            Iv_HomeFeed_Favorite.setImageResource(R.drawable.favorite_off);
+            Iv_HomeFeed_Favorite.setImageResource(R.drawable.thumb_up_off);
         }
 
         Iv_HomeFeed_Favorite.setOnClickListener(new View.OnClickListener() {
@@ -556,6 +490,15 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                 }
             }
         });
+
+//        if (feedInfoList.get(position).getReport() != null) {
+//            if (feedInfoList.get(position).getReport().containsKey(firebaseUser.getUid())) {
+//                feedInfoList.remove(position);
+//                notifyItemRemoved(position);
+//            }
+//        } else {
+//
+//        }
 
     }
 
@@ -602,6 +545,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 
     }
 
+    // 좋아요 클릭시
     private void onFavoriteClicked(DatabaseReference feedRef) {
 
         feedRef.runTransaction(new Transaction.Handler() {
@@ -638,6 +582,32 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             }
         });
     }
+    private void onReportClicked(DatabaseReference feedRef) {
+        feedRef.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                FeedInfo feedInfo = currentData.getValue(FeedInfo.class);
+                if (feedInfo == null) {
+                    return Transaction.success(currentData);
+                }
+                if (feedInfo.getReport().containsKey(firebaseUser.getUid())) {
+                    feedInfo.setReportCount(feedInfo.getReportCount() - 1);
+                    feedInfo.getReport().remove(firebaseUser.getUid());
+                } else {
+                    feedInfo.setReportCount(feedInfo.getReportCount() + 1);
+                    feedInfo.getReport().put(firebaseUser.getUid(), true);
+                }
+                currentData.setValue(feedInfo);
+                return Transaction.success(currentData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+
+            }
+        });
+    }
 
     @Override
     public int getItemCount() {
@@ -645,24 +615,25 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     }
 
     // 신고 버튼 클릭시 실행 함수
-    public void Report() {
-        AlertDialog.Builder ReportDialogBuilder = new AlertDialog.Builder(context);
-        ReportDialogBuilder.setTitle("게시물 신고");
-        ReportDialogBuilder.setMessage("정말 신고하시겠습니까?");
-        ReportDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        ReportDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        ReportDialogBuilder.show();
-    }
+//    public void Report() {
+//        AlertDialog.Builder ReportDialogBuilder = new AlertDialog.Builder(context);
+//        ReportDialogBuilder.setTitle("게시물 신고");
+//        ReportDialogBuilder.setMessage("정말 신고하시겠습니까?");
+//        ReportDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                onReportClicked(firebaseDatabase.getReference().child("posts").child(uidList.get(holder.getAbsoluteAdapterPosition())));
+//
+//            }
+//        });
+//        ReportDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//        ReportDialogBuilder.show();
+//    }
 
     // 차단 버튼 클릭시 실행 함수
     public void Block(String BlockUserID) {
