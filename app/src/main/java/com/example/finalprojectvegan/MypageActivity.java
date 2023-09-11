@@ -114,6 +114,8 @@ public class MypageActivity extends AppCompatActivity {
         // MyPage 내 버튼
         Btn_Mypage_Setting = findViewById(R.id.Btn_Mypage_Setting);
         Btn_EditAccount = findViewById(R.id.Btn_EditAccount);
+        Btn_Mypage_help = findViewById(R.id.Btn_Mypage_help);
+        Btn_Mypage_Info = findViewById(R.id.Btn_Mypage_Info);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -183,7 +185,21 @@ public class MypageActivity extends AppCompatActivity {
             }
         });
 
+        Btn_Mypage_help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.notion.so/FAQ-01fca52faabf46f5826a13a11bf3c65f?pvs=4"));
+                startActivity(intent);
+            }
+        });
 
+        Btn_Mypage_Info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MypageActivity.this, InfoActivity.class);
+                startActivity(intent);
+            }
+        });
 
 //        db.collection("posts")
 //                .get()

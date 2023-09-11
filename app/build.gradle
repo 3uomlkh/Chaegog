@@ -103,4 +103,7 @@ dependencies {
    // firebase cloud message
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-analytics'
+
+    // 애드몹 광고
+    implementation 'com.google.android.gms:play-services-ads:22.3.0'
 }

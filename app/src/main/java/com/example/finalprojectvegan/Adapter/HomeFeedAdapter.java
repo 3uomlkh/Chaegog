@@ -54,8 +54,6 @@ import java.util.List;
 import java.util.Locale;
 
 import okhttp3.ResponseBody;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,9 +66,9 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     private List<FeedInfo> feedInfoList = new ArrayList<>();
     private List<String> uidList = new ArrayList<>();
     private Context context;
-    private TextView Tv_HomeFeed_Title, Tv_HomeFeed_Content, Tv_HomeFeed_CreatedAt, Tv_HomeFeed_Publisher, Tv_HomeFeed_Favorite;
-    private ImageView Iv_HomeFeed_Image, Iv_HomeFeed_Profile, Iv_HomeFeed_Favorite;
+
     private String FeedId, USER_ID, USER_PROFILE_IMG;
+    private List<String> userIdList = new ArrayList<>();
     private String FeedPublisher, FeedTitle, FeedContent, FeedUri, blockUserID, FeedKey;
     private String postPublisher, token;
     private PushNotification pushNotification;
@@ -85,7 +83,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     private FirebaseDatabase firebaseDatabase;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
+        private TextView Tv_HomeFeed_Title, Tv_HomeFeed_Content, Tv_HomeFeed_CreatedAt, Tv_HomeFeed_Publisher, Tv_HomeFeed_Favorite;
+        private ImageView Iv_HomeFeed_Image, Iv_HomeFeed_Profile, Iv_HomeFeed_Favorite;
         public CardView cardView;
         public Button Btn_HomeFeedComment, Btn_HomeFeedEtc;
 
@@ -107,7 +106,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                 @Override
                 public void onClick(View view) {
                     popupMenu = new PopupMenu(context.getApplicationContext(), view);
-
                     int pos = getAbsoluteAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION){
                         // 피드 dataset으로부터 클릭된 view의 작성자(publisher)를 가져온다
@@ -228,13 +226,11 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 //                                                                        AlreadyBlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 //                                                                            @Override
 //                                                                            public void onClick(DialogInterface dialogInterface, int i) {
-//
 //                                                                            }
 //                                                                        });
 //                                                                        AlreadyBlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
 //                                                                            @Override
 //                                                                            public void onClick(DialogInterface dialogInterface, int i) {
-//
 //                                                                            }
 //                                                                        });
 //                                                                        AlreadyBlockDialogBuilder.show();
@@ -251,22 +247,13 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 //                                                                        BlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
 //                                                                            @Override
 //                                                                            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                                                                            }
-//                                                                        });
-//                                                                        BlockDialogBuilder.show();
-//                                                                    }
-//                                                                }
-//                                                            }
-//                                                        }
-//                                                    });
+            // 피드에서 더보기 선택시
 
-//                                            AlertDialog.Builder BlockDialogBuilder = new AlertDialog.Builder(context);
-//                                            BlockDialogBuilder.setTitle("사용자 차단");
-//                                            BlockDialogBuilder.setMessage("정말 차단하시겠습니까?\n해당 계정의 모든 내용을 볼 수 없게됩니다");
-//                                            BlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                                @Override
-//                                                public void onClick(DialogInterface dialogInterface, int i) {
+//            Btn_HomeFeedEtc = view.findViewById(R.id.Btn_HomeFeedEtc);
+//            Btn_HomeFeedEtc.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    PopupMenu popupMenu = new PopupMenu(context.getApplicationContext(), view);
 //
 //                                                }
 //                                            });
@@ -350,6 +337,15 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                 }
             });
 
+            Iv_HomeFeed_Image = cardView.findViewById(R.id.Iv_HomeFeed_Image);
+            Iv_HomeFeed_Profile = cardView.findViewById(R.id.Iv_HomeFeed_Profile);
+            Iv_HomeFeed_Favorite = cardView.findViewById(R.id.Iv_HomeFeedFavorite);
+            Tv_HomeFeed_Title = cardView.findViewById(R.id.Tv_HomeFeed_Title);
+            Tv_HomeFeed_Content = cardView.findViewById(R.id.Tv_HomeFeed_Content);
+            Tv_HomeFeed_CreatedAt = cardView.findViewById(R.id.Tv_HomeFeed_CreatedAt);
+            Tv_HomeFeed_Publisher = cardView.findViewById(R.id.Tv_HomeFeed_Publisher);
+            Tv_HomeFeed_Favorite = cardView.findViewById(R.id.Tv_HomeFeed_Favorite);
+
             // 피드에서 댓글 아이콘 클릭시
             Btn_HomeFeedComment = view.findViewById(R.id.Btn_HomeFeedComment);
             Btn_HomeFeedComment.setOnClickListener(new View.OnClickListener() {
@@ -370,6 +366,50 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                     }
                 }
             });
+        }
+
+        void onBind(FeedInfo data) {
+
+        // posts RecyclerView에서 게시글 작성자 닉네임과 프로필 이미지를 표시하기 위해 추가로 users DB에서 데이터 가져오기
+            db.collection("users")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                if (firebaseUser != null) {
+                                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+//                                    Log.d("HomeFeedSuccess", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+                                        if (documentSnapshot.getId().equals(data.getPublisher())) {
+
+                                            userIdList.add(documentSnapshot.getData().get("userId").toString());
+                                            postPublisher = documentSnapshot.getId();
+                                            USER_ID = documentSnapshot.getData().get("userId").toString();
+                                            USER_PROFILE_IMG = documentSnapshot.getData().get("userProfileImg").toString();
+                                            token = documentSnapshot.getData().get("userToken").toString();
+
+//                                            Log.d("USER_ID", USER_ID);
+//                                            Log.d("USER_PROFILE_IMG", USER_PROFILE_IMG);
+
+                                        }
+                                    }
+                                }
+                            Tv_HomeFeed_Publisher.setText(USER_ID);
+                            Glide.with(cardView)
+                                    .load(USER_PROFILE_IMG)
+                                    .skipMemoryCache(false)
+                                    .into(Iv_HomeFeed_Profile);
+
+                            } else {
+                                Log.d("ERROR", "HOMEFEED_USER DATA GET", task.getException());
+                            }
+                        }
+                    });
+
+            Tv_HomeFeed_Title.setText(data.getTitle());
+            Tv_HomeFeed_Content.setText(data.getContent());
+            Tv_HomeFeed_CreatedAt.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(data.getCreatedAt()));
+            Tv_HomeFeed_Favorite.setText(String.valueOf(data.getFavoriteCount()));
         }
     }
 
@@ -399,68 +439,13 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull HomeFeedAdapter.ViewHolder holder, int position) {
 
         CardView cardView = holder.cardView;
 
+        holder.onBind(feedInfoList.get(position));
         db = FirebaseFirestore.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        Iv_HomeFeed_Image = cardView.findViewById(R.id.Iv_HomeFeed_Image);
-        Iv_HomeFeed_Profile = cardView.findViewById(R.id.Iv_HomeFeed_Profile);
-        Iv_HomeFeed_Favorite = cardView.findViewById(R.id.Iv_HomeFeedFavorite);
-        Tv_HomeFeed_Title = cardView.findViewById(R.id.Tv_HomeFeed_Title);
-        Tv_HomeFeed_Content = cardView.findViewById(R.id.Tv_HomeFeed_Content);
-        Tv_HomeFeed_CreatedAt = cardView.findViewById(R.id.Tv_HomeFeed_CreatedAt);
-        Tv_HomeFeed_Publisher = cardView.findViewById(R.id.Tv_HomeFeed_Publisher);
-        Tv_HomeFeed_Favorite = cardView.findViewById(R.id.Tv_HomeFeed_Favorite);
-
-        // posts RecyclerView에서 게시글 작성자 닉네임과 프로필 이미지를 표시하기 위해 추가로 users DB에서 데이터 가져오기
-        db.collection("users")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                            if (firebaseUser != null) {
-                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-//                                    Log.d("success", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-
-                                    if (documentSnapshot.getId().equals(feedInfoList.get(holder.getAbsoluteAdapterPosition()).getPublisher())) {
-
-                                        postPublisher = documentSnapshot.getId();
-                                        USER_ID = documentSnapshot.getData().get("userId").toString();
-                                        USER_PROFILE_IMG = documentSnapshot.getData().get("userProfileImg").toString();
-                                        token = documentSnapshot.getData().get("userToken").toString();
-
-                                        // 여기서 로그 찍어보면 다 나오는데
-                                        Log.d("USER_ID", USER_ID);
-                                        Log.d("USER_PROFILE_IMG", USER_PROFILE_IMG);
-
-                                        // 여기서 출력하면 첫번째 뷰만 안나옵니다..
-                                        Tv_HomeFeed_Publisher.setText(USER_ID);
-                                        Glide.with(cardView)
-                                                .load(USER_PROFILE_IMG)
-                                                .skipMemoryCache(false)
-                                                .into(Iv_HomeFeed_Profile);
-
-                                    }
-                                }
-                            }
-
-                        } else {
-                            Log.d("ERROR", "HOMEFEED_USER DATA GET", task.getException());
-                        }
-                    }
-                });
-
-//        // RecyclerView에 표시할 posts 내용들 Dataset에서 가져와서 넣기
-        Tv_HomeFeed_Title.setText(feedInfoList.get(position).getTitle());
-        Tv_HomeFeed_Content.setText(feedInfoList.get(position).getContent());
-        Tv_HomeFeed_Publisher.setText(feedInfoList.get(position).getPublisher());
-        Tv_HomeFeed_CreatedAt.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(feedInfoList.get(position).getCreatedAt()));
-        Tv_HomeFeed_Favorite.setText(String.valueOf(feedInfoList.get(position).getFavoriteCount()));
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         String url = feedInfoList.get(position).getUri();
         Glide.with(cardView)
@@ -468,19 +453,19 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                 .override(800, 800)
                 .apply(new RequestOptions().transform(new CenterCrop(),
                         new RoundedCorners(10)))
-                .into(Iv_HomeFeed_Image);
+                .into(holder.Iv_HomeFeed_Image);
 
         if (feedInfoList.get(position).getFavorites() != null) {
             if (feedInfoList.get(position).getFavorites().containsKey(firebaseUser.getUid())) {
-                Iv_HomeFeed_Favorite.setImageResource(R.drawable.thumb_up_on);
+                holder.Iv_HomeFeed_Favorite.setImageResource(R.drawable.thumb_up_on);
             } else {
-                Iv_HomeFeed_Favorite.setImageResource(R.drawable.thumb_up_off);
+                holder.Iv_HomeFeed_Favorite.setImageResource(R.drawable.thumb_up_off);
             }
         } else {
-            Iv_HomeFeed_Favorite.setImageResource(R.drawable.thumb_up_off);
+            holder.Iv_HomeFeed_Favorite.setImageResource(R.drawable.thumb_up_off);
         }
 
-        Iv_HomeFeed_Favorite.setOnClickListener(new View.OnClickListener() {
+        holder.Iv_HomeFeed_Favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("좋아요", "눌림");

@@ -31,9 +31,12 @@
         android:theme="@style/Theme.FinalProjectVegan"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".EditFeedActivity"
+            android:name=".InfoActivity"
             android:exported="false" />
-        <!-- <service -->
+        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" /> <!-- <service -->
         <!-- android:name=".Fcm.MyFirebaseMessagingService" -->
         <!-- android:exported="false"> -->
         <!-- <intent-filter> -->
@@ -127,20 +130,20 @@
         </activity>
         <activity
             android:name=".RegisterStep4Activity"
-            android:parentActivityName=".RegisterStep3Activity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".RegisterStep3Activity" />
         <activity
             android:name=".RegisterStep3Activity"
-            android:parentActivityName=".RegisterStep2Activity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".RegisterStep2Activity" />
         <activity
             android:name=".RegisterStep2Activity"
-            android:parentActivityName=".RegisterStep1Activity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".RegisterStep1Activity" />
         <activity
             android:name=".RegisterStep1Activity"
-            android:parentActivityName=".LoginActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".LoginActivity" />
         <activity
             android:name=".LoginActivity"
             android:configChanges="orientation|screenSize"
@@ -178,6 +181,5 @@
                 android:resource="@xml/external" />
         </provider>
     </application>
-
 
 </manifest>
