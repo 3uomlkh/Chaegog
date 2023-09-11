@@ -58,6 +58,8 @@
         <entry key="app/src/main/res/drawable/selector_radio_button_mini.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/selector_radio_text.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/tab_style01.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/thumb_up_off.xml" value="0.1325" />
+        <entry key="app/src/main/res/drawable/thumb_up_on.xml" value="0.1325" />
         <entry key="app/src/main/res/layout/Mypage_item.xml" value="0.1802536231884058" />
         <entry key="app/src/main/res/layout/activity_bookmark.xml" value="0.15416666666666667" />
         <entry key="app/src/main/res/layout/activity_camera.xml" value="0.1" />
@@ -112,7 +114,7 @@
         <entry key="app/src/main/res/layout/fragment_map_tab_review.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_roading.xml" value="0.19154367959004168" />
         <entry key="app/src/main/res/layout/fragment_user_search.xml" value="0.22313232421875" />
-        <entry key="app/src/main/res/layout/homefeed_item.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/homefeed_item.xml" value="0.4178610229492188" />
         <entry key="app/src/main/res/layout/myfeed_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/mypage_item.xml" value="0.10219879150390626" />
         <entry key="app/src/main/res/layout/product_item.xml" value="0.20471014492753623" />
