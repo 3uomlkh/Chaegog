@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
             <LinearLayout
@@ -23,7 +22,7 @@
                     android:id="@+id/arg_ratingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="평균별점"
+                    android:contentDescription="@string/average_rating"
                     android:layout_margin="5dp"
                     android:isIndicator="true"
                     android:numStars="5"
@@ -35,7 +34,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:layout_gravity="center"
-                    android:text="5.0"
                     android:textSize="18sp" />
             </LinearLayout>
 <!--            <LinearLayout-->
@@ -74,14 +72,14 @@
 
         <Button
             android:id="@+id/review_button"
-            android:layout_width="match_parent"
+            android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_gravity="center"
             android:textSize="18sp"
             android:layout_marginTop="5dp"
-            android:text="리뷰작성"/>
+            android:text="@string/write_review"/>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/review_recyclerview"
                 android:layout_width="match_parent"

@@ -8,7 +8,7 @@
 
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
@@ -21,7 +21,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
             app:cardCornerRadius="100dp">
 
             <ImageView
@@ -30,6 +30,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
+                android:contentDescription="@string/user_profile"
                 android:src="@drawable/ic_baseline_account_circle_24" />
 
         </androidx.cardview.widget.CardView>
@@ -38,34 +39,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/Tv_MyFeed_UerId"
-                android:text="사용자 닉네임"
+                android:text="@string/user_name"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/Tv_MyFeed_VeganType"
-                android:text="사용자 비건타입"
+                android:text="@string/user_type"
                 android:textColor="@color/black"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:textStyle="normal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/Tv_MyFeed_Allergy"
-                android:text="사용자 알러지"
+                android:text="@string/user_allergy"
                 android:textColor="@color/black"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:textStyle="normal" />
 
         </LinearLayout>
@@ -92,7 +93,7 @@
         android:textAlignment="center"
         android:paddingTop="20dp"
         android:visibility="visible"
-        android:text="게시물을 올려 사용자들과 자유롭게 공유하세요" />
+        android:text="@string/my_feed_text" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/Rv_MyFeed"

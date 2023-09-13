@@ -19,14 +19,15 @@
             android:id="@+id/search_btn"
             android:layout_width="80dp"
             android:layout_height="50dp"
-            android:text="검색"
+            android:text="@string/search_btn"
             android:layout_marginStart="10dp"
             android:layout_marginTop="40dp"/>
         <EditText
             android:id="@+id/search_edit_text"
             android:layout_width="250dp"
             android:layout_height="50dp"
-            android:hint="계정 검색"
+            android:hint="@string/search_account"
+            android:importantForAutofill="no"
             android:inputType="text"
             android:imeOptions="actionSearch"
             android:layout_marginTop="40dp"/>
@@ -52,7 +53,7 @@
             android:fontFamily="@font/pretendardregular"
             android:id="@+id/search_all"
             android:textColor="@color/black"
-            android:text="계정" />
+            android:text="@string/account" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -60,7 +61,7 @@
             android:fontFamily="@font/pretendardregular"
             android:id="@+id/search_recipe"
             android:textColor="@color/black"
-            android:text="레시피" />
+            android:text="@string/recipe" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -68,7 +69,7 @@
             android:fontFamily="@font/pretendardregular"
             android:id="@+id/search_product"
             android:textColor="@color/black"
-            android:text="제품" />
+            android:text="@string/product" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -76,7 +77,7 @@
             android:id="@+id/search_restaurant"
             android:fontFamily="@font/pretendardregular"
             android:textColor="@color/black"
-            android:text="식당" />
+            android:text="@string/restaurant" />
     </com.google.android.material.tabs.TabLayout>
 
     <TextView
@@ -84,7 +85,7 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="레시피"
+        android:text="@string/recipe"
         android:textColor="#424242"
         android:textSize="18sp"
         android:textStyle="bold"/>
@@ -97,7 +98,7 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="식당"
+        android:text="@string/restaurant"
         android:textColor="#424242"
         android:textSize="18sp"
         android:textStyle="bold"/>

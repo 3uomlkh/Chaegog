@@ -10,7 +10,7 @@
         android:layout_height = "wrap_content"
         android:layout_gravity = "center"
         android:padding = "20dp"
-        android:text = "정말 계정을 삭제하시겠습니까?\n한번 삭제하시면 관련된 정보가 전부 사라지며 복구할 수 없습니다."/>
+        android:text = "@string/account_delete_text"/>
 
     <LinearLayout
         android:layout_width = "match_parent"
@@ -21,14 +21,14 @@
             android:layout_width = "0dp"
             android:layout_height = "wrap_content"
             android:layout_weight = "1"
-            android:text = "삭제"/>
+            android:text = "@string/delete"/>
 
         <Button
             android:id = "@+id/Btn_Cancle"
             android:layout_width = "0dp"
             android:layout_height = "wrap_content"
             android:layout_weight = "1"
-            android:text = "취소"/>
+            android:text = "@string/cancel"/>
 
     </LinearLayout>
 </LinearLayout>

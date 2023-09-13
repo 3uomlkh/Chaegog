@@ -39,7 +39,7 @@
         android:layout_marginTop="50dp"
         android:layout_marginBottom="50dp"
         android:fontFamily="@font/pretendardregular"
-        android:text="제품의 식품유형표를 인식해주세요."
+        android:text="@string/ocr_textview"
         android:textAlignment="center"
         android:textSize="20dp"
         android:textStyle="bold"
@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginBottom="5dp"
-        android:text="부적합 원재료명"
+        android:text="@string/incompatible_ingredient_name"
         android:textColor="#424242"
         android:textSize="16dp"
         android:visibility="gone" />
@@ -62,7 +62,7 @@
         android:layout_height="match_parent"
         android:background="@color/yellow_light"
         android:gravity="center"
-        android:text="USER_ID님의 채식유형에\n적합한 제품입니다."
+        android:text="@string/positive_ocr"
         android:textColor="@color/green_light"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:text="원재료명"
+        android:text="@string/ingredient_name"
         android:textColor="#424242"
         android:textSize="16dp"
         android:background="@drawable/review_border"
@@ -87,7 +87,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="5dp"
-        android:text="알러지 유발 원재료명"
+        android:text="@string/allergen_ingredient_name"
         android:textColor="#424242"
         android:textSize="16dp"
         android:visibility="gone" />
@@ -98,7 +98,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:text="알러지 유발 원재료명"
+        android:text="@string/allergen_ingredient_name"
         android:textColor="#424242"
         android:background="@drawable/review_border"
         android:textSize="16dp"
@@ -111,7 +111,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="5dp"
-        android:text="추천 제품"
+        android:text="@string/recommended_product"
         android:textColor="#424242"
         android:textSize="16dp"
         android:visibility="gone" />
@@ -128,7 +128,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:visibility="gone"
-        android:text="추천 제품이 없습니다"
+        android:text="@string/no_recommended_product"
         android:textSize="16sp"
         android:fontFamily="@font/pretendardregular" />
 
@@ -157,7 +157,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/pretendardregular"
             android:textSize="16sp"
-            android:text="스캔하기" />
+            android:text="@string/ocr_scan" />
 
     </LinearLayout>
 

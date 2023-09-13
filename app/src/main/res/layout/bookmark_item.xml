@@ -18,6 +18,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_margin="5dp"
+            android:contentDescription="@string/restaurant_img"
             android:outlineSpotShadowColor="#6D6D6D"
             tools:srcCompat="@tools:sample/avatars"
             android:padding="5dp"/>
@@ -32,16 +33,16 @@
                 android:layout_margin="5dp"
                 android:textSize="17sp"
                 android:textColor="@color/black"
-                android:text="제목"
+                android:text="@string/restaurant_name"
                 android:padding="5dp"/>
             <TextView
                 android:id="@+id/bookmark_addr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:textSize="15sp"
                 android:textColor="@color/black"
-                android:text="설명"
+                android:text="@string/restaurant_address"
                 android:padding="5dp"/>
         </LinearLayout>
 <!--        <View-->
@@ -49,10 +50,11 @@
 <!--            android:layout_height="0dp"-->
 <!--            android:layout_weight="1" />-->
         <ImageView
-            android:layout_width="25dp"
+            android:layout_width="0dp"
             android:layout_height="25dp"
             android:layout_weight="1"
             android:layout_margin="5dp"
+            android:contentDescription="@string/bookmark"
             android:id="@+id/saveImage"
             android:src="@drawable/favorite_off"/>
     </LinearLayout>

@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:src="@drawable/camera"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:contentDescription="@string/restaurant_img"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,13 +21,13 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
-        android:text="위치보기"/>
+        android:text="@string/location"/>
     <Button
         android:id="@+id/call_btn"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="전화걸기"/>
+        android:text="@string/make_call"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,23 +42,24 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:textSize="17dp"
+                android:textSize="17sp"
                 android:textColor="#424242"
                 android:textStyle="bold"
                 android:id="@+id/map_info_detail_name"
-                android:text="식당명"/>
+                android:text="@string/restaurant_name"/>
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:src="@drawable/favorite_off"
-                android:id="@+id/map_info_save_image"/>
+                android:id="@+id/map_info_save_image"
+                android:contentDescription="@string/bookmark"/>
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/map_info_detail_category"
-            android:text="종류"
+            android:text="@string/restaurant_type"
             android:textColor="#424242"/>
         <!--            <TextView-->
         <!--                android:layout_width="wrap_content"-->
@@ -74,9 +76,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17dp"
+            android:textSize="17sp"
             android:textStyle="bold"
-            android:text="메뉴"
+            android:text=""
             android:textColor="#424242"/>
         <!--        <androidx.recyclerview.widget.RecyclerView-->
         <!--            android:layout_width="match_parent"-->
@@ -87,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/map_info_detail_menu"
-            android:text="메뉴"
+            android:text="@string/restaurant_menu"
             android:textColor="#424242"/>
     </LinearLayout>
 
@@ -99,15 +101,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17dp"
+            android:textSize="17sp"
             android:textStyle="bold"
-            android:text="주소"
+            android:text="@string/restaurant_address"
             android:textColor="#424242"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/map_info_detail_addr"
-            android:text="주소"
+            android:text="@string/restaurant_address"
             android:textColor="#424242"/>
     </LinearLayout>
 
@@ -119,15 +121,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17dp"
-            android:text="영업시간"
+            android:textSize="17sp"
+            android:text="@string/restaurant_time"
             android:textColor="#424242"
             android:textStyle="bold"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/map_info_detail_time"
-            android:text="영업시간"
+            android:text="@string/restaurant_time"
             android:textColor="#424242"/>
     </LinearLayout>
 
@@ -140,15 +142,15 @@
             android:id="@+id/map_info_detail_dayoff_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17dp"
-            android:text="휴무일"
+            android:textSize="17sp"
+            android:text="@string/restaurant_dayoff"
             android:textColor="#424242"
             android:textStyle="bold"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/map_info_detail_dayoff"
-            android:text="휴무일"
+            android:text="@string/restaurant_dayoff"
             android:textColor="#424242"/>
     </LinearLayout>
 </LinearLayout>
