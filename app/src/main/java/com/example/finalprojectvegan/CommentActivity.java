@@ -61,8 +61,8 @@ public class CommentActivity extends AppCompatActivity {
     PushNotification pushNotification;
     static String TOPIC = "/topics/myTopic";
     private int myInt;
-    public SharedPreferences pref;
-    public SharedPreferences.Editor editor;
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +70,6 @@ public class CommentActivity extends AppCompatActivity {
 
         // SharedPreferences 초기화 후 저장해둔 값 불러오기
         pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
-        editor = pref.edit();
         myInt = pref.getInt("MyPrefInt", 1);
 
 

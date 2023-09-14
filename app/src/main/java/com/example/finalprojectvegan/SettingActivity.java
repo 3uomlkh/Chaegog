@@ -29,8 +29,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class SettingActivity extends AppCompatActivity {
     private int myInt;
-    public SharedPreferences pref;
-    public SharedPreferences.Editor editor;
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
     private SwitchCompat alert_switch;
     private TextView Btn_Mypage_Logout, Btn_Mypage_DeleteAccount;
     private String DELETE_POST;

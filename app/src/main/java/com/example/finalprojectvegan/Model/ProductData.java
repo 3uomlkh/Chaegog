@@ -1,26 +1,38 @@
 package com.example.finalprojectvegan.Model;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
 
 public class ProductData {
-    @SerializedName("serialNum") // php 파일과 이름 같게
-    private int serialNum;
-    @SerializedName("productName")
     private String productName;
-    @SerializedName("productCompany")
     private String productCompany;
-    @SerializedName("productImage")
-    private String productImage;
+    private ArrayList<String> bookmarkIdList;
+
+    public ProductData(String name, String company) {
+        this.productName = name;
+        this.productCompany = company;
+    }
 
     public String getProductName() {
         return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public String getProductCompany() {
         return productCompany;
     }
 
-    public String getProductImage() {
-        return productImage;
+    public void setProductCompany(String productCompany) {
+        this.productCompany = productCompany;
+    }
+
+    public ArrayList<String> getBookmarkIdList() {
+        return bookmarkIdList;
+    }
+
+    public void setBookmarkIdList(ArrayList<String> bookmarkIdList) {
+        this.bookmarkIdList = bookmarkIdList;
     }
 }

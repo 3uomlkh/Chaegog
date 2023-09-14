@@ -20,6 +20,12 @@ import com.example.finalprojectvegan.Fcm.NotificationAPI;
 import com.example.finalprojectvegan.Fcm.NotificationData;
 import com.example.finalprojectvegan.Fcm.PushNotification;
 import com.example.finalprojectvegan.Fcm.RetrofitInstance;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,11 +61,23 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String userToken, refreshToken;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // AdMob 광고 SDK 초기화
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
 
         Btn_addFeed = (FloatingActionButton) findViewById(R.id.Btn_addFeed);
