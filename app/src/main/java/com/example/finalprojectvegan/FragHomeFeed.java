@@ -1,5 +1,6 @@
 package com.example.finalprojectvegan;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,8 +133,10 @@ public class FragHomeFeed extends Fragment {
 
                     feedInfoList.add(feedInfo);
                     uidList.add(uidKey);
+
                 }
                 homeFeedAdapter.notifyDataSetChanged();
+
             }
 
             @Override

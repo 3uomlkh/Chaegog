@@ -42,6 +42,9 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.15.1'
 
     implementation 'com.github.yalantis:ucrop:2.2.6'
+    implementation files('libs/activation.jar')
+    implementation files('libs/additionnal.jar')
+    implementation files('libs/mail.jar')
     // New version
     def multidex_version = "2.0.1"
     implementation "androidx.multidex:multidex:$multidex_version"

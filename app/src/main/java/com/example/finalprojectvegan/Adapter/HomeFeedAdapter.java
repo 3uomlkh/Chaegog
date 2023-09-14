@@ -29,8 +29,10 @@ import com.example.finalprojectvegan.Fcm.NotificationAPI;
 import com.example.finalprojectvegan.Fcm.NotificationData;
 import com.example.finalprojectvegan.Fcm.PushNotification;
 import com.example.finalprojectvegan.Fcm.RetrofitInstance;
+import com.example.finalprojectvegan.FragHomeFeed;
 import com.example.finalprojectvegan.Model.FeedInfo;
 import com.example.finalprojectvegan.R;
+import com.example.finalprojectvegan.SendMail;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -188,10 +190,18 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                             ReportDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                    Log.d("신고", "눌림");
                                                     if (uidList.size() != 0 ) {
-                                                        Log.d("신고", "성공?");
                                                         onReportClicked(firebaseDatabase.getReference().child("posts").child(uidList.get(pos)));
+
+                                                        if (feedInfoList.get(pos).getReportCount() > 1) {
+                                                            // 이메일 전송 구현
+                                                            SendMail mailServer = new SendMail();
+                                                            mailServer.sendSecurityCode(context.getApplicationContext(), "cchaegog@gmail.com");
+                                                            Log.d("이메일 전송", "성공?");
+//                                                            Intent intent = new Intent(context, SendMail.class);
+//                                                            intent.putExtra("uidKey", uidList.get(pos));
+//                                                            (FragHomeFeed)context.startActivity(intent);
+                                                        }
                                                     }
                                                 }
                                             });
