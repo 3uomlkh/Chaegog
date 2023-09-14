@@ -1,6 +1,5 @@
 package com.example.finalprojectvegan;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,25 +11,19 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.Volley;
-import com.example.finalprojectvegan.Model.UserVeganCategoryInfo;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class RegisterStep2Activity extends AppCompatActivity {
 
     private Button Btn_Register2To3;
     private TextView Tv_SelectedVeganReason;
     private CheckBox Cb_Environment, Cb_Animal, Cb_Health, Cb_Religion, Cb_Etc;
-    private String userId, userEmail, userPw;
+    private String userId, userEmail, userPw, userVeganReason;
+
+//    ArrayList<VeganReasons> Array_userVeganReason = new ArrayList<VeganReasons>();
+//    ArrayList<String> arr = new ArrayList<>();
+    //    private ArrayList<VeganReasons> Array_userVeganReason;
+    private int countR = 0;
 
     private FirebaseAuth firebaseAuth;
 
@@ -46,6 +39,8 @@ public class RegisterStep2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_step2);
+
+//        arr = new ArrayList<>();
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");
@@ -75,7 +70,20 @@ public class RegisterStep2Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String userVeganReason = Tv_SelectedVeganReason.getText().toString();
+//                String userVeganReason = Tv_SelectedVeganReason.getText().toString();
+
+                if (countR == 0) {
+                    Tv_SelectedVeganReason.append("없음 ");
+                    userVeganReason = Tv_SelectedVeganReason.getText().toString();
+//                    Array_userVeganReason.clear();
+//                    arr.clear();
+//                    Array_userVeganReason.add(new VeganReasons("없음"));
+//                    arr.add("없음");
+//                    Array_userVeganReason.add(0, "없음");
+                } else {
+//                    userVeganReason = Tv_SelectedVeganReason.getText().toString();
+                }
+                Log.d("비건이유 문제발생?", Tv_SelectedVeganReason + "혹은" + userVeganReason);
 
                 if (userVeganReason.equals("")) {
                     Toast.makeText(RegisterStep2Activity.this, "선택해주세요", Toast.LENGTH_SHORT).show();
@@ -86,7 +94,10 @@ public class RegisterStep2Activity extends AppCompatActivity {
                     intent2.putExtra("userEmail", userEmail);
                     intent2.putExtra("userPw", userPw);
                     intent2.putExtra("userVeganReason", userVeganReason);
+//                    intent2.putExtra("veganReason", arr);
                     startActivity(intent2);
+//                    Log.d("이유!!!!!!", Array_userVeganReason + "입니다");
+//                    Log.d("이유2222!!!!!!", arr + "입니다");
                 }
 
             }
@@ -103,41 +114,85 @@ public class RegisterStep2Activity extends AppCompatActivity {
                 case R.id.Cb_Environment:
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "환경", Toast.LENGTH_SHORT).show();
-                        Tv_SelectedVeganReason.append(" 환경");
+                        Tv_SelectedVeganReason.append("환경 ");
+                        userVeganReason = Tv_SelectedVeganReason.getText().toString();
+//                        Array_userVeganReason.add(new VeganReasons("환경"));
+//                        arr.add("환경");
+                        countR++;
                     } else {
-                        Tv_SelectedVeganReason.setText("");
+//                        Tv_SelectedVeganReason.setText("");
+                        userVeganReason = Tv_SelectedVeganReason.getText().toString();
+                        userVeganReason = userVeganReason.replace("환경 ", "");
+//                        Array_userVeganReason.remove("환경");
+//                        arr.remove("환경");
                     }
                     break;
                 case R.id.Cb_Animal:
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "동물권", Toast.LENGTH_SHORT).show();
-                        Tv_SelectedVeganReason.append(" 동물권");
+                        Tv_SelectedVeganReason.append("동물권 ");
+                        userVeganReason = Tv_SelectedVeganReason.getText().toString();
+//                        Array_userVeganReason.add(new VeganReasons("동물권"));
+//                        arr.add("동물권");
+                        countR++;
                     } else {
-                        Tv_SelectedVeganReason.setText("");
+//                        Tv_SelectedVeganReason.setText("");
+
+                        userVeganReason = Tv_SelectedVeganReason.getText().toString();
+                        userVeganReason = userVeganReason.replace("동물권 ", "");
+//                        Array_userVeganReason.remove("동물권");
+//                        arr.remove("동물권");
                     }
                     break;
                 case R.id.Cb_Health:
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "건강", Toast.LENGTH_SHORT).show();
-                        Tv_SelectedVeganReason.append(" 건강");
+                        Tv_SelectedVeganReason.append("건강 ");
+                        userVeganReason = Tv_SelectedVeganReason.getText().toString();
+//                        Array_userVeganReason.add(new VeganReasons("건강"));
+//                        arr.add("건강");
+                        countR++;
                     } else {
-                        Tv_SelectedVeganReason.setText("");
+//                        Tv_SelectedVeganReason.setText("");
+//                        Array_userVeganReason.remove("건강");
+//                        arr.remove("건강");
+
+                        userVeganReason = Tv_SelectedVeganReason.getText().toString();
+                        userVeganReason = userVeganReason.replace("건강 ", "");
                     }
                     break;
                 case R.id.Cb_Religion:
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "종교", Toast.LENGTH_SHORT).show();
-                        Tv_SelectedVeganReason.append(" 종교");
+                        Tv_SelectedVeganReason.append("종교 ");
+                        userVeganReason = Tv_SelectedVeganReason.getText().toString();
+//                        Array_userVeganReason.add(new VeganReasons("종교"));
+//                        arr.add("종교");
+                        countR++;
                     } else {
-                        Tv_SelectedVeganReason.setText("");
+//                        Tv_SelectedVeganReason.setText("");
+//                        Array_userVeganReason.remove("종교");
+//                        arr.remove("종교");
+
+                        userVeganReason = Tv_SelectedVeganReason.getText().toString();
+                        userVeganReason = userVeganReason.replace("종교 ", "");
                     }
                     break;
                 case R.id.Cb_Etc:
                     if (checked) {
                         //Toast.makeText(getApplicationContext(), "기타", Toast.LENGTH_SHORT).show();
-                        Tv_SelectedVeganReason.append(" 기타");
+                        Tv_SelectedVeganReason.append("기타 ");
+                        userVeganReason = Tv_SelectedVeganReason.getText().toString();
+//                        Array_userVeganReason.add(new VeganReasons("기타"));
+//                        arr.add("기타");
+                        countR++;
                     } else {
-                        Tv_SelectedVeganReason.setText("");
+//                        Tv_SelectedVeganReason.setText("");
+//                        Array_userVeganReason.remove("기타");
+//                        arr.remove("기타");
+
+                        userVeganReason = Tv_SelectedVeganReason.getText().toString();
+                        userVeganReason = userVeganReason.replace("기타 ", "");
                     }
                     break;
                 default:

@@ -6,7 +6,7 @@ public class UserProfile {
     private String userId;
     private String userEmail;
     private String userPw;
-    private String userVeganReason;
+    private ArrayList<String> userVeganReason;
     private String userVeganType;
     private ArrayList<String> userAllergy;
     private String userProfileImg;
@@ -16,7 +16,7 @@ public class UserProfile {
 
     }
 
-    public UserProfile(String userId, String userEmail, String userPw, String userVeganReason, String userVeganType, ArrayList<String> userAllergy, String userProfileImg, String userToken) {
+    public UserProfile(String userId, String userEmail, String userPw, ArrayList<String> userVeganReason, String userVeganType, ArrayList<String> userAllergy, String userProfileImg, String userToken) {
         this.userId = userId;
         this.userEmail = userEmail;
         this.userPw = userPw;
@@ -51,11 +51,11 @@ public class UserProfile {
         this.userPw = userPw;
     }
 
-    public String getUserVeganReason() {
+    public ArrayList<String> getUserVeganReason() {
         return userVeganReason;
     }
 
-    public void setUserVeganReason(String userVeganReason) {
+    public void setUserVeganReason(ArrayList<String> userVeganReason) {
         this.userVeganReason = userVeganReason;
     }
 

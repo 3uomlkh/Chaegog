@@ -29,7 +29,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 app:cardCornerRadius="100dp">
 
                 <ImageView
@@ -38,8 +38,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
-                    android:src="@drawable/personimage"
-                    android:contentDescription="@string/user_profile"/>
+                    android:src="@drawable/personimage" />
 
             </androidx.cardview.widget.CardView>
 
@@ -48,20 +47,20 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/pretendardregular"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                tools:text="@string/post_writer" />
+                tools:text="작성자" />
 
             <TextView
                 android:id="@+id/Tv_HomeFeed_CreatedAt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
                 android:fontFamily="@font/pretendardregular"
                 tools:text="2022-09-25" />
 
@@ -77,13 +76,13 @@
             android:id="@+id/Tv_HomeFeed_Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
             android:fontFamily="@font/pretendardregular"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:padding="5dp"
             android:textStyle="bold"
-            tools:text="@string/post_title" />
+            tools:text="타이틀" />
 
         <TextView
             android:id="@+id/Tv_HomeFeed_Content"
@@ -91,8 +90,8 @@
             android:layout_height="wrap_content"
             android:minLines="1"
             android:maxLines="5"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:fontFamily="@font/pretendardregular"
             android:padding="5dp"
             android:textColor="@color/black"
@@ -117,17 +116,16 @@
             <ImageView
                 android:id="@+id/Iv_HomeFeedFavorite"
                 android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginStart="20dp"
-                android:background="@drawable/favorite_off"
-                android:button="@null"
-                android:contentDescription="@string/like"/>
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/thumb_up_off"
+                android:button="@null" />
 
             <TextView
                 android:layout_width="25dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:id="@+id/Tv_HomeFeed_Favorite" />
 
             <View
@@ -139,17 +137,15 @@
                 android:id="@+id/Btn_HomeFeedComment"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/ic_baseline_comment_24"
-                android:contentDescription="@string/comment"/>
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ic_baseline_comment_24" />
 
             <Button
                 android:id="@+id/Btn_HomeFeedEtc"
                 android:layout_width="21dp"
                 android:layout_height="25dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/more"
-                android:contentDescription="@string/more"/>
+                android:layout_marginRight="10dp"
+                android:background="@drawable/more" />
 
         </LinearLayout>
 

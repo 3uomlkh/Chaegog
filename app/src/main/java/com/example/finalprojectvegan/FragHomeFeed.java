@@ -6,11 +6,14 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,16 +74,22 @@ public class FragHomeFeed extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
-//        progressDialog = new ProgressDialog(getActivity());
-//        progressDialog.showDialog();
-//
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                progressDialog.closeDialog();
-//            }
-//        }, 3000);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_layout);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                        homeFeedAdapter.notifyDataSetChanged();
+
+                    }
+                }, 500);
+            }
+        });
 
         recyclerView = view.findViewById(R.id.homefeed_recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -88,6 +97,18 @@ public class FragHomeFeed extends Fragment {
 
         homeFeedAdapter = new HomeFeedAdapter(getActivity(), feedInfoList, uidList, myInt);
         recyclerView.setAdapter(homeFeedAdapter);
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.showDialog();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.closeDialog();
+                homeFeedAdapter.notifyDataSetChanged();
+            }
+        }, 2000);
 
         firebaseDatabase.getReference().child("posts").addValueEventListener(new ValueEventListener() {
             @Override
@@ -113,31 +134,5 @@ public class FragHomeFeed extends Fragment {
 
         return view;
     }
-
-    // 게시물 리로딩
-
-    public void refreshFeed() {
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-//                mAdapter.notifyItemInserted(FeedList.size());
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-    }
-
-//                            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//                                @Override
-//                                public void onRefresh() {
-//                                    mAdapter.notifyItemInserted(FeedList.size());
-//                                    mAdapter.notifyDataSetChanged();
-////                                   mAdapter.notifyItemChanged(0);
-//                                    recyclerView.setAdapter(mAdapter);
-//                                    swipeRefreshLayout.setRefreshing(false);
-//                                }
-//                            });
-//    }
 
 }

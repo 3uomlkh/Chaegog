@@ -44,6 +44,9 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
         // 알림메세지 수신 동의
         pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         editor = pref.edit();
@@ -85,8 +88,8 @@ public class SettingActivity extends AppCompatActivity {
                         dialog.dismiss();
 
                         firebaseAuth.signOut();
-                        Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
-                        startActivity(intent);
+                        Intent intentLogout = new Intent(SettingActivity.this, LoginActivity.class);
+                        startActivity(intentLogout);
                     }
                 });
 
@@ -116,66 +119,73 @@ public class SettingActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         dialog.dismiss();
 
-                        firebaseUser.delete()
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d("AccountDelete", "User account deleted.");
-                                        }
-                                    }
-                                });
+                        Delete();
 
-                        db.collection("posts")
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            if (firebaseUser != null) {
-                                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+//                        firebaseUser.delete()
+//                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<Void> task) {
+//                                        if (task.isSuccessful()) {
+//                                            Log.d("AccountDelete", "User account deleted.");
+//                                            firebaseAuth.signOut();
+////                                            Intent intentDelete = new Intent(SettingActivity.this, LoginActivity.class);
+////                                            startActivity(intentDelete);
+//                                        } else {
+//                                            Log.d("AccountDelete", "Failure");
+//                                        }
+//                                    }
+//                                });
 
-                                                    String publisher = documentSnapshot.getData().get("publisher").toString();
-
-                                                    if (publisher.equals(firebaseUser.getUid())) {
-                                                        DELETE_POST = documentSnapshot.getData().get("postId").toString();
-
-                                                        db.collection("posts").document(DELETE_POST)
-                                                                .delete()
-                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(Void unused) {
-
-                                                                    }
-                                                                })
-                                                                .addOnFailureListener(new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(@NonNull Exception e) {
-
-                                                                    }
-                                                                });
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
-
-
-                        db.collection("users").document(firebaseUser.getUid())
-                                .delete()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-
-                                    }
-                                });
+//                        db.collection("posts")
+//                                .get()
+//                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                        if (task.isSuccessful()) {
+//                                            if (firebaseUser != null) {
+//                                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+//
+//                                                    String publisher = documentSnapshot.getData().get("publisher").toString();
+//
+//                                                    if (publisher.equals(firebaseUser.getUid())) {
+//                                                        DELETE_POST = documentSnapshot.getData().get("postId").toString();
+//
+//                                                        db.collection("posts").document(DELETE_POST)
+//                                                                .delete()
+//                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                                    @Override
+//                                                                    public void onSuccess(Void unused) {
+//
+//                                                                    }
+//                                                                })
+//                                                                .addOnFailureListener(new OnFailureListener() {
+//                                                                    @Override
+//                                                                    public void onFailure(@NonNull Exception e) {
+//
+//                                                                    }
+//                                                                });
+//                                                    }
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+//                                });
+//
+//
+//                        db.collection("users").document(firebaseUser.getUid())
+//                                .delete()
+//                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void unused) {
+//
+//                                    }
+//                                })
+//                                .addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//
+//                                    }
+//                                });
                     }
                 });
 
@@ -189,5 +199,22 @@ public class SettingActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public void Delete() {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseUser.delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            firebaseAuth.signOut();
+                            Log.d("계정삭제", "성공");
+                            Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Log.d("계정삭제", "실패");
+                        }
+                    }
+                });
     }
 }
