@@ -1,8 +1,6 @@
 package com.example.finalprojectvegan;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,18 +14,16 @@ public class SendMail extends AppCompatActivity {
 
     String uidKey; // 신고당한 게시물 ID
 
-    Intent intent = getIntent();
 
-    GMailSender gMailSender = new GMailSender(user, password);
-    String emailCode = gMailSender.getEmailCode();
-    public void sendSecurityCode(Context context, String sendTo) {
+//    GMailSender gMailSender = new GMailSender(user, password);
+//    String emailCode = gMailSender.getEmailCode();
 
-//        uidKey = intent.getStringExtra("uidKey");
+    public void sendSecurityCode(Context context, String sendTo, String postId) {
 
-        Log.d("이메일 전송", "아주 성공적");
         try {
-            gMailSender.sendMail("게시물 신고 보고서", "3회 이상 신고되었습니다.", sendTo);
-            Toast.makeText(context, "인증번호가 전송되었습니다.", Toast.LENGTH_SHORT).show();
+            GMailSender gMailSender = new GMailSender(user, password);
+            gMailSender.sendMail("[ " + postId + " ]" + "게시물 신고 보고서", "3회 이상 신고되었습니다.", sendTo);
+            Toast.makeText(context, "이메일을 성공적으로 보냈습니다.", Toast.LENGTH_SHORT).show();
         } catch (SendFailedException e) {
             Toast.makeText(context, "이메일 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show();
         } catch (MessagingException e) {

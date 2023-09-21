@@ -6,6 +6,11 @@
             android:title="신고" />
 
         <item
+            android:id="@+id/feed_report_cancle"
+            android:title="신고 취소"
+            android:visible="false"/>
+
+        <item
             android:id="@+id/feed_block"
             android:title="차단" />
 

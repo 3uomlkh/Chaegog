@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,9 @@ import android.view.ViewGroup;
 
 import com.example.finalprojectvegan.Adapter.HomeFeedAdapter;
 import com.example.finalprojectvegan.Model.FeedInfo;
+import com.example.finalprojectvegan.Model.ReportInfo;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +35,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FragHomeFeed extends Fragment {
     private int myInt;
@@ -40,6 +46,7 @@ public class FragHomeFeed extends Fragment {
     private RecyclerView recyclerView;
     private List<FeedInfo> feedInfoList = new ArrayList<>();
     private List<String> uidList = new ArrayList<>();
+    private List<String> ReportPost = new ArrayList<>();
     private HomeFeedAdapter homeFeedAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private FirebaseFirestore db;
@@ -48,6 +55,9 @@ public class FragHomeFeed extends Fragment {
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
     private ProgressDialog progressDialog;
+    Map<String, Boolean> mail = new HashMap<>();
+    Map<String, Object> mailSend = new HashMap<>();
+
 
     public FragHomeFeed() {
     }
@@ -67,12 +77,18 @@ public class FragHomeFeed extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_frag_home_feed, container, false);
 
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .permitDiskReads()
+                .permitDiskWrites()
+                .permitNetwork().build());
+
         pref = this.getActivity().getSharedPreferences("pref", Activity.MODE_PRIVATE);
         myInt = pref.getInt("MyPrefInt", 1);
 
         // firebase 초기화
         db = FirebaseFirestore.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
@@ -112,17 +128,54 @@ public class FragHomeFeed extends Fragment {
             }
         }, 2000);
 
+//        DatabaseReference postRef = databaseReference.child("post");
+//        DatabaseReference reportRef = databaseReference.child("report");
+
         firebaseDatabase.getReference().child("posts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 feedInfoList.clear();
                 uidList.clear();
+                ReportPost.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     FeedInfo feedInfo = dataSnapshot.getValue(FeedInfo.class);
                     String uidKey = dataSnapshot.getKey();
 
-                    feedInfoList.add(feedInfo);
-                    uidList.add(uidKey);
+                    databaseReference.child("report").child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                ReportInfo reportInfo = dataSnapshot.getValue(ReportInfo.class);
+                                String post = reportInfo.getPostId();
+                                ReportPost.add(post);
+                            }
+                            if (ReportPost.contains(feedInfo.getPostId())) {
+
+                            } else {
+                                feedInfoList.add(feedInfo);
+                                uidList.add(uidKey);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    if (feedInfo.getReportMail().equals("")) {
+                        if (feedInfo.getReportCount() == 3) {
+                            // 이메일 전송 구현
+                            SendMail mailServer = new SendMail();
+                            mailServer.sendSecurityCode(getActivity(), "cchaegog@gmail.com", feedInfo.getPostId());
+//                            Log.d("이메일 전송", "성공");
+                            mailSend.put("reportMail", "SEND");
+                            databaseReference.child("posts").child(uidKey).updateChildren(mailSend);
+                            mail.put(feedInfo.getPostId() + " Mail Send", true);
+                            ReportInfo reportInfo = new ReportInfo(null, mail);
+                            databaseReference.child("report").child("mail").child(feedInfo.getPostId()).setValue(reportInfo);
+                        }
+                    }
 
                 }
                 homeFeedAdapter.notifyDataSetChanged();

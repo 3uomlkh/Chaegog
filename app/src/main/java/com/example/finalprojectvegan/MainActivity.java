@@ -117,14 +117,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-//            for (UserInfo profile : firebaseUser.getProviderData()) {
-//                String name = profile.getDisplayName();
-//                if (neame == null) {
-//                    Intent intent = new Intent(MainActivity.this, RegisterStep1Activity.class);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(intent);
-//                }
-//            }
         }
 
         toolbar = findViewById(R.id.toolbar);
@@ -198,9 +190,6 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.mypage:
                         getSupportFragmentManager().beginTransaction() .replace(R.id.main_layout,fragment_mypage).commitAllowingStateLoss();
-//                        SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
-//                        editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
-//                        editor.apply();
                         return true;
                 }
                 return true;
@@ -272,14 +261,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-//                Toast.makeText(getApplicationContext(), "검색창 클릭됨", Toast.LENGTH_SHORT).show();
-//                getSupportFragmentManager().beginTransaction().replace(R.id.main_layout,fragment_search).commitAllowingStateLoss();
-
                 Intent intent1 = new Intent(getApplicationContext(), SearchActivity.class);
                 startActivity(intent1);
                 return true;
             case R.id.action_settings:
-//                Toast.makeText(getApplicationContext(), "마이페이지 클릭됨", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), MypageActivity.class);
                 startActivity(intent);
                 return true;

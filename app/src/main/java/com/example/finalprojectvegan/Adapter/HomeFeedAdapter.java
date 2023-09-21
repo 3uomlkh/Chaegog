@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import com.example.finalprojectvegan.Fcm.PushNotification;
 import com.example.finalprojectvegan.Fcm.RetrofitInstance;
 import com.example.finalprojectvegan.FragHomeFeed;
 import com.example.finalprojectvegan.Model.FeedInfo;
+import com.example.finalprojectvegan.Model.ReportInfo;
 import com.example.finalprojectvegan.R;
 import com.example.finalprojectvegan.SendMail;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,6 +48,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -67,14 +70,14 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 //    private ArrayList<FeedInfo> FeedDataset = new ArrayList<>();
     private List<FeedInfo> feedInfoList = new ArrayList<>();
     private List<String> uidList = new ArrayList<>();
+    private List<String> postId = new ArrayList<>();
     private Context context;
 
-    private String FeedId, USER_ID, USER_PROFILE_IMG;
+    private String FeedId, USER_ID, USER_PROFILE_IMG, post;
     private List<String> userIdList = new ArrayList<>();
     private String FeedPublisher, FeedTitle, FeedContent, FeedUri, blockUserID, FeedKey;
     private String postPublisher, token;
     private PushNotification pushNotification;
-    private int favoriteCount;
 
     private PopupMenu popupMenu;
 
@@ -83,6 +86,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     private FirebaseFirestore db;
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
+
+    private TextView feed_report;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView Tv_HomeFeed_Title, Tv_HomeFeed_Content, Tv_HomeFeed_CreatedAt, Tv_HomeFeed_Publisher, Tv_HomeFeed_Favorite;
@@ -95,6 +100,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             cardView = view;
 
             // 변수 초기화
+
             db = FirebaseFirestore.getInstance();
             firebaseAuth = FirebaseAuth.getInstance();
             firebaseUser = firebaseAuth.getCurrentUser();
@@ -102,7 +108,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             databaseReference = firebaseDatabase.getReference();
 
             // 피드에서 더보기 선택시
-
             Btn_HomeFeedEtc = view.findViewById(R.id.Btn_HomeFeedEtc);
             Btn_HomeFeedEtc.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -159,6 +164,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                                                     Log.d("Post Delete Success", "Success");
                                                                 }
                                                             });
+                                                    notifyItemRemoved(i);
                                                 }
                                             });
                                             DeleteDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
@@ -179,6 +185,10 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                         } else {
                             // 현재 사용자 작성 게시물이 아닌 경우 -> feed_menu.xml 표시 -> 신고/차단
                             popupMenu.getMenuInflater().inflate(R.menu.feed_menu, popupMenu.getMenu());
+
+//                            MenuItem reportItem = popupMenu.getMenu().findItem(R.id.feed_report);
+//                            MenuItem reportCancleItem = popupMenu.getMenu().findItem(R.id.feed_report_cancle);
+
                             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem menuItem) {
@@ -193,147 +203,56 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     if (uidList.size() != 0 ) {
-                                                        onReportClicked(firebaseDatabase.getReference().child("posts").child(uidList.get(pos)));
-
-                                                        if (feedInfoList.get(pos).getReportCount() > 1) {
-                                                            // 이메일 전송 구현
-                                                            SendMail mailServer = new SendMail();
-                                                            mailServer.sendSecurityCode(context.getApplicationContext(), "cchaegog@gmail.com");
-                                                            Log.d("이메일 전송", "성공?");
-//                                                            Intent intent = new Intent(context, SendMail.class);
-//                                                            intent.putExtra("uidKey", uidList.get(pos));
-//                                                            (FragHomeFeed)context.startActivity(intent);
-                                                        }
+                                                        onReportClicked(firebaseDatabase.getReference().child("posts").child(uidList.get(pos)), pos);
+//                                                        feedInfoList.remove(pos);
+//                                                        if (feedInfoList.get(pos).getReport() != null) {
+//                                                            if (feedInfoList.get(pos).getReport().containsKey(firebaseUser.getUid())) {
+//                                                                feedInfoList.remove(pos);
+//                                                                notifyItemRemoved(pos);
+//                                                            } else {
+//
+//                                                            }
+//                                                        }
+//                                                        else {
+//
+//                                                        }
+//                                                        notifyItemRemoved(pos);
                                                     }
                                                 }
                                             });
                                             ReportDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-
                                                 }
                                             });
                                             ReportDialogBuilder.show();
-//                                            Report();
                                             return true;
+
+//                                        case R.id.feed_report_cancle:
+//                                            // Dialog를 통해 진행여부 확인.
+//                                            AlertDialog.Builder ReportCancleDialogBuilder = new AlertDialog.Builder(context);
+//                                            ReportCancleDialogBuilder.setTitle("게시물 신고 취소");
+//                                            ReportCancleDialogBuilder.setMessage("정말 신고 취소하시겠습니까?");
+//                                            ReportCancleDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(DialogInterface dialogInterface, int i) {
+//                                                    if (uidList.size() != 0 ) {
+//                                                        onReportClicked(firebaseDatabase.getReference().child("posts").child(uidList.get(pos)), pos);
+//                                                    }
+//                                                }
+//                                            });
+//                                            ReportCancleDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(DialogInterface dialogInterface, int i) {
+//                                                }
+//                                            });
+//                                            ReportCancleDialogBuilder.show();
+//                                            return true;
 
                                         // 게시물 차단 클릭시
                                         case R.id.feed_block:
 
                                             Block(FeedPublisher);
-
-//                                            db.collection("BLOCKS")
-//                                                    .get()
-//                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                                                        @Override
-//                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                                                            if (task.isSuccessful()) {
-//                                                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-//                                                                    if (documentSnapshot.getId().equals(FeedPublisher)) {
-//                                                                        AlertDialog.Builder AlreadyBlockDialogBuilder = new AlertDialog.Builder(context);
-//                                                                        AlreadyBlockDialogBuilder.setTitle("사용자 차단");
-//                                                                        AlreadyBlockDialogBuilder.setMessage("이미 차단되어있습니다\n차단을 해제하시겠습니까?");
-//                                                                        AlreadyBlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                                                            @Override
-//                                                                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                                                            }
-//                                                                        });
-//                                                                        AlreadyBlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-//                                                                            @Override
-//                                                                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                                                            }
-//                                                                        });
-//                                                                        AlreadyBlockDialogBuilder.show();
-//                                                                    } else {
-//                                                                        AlertDialog.Builder BlockDialogBuilder = new AlertDialog.Builder(context);
-//                                                                        BlockDialogBuilder.setTitle("사용자 차단");
-//                                                                        BlockDialogBuilder.setMessage("정말 차단하시겠습니까?\n해당 계정의 모든 내용을 볼 수 없게됩니다");
-//                                                                        BlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                                                            @Override
-//                                                                            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                                                                            }
-//                                                                        });
-//                                                                        BlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-//                                                                            @Override
-//                                                                            public void onClick(DialogInterface dialogInterface, int i) {
-            // 피드에서 더보기 선택시
-
-//            Btn_HomeFeedEtc = view.findViewById(R.id.Btn_HomeFeedEtc);
-//            Btn_HomeFeedEtc.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    PopupMenu popupMenu = new PopupMenu(context.getApplicationContext(), view);
-//
-//                                                }
-//                                            });
-//                                            BlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-//                                                @Override
-//                                                public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                                                }
-//                                            });
-//                                            BlockDialogBuilder.show();
-
-
-//                                            db.collection("USERS").document(firebaseUser.getUid()).collection("BLOCK")
-//                                                    .get()
-//                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                                                        @Override
-//                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                                                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-//                                                                Log.d("DOCUMENTID", documentSnapshot.getId());
-//                                                                if (documentSnapshot.exists()) {
-//                                                                    documentSnapshot.getData().clear();
-//                                                                    Log.d("BLOCK Exist", "clear");
-//                                                                } else {
-//                                                                    db.collection("USERS").document(firebaseUser.getUid()).collection("BLOCK").document(FeedPublisher)
-//                                                                            .set(blockInfo)
-//                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                                                                @Override
-//                                                                                public void onSuccess(Void unused) {
-//                                                                                    Log.d("BLOCK NoExist", "set");
-//                                                                                }
-//                                                                            })
-//                                                                            .addOnFailureListener(new OnFailureListener() {
-//                                                                                @Override
-//                                                                                public void onFailure(@NonNull Exception e) {
-//
-//                                                                                }
-//                                                                            });
-//                                                                }
-//                                                            }
-//                                                        }
-//                                                    });
-
-//                                            db.collection("USERS").document(firebaseUser.getUid()).collection("BLOCK").document(FeedPublisher)
-//                                                    .set(blockInfo)
-//                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                                        @Override
-//                                                        public void onSuccess(Void unused) {
-//
-//                                                        }
-//                                                    })
-//                                                    .addOnFailureListener(new OnFailureListener() {
-//                                                        @Override
-//                                                        public void onFailure(@NonNull Exception e) {
-//
-//                                                        }
-//                                                    });
-//                                            db.collection("USERS").document(firebaseUser.getUid()).collection("BLOCK").document()
-//                                                    .set(blockInfo)
-//                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                                        @Override
-//                                                        public void onSuccess(Void unused) {
-//
-//                                                        }
-//                                                    })
-//                                                    .addOnFailureListener(new OnFailureListener() {
-//                                                        @Override
-//                                                        public void onFailure(@NonNull Exception e) {
-//
-//                                                        }
-//                                                    });
 
                                             return true;
                                         default:
@@ -391,16 +310,15 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
 //                                    Log.d("HomeFeedSuccess", documentSnapshot.getId() + " => " + documentSnapshot.getData());
                                         if (documentSnapshot.getId().equals(data.getPublisher())) {
-
-                                            userIdList.add(documentSnapshot.getData().get("userId").toString());
-                                            postPublisher = documentSnapshot.getId();
-                                            USER_ID = documentSnapshot.getData().get("userId").toString();
-                                            USER_PROFILE_IMG = documentSnapshot.getData().get("userProfileImg").toString();
-                                            token = documentSnapshot.getData().get("userToken").toString();
-
-//                                            Log.d("USER_ID", USER_ID);
-//                                            Log.d("USER_PROFILE_IMG", USER_PROFILE_IMG);
-
+//                                            if (data.getReport().containsKey(firebaseUser.getUid())) {
+//
+//                                            } else {
+                                                userIdList.add(documentSnapshot.getData().get("userId").toString());
+                                                postPublisher = documentSnapshot.getId();
+                                                USER_ID = documentSnapshot.getData().get("userId").toString();
+                                                USER_PROFILE_IMG = documentSnapshot.getData().get("userProfileImg").toString();
+                                                token = documentSnapshot.getData().get("userToken").toString();
+//                                            }
                                         }
                                     }
                                 }
@@ -416,10 +334,17 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                         }
                     });
 
-            Tv_HomeFeed_Title.setText(data.getTitle());
-            Tv_HomeFeed_Content.setText(data.getContent());
-            Tv_HomeFeed_CreatedAt.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(data.getCreatedAt()));
-            Tv_HomeFeed_Favorite.setText(String.valueOf(data.getFavoriteCount()));
+                Tv_HomeFeed_Title.setText(data.getTitle());
+                Tv_HomeFeed_Content.setText(data.getContent());
+                Tv_HomeFeed_CreatedAt.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(data.getCreatedAt()));
+                Tv_HomeFeed_Favorite.setText(String.valueOf(data.getFavoriteCount()));
+                String url = data.getUri();
+                Glide.with(cardView)
+                        .load(url)
+                        .override(800, 800)
+                        .apply(new RequestOptions().transform(new CenterCrop(),
+                                new RoundedCorners(10)))
+                        .into(Iv_HomeFeed_Image);
         }
     }
 
@@ -451,19 +376,11 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull HomeFeedAdapter.ViewHolder holder, int position) {
 
-        CardView cardView = holder.cardView;
+//        CardView cardView = holder.cardView;
 
         holder.onBind(feedInfoList.get(position));
         db = FirebaseFirestore.getInstance();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        String url = feedInfoList.get(position).getUri();
-        Glide.with(cardView)
-                .load(url)
-                .override(800, 800)
-                .apply(new RequestOptions().transform(new CenterCrop(),
-                        new RoundedCorners(10)))
-                .into(holder.Iv_HomeFeed_Image);
 
         if (feedInfoList.get(position).getFavorites() != null) {
             if (feedInfoList.get(position).getFavorites().containsKey(firebaseUser.getUid())) {
@@ -485,15 +402,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                 }
             }
         });
-
-//        if (feedInfoList.get(position).getReport() != null) {
-//            if (feedInfoList.get(position).getReport().containsKey(firebaseUser.getUid())) {
-//                feedInfoList.remove(position);
-//                notifyItemRemoved(position);
-//            }
-//        } else {
-//
-//        }
 
     }
 
@@ -550,7 +458,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                 if (feedInfo == null) {
                     return Transaction.success(currentData);
                 }
-
                 if (feedInfo.getFavorites().containsKey(firebaseUser.getUid())) {
                     // Unstar the post and remove self from stars
                     feedInfo.setFavoriteCount(feedInfo.getFavoriteCount() - 1);
@@ -563,7 +470,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                         sendCommentToFCM();
                     }
                 }
-
                 // Set value and report transaction success
                 currentData.setValue(feedInfo);
                 return Transaction.success(currentData);
@@ -577,24 +483,29 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             }
         });
     }
-    private void onReportClicked(DatabaseReference feedRef) {
+
+    private void onReportClicked(DatabaseReference feedRef, int i) {
         feedRef.runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
                 FeedInfo feedInfo = currentData.getValue(FeedInfo.class);
+                ReportInfo reportInfo = new ReportInfo(feedInfo.getPostId(), null);
                 if (feedInfo == null) {
                     return Transaction.success(currentData);
                 }
                 if (feedInfo.getReport().containsKey(firebaseUser.getUid())) {
+//                    feedInfoList.remove()
                     feedInfo.setReportCount(feedInfo.getReportCount() - 1);
                     feedInfo.getReport().remove(firebaseUser.getUid());
                 } else {
                     feedInfo.setReportCount(feedInfo.getReportCount() + 1);
                     feedInfo.getReport().put(firebaseUser.getUid(), true);
+                    firebaseDatabase.getReference().child("report").child(firebaseUser.getUid()).child(feedInfo.getPostId()).setValue(reportInfo);
                 }
                 currentData.setValue(feedInfo);
                 return Transaction.success(currentData);
+
             }
 
             @Override
@@ -608,27 +519,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     public int getItemCount() {
         return feedInfoList.size();
     }
-
-    // 신고 버튼 클릭시 실행 함수
-//    public void Report() {
-//        AlertDialog.Builder ReportDialogBuilder = new AlertDialog.Builder(context);
-//        ReportDialogBuilder.setTitle("게시물 신고");
-//        ReportDialogBuilder.setMessage("정말 신고하시겠습니까?");
-//        ReportDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                onReportClicked(firebaseDatabase.getReference().child("posts").child(uidList.get(holder.getAbsoluteAdapterPosition())));
-//
-//            }
-//        });
-//        ReportDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//            }
-//        });
-//        ReportDialogBuilder.show();
-//    }
 
     // 차단 버튼 클릭시 실행 함수
     public void Block(String BlockUserID) {

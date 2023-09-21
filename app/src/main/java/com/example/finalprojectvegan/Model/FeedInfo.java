@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FeedInfo {
-    private String title, content, publisher, postId, uri;
+    private String title, content, publisher, postId, uri, reportMail;
     private Date createdAt;
     private ArrayList<String> favoriteIdList;
     public int favoriteCount, reportCount;
     public Map<String, Boolean> favorites, report = new HashMap<>();
 
-    public FeedInfo(String title, String content, String publisher, String postId, String uri, Date createdAt, int favoriteCount, Map<String, Boolean> favorites, int reportCount, Map<String, Boolean> report) {
+    public FeedInfo(String title, String content, String publisher, String postId, String uri, Date createdAt, int favoriteCount, Map<String, Boolean> favorites, int reportCount, Map<String, Boolean> report, String reportMail) {
         this.title = title;
         this.content = content;
         this.publisher = publisher;
@@ -23,6 +23,7 @@ public class FeedInfo {
         this.favorites = favorites;
         this.reportCount = reportCount;
         this.report = report;
+        this.reportMail = reportMail;
     }
 
     public FeedInfo() {
@@ -107,5 +108,13 @@ public class FeedInfo {
 
     public void setReport(Map<String, Boolean> report) {
         this.report = report;
+    }
+
+    public String getReportMail() {
+        return reportMail;
+    }
+
+    public void setReportMail(String reportMail) {
+        this.reportMail = reportMail;
     }
 }

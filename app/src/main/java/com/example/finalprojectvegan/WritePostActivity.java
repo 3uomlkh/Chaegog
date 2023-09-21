@@ -299,11 +299,12 @@ public class WritePostActivity extends AppCompatActivity {
         final int reportCount = Integer.parseInt("0");
         final Map<String, Boolean> favoriteUser = null;
         final Map<String, Boolean> reportUser = null;
+        final String reportMail = "";
 
         if (title.length() > 0 && content.length() > 0) {
 
             DocumentReference documentReference = db.collection("posts").document();
-            FeedInfo feedInfo = new FeedInfo(title, content, firebaseUser.getUid(), documentReference.getId(), uri.toString(), new Date(), favoriteCount, favoriteUser, reportCount, reportUser);
+            FeedInfo feedInfo = new FeedInfo(title, content, firebaseUser.getUid(), documentReference.getId(), uri.toString(), new Date(), favoriteCount, favoriteUser, reportCount, reportUser, reportMail);
             documentReference.set(feedInfo)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
