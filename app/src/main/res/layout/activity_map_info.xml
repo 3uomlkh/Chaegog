@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="가게정보"
+        android:text="@string/restaurant_infomation"
         android:textSize="15dp"
         android:fontFamily="@font/pretendardregular"
         android:textColor="@color/white"
@@ -32,7 +32,7 @@
             android:fontFamily="@font/pretendardregular"
             android:id="@+id/tab_info"
             android:textColor="@color/black"
-            android:text="정보" />
+            android:text="@string/restaurant_info" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
             android:fontFamily="@font/pretendardregular"
             android:id="@+id/tab_menu"
             android:textColor="@color/black"
-            android:text="메뉴" />
+            android:text="@string/restaurant_menu" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
             android:fontFamily="@font/pretendardregular"
             android:id="@+id/tab_picture"
             android:textColor="@color/black"
-            android:text="사진" />
+            android:text="@string/restaurant_photo" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
             android:id="@+id/tab_review"
             android:fontFamily="@font/pretendardregular"
             android:textColor="@color/black"
-            android:text="리뷰" />
+            android:text="@string/restaurant_review" />
     </com.google.android.material.tabs.TabLayout>
 
     <FrameLayout

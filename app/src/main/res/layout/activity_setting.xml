@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="설정"
+            android:text="@string/setting"
             android:layout_gravity="center"
             android:textColor="@color/black" />
 
@@ -30,7 +30,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
         android:orientation="horizontal" >
         <androidx.appcompat.widget.SwitchCompat
@@ -44,13 +44,13 @@
             android:textOff=""
             android:textOn=""
             app:switchPadding="7dp"
-            android:text="알림메세지 수신동의"/>
+            android:text="@string/receive_notification"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
         android:orientation="horizontal" >
 
@@ -63,16 +63,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="5dp"
             android:id="@+id/Btn_Mypage_Logout"
-            android:text="로그아웃" />
+            android:text="@string/logout" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
         android:orientation="horizontal" >
 
@@ -85,9 +85,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="5dp"
             android:id="@+id/Btn_Mypage_DeleteAccount"
-            android:text="계정삭제" />
+            android:text="@string/delete_account" />
 
     </LinearLayout>
 

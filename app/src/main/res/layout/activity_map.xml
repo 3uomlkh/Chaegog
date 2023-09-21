@@ -22,7 +22,8 @@
         android:backgroundTint="@color/green_light"
         app:tint="@android:color/white"
         android:src="@drawable/search"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:contentDescription="@string/restaurant_search_btn"/>
 
     <LinearLayout
         android:id="@+id/map_info_layout"
@@ -41,7 +42,8 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:src="@drawable/camera"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:contentDescription="@string/restaurant_img"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -54,17 +56,17 @@
                     android:id="@+id/map_info_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="식당명"
+                    android:text="@string/restaurant_name"
                     android:textColor="@color/white"
-                    android:textSize="16dp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/map_info_addr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="주소"
+                    android:text="@string/restaurant_address"
                     android:textColor="@color/white"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -72,18 +74,18 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="영업시간 "
+                        android:text="@string/restaurant_time"
                         android:textStyle="bold"
                         android:textColor="@color/white"
-                        android:textSize="12dp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/map_info_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="영업시간"
+                        android:text="@string/restaurant_time"
                         android:textColor="@color/white"
-                        android:textSize="12dp" />
+                        android:textSize="12sp" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -93,18 +95,18 @@
                         android:id="@+id/map_info_day_off_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="휴무일 "
+                        android:text="@string/restaurant_dayoff"
                         android:visibility="visible"
                         android:textColor="@color/white"
                         android:textStyle="bold"
-                        android:textSize="12dp" />
+                        android:textSize="12sp" />
                     <TextView
                         android:id="@+id/map_info_day_off"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="휴무일"
+                        android:text="@string/restaurant_dayoff"
                         android:textColor="@color/white"
-                        android:textSize="12dp" />
+                        android:textSize="12sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -115,7 +117,8 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:src="@drawable/red_arrow"
-                android:background="@null"/>
+                android:background="@null"
+                android:contentDescription="@string/restaurant_info_btn"/>
         </LinearLayout>
     </LinearLayout>
 

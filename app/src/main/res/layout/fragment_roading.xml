@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="@color/yellow_light" >
 
-    <!-- TODO: Update blank fragment layout -->
     <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
@@ -14,11 +13,10 @@
         android:layout_marginTop="200dp"
         android:src="@drawable/sadtomato" />
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="준비중입니다.."
+        android:text="@string/in_progress"
         android:fontFamily="@font/pretendardregular"
         android:textSize="30sp"
         android:textColor="@color/tomato"

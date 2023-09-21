@@ -12,10 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:fontFamily="@font/hssaemaul_regular"
-        android:text="채곡채곡 4/4"
+        android:text="@string/register_step4"
         android:textAlignment="center"
         android:textColor="#1b1b1b"
-        android:textSize="40dp"
+        android:textSize="40sp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="알레르기 종류를 선택해주세요."
+        android:text="@string/choose_allergy"
         android:fontFamily="@font/pretendardregular"
         android:textAlignment="center"
         android:textColor="#1b1b1b"
@@ -42,7 +42,7 @@
         android:id="@+id/Btn_RegisterFinish"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="다음 단계로"
+        android:text="@string/next_step"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -68,55 +68,55 @@
                 android:id="@+id/Cb_memil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="메밀" />
+                android:text="@string/buckwheat" />
 
             <CheckBox
                 android:id="@+id/Cb_mil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="밀" />
+                android:text="@string/wheat" />
 
             <CheckBox
                 android:id="@+id/Cb_daedu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="대두" />
+                android:text="@string/soybean" />
 
             <CheckBox
                 android:id="@+id/Cb_hodu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="호두" />
+                android:text="@string/walnut" />
 
             <CheckBox
                 android:id="@+id/Cb_peanut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="땅콩" />
+                android:text="@string/peanut" />
 
             <CheckBox
                 android:id="@+id/Cb_peach"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="복숭아" />
+                android:text="@string/peach" />
 
             <CheckBox
                 android:id="@+id/Cb_tomato"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="토마토" />
+                android:text="@string/tomato" />
 
             <CheckBox
                 android:id="@+id/Cb_poultry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="난류(가금류)" />
+                android:text="@string/poultry" />
 
             <CheckBox
                 android:id="@+id/Cb_milk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="우유" />
+                android:text="@string/milk" />
         </LinearLayout>
 
         <LinearLayout
@@ -130,55 +130,55 @@
                 android:id="@+id/Cb_shrimp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="새우" />
+                android:text="@string/shrimp" />
 
             <CheckBox
                 android:id="@+id/Cb_mackerel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="고등어" />
+                android:text="@string/mackerel" />
 
             <CheckBox
                 android:id="@+id/Cb_mussel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="홍합" />
+                android:text="@string/mussels" />
 
             <CheckBox
                 android:id="@+id/Cb_abalone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="전복" />
+                android:text="@string/abalone" />
 
             <CheckBox
                 android:id="@+id/Cb_oyster"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="굴" />
+                android:text="@string/oyster" />
 
             <CheckBox
                 android:id="@+id/Cb_shellfish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="조개류" />
+                android:text="@string/shellfishery" />
 
             <CheckBox
                 android:id="@+id/Cb_crab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="게" />
+                android:text="@string/crab" />
 
             <CheckBox
                 android:id="@+id/Cb_squid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="오징어" />
+                android:text="@string/squid" />
 
             <CheckBox
                 android:id="@+id/Cb_sulfurous"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="아황산 포함식품" />
+                android:text="@string/sulfur_dioxide" />
         </LinearLayout>
 
     </LinearLayout>

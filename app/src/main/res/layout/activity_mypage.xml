@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="마이페이지"
+            android:text="@string/mypage"
             android:layout_gravity="center"
             android:textColor="@color/black" />
 
@@ -81,7 +81,7 @@
                 android:id="@+id/Tv_Mypage_UserId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="사용자 닉네임"
+                android:text="@string/user_name"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="bold" />
@@ -90,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/Tv_Mypage_VeganType"
-                android:text="사용자 비건타입"
+                android:text="@string/user_type"
                 android:textColor="@color/black"
                 android:textSize="15dp"
                 android:textStyle="normal" />
@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/Tv_Mypage_Allergy"
-                android:text="사용자 알러지"
+                android:text="@string/user_allergy"
                 android:textColor="@color/black"
                 android:textSize="15dp"
                 android:textStyle="normal" />
@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="40dp"
             android:layout_gravity="center"
-            android:text="수정"/>
+            android:text="@string/modification"/>
 
     </LinearLayout>
 
@@ -171,7 +171,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:id="@+id/Btn_Mypage_BlockInfo"
-            android:text="차단" />
+            android:text="@string/block_list" />
     </LinearLayout>
 
     <LinearLayout
@@ -192,7 +192,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:id="@+id/Btn_Mypage_help"
-            android:text="도움말" />
+            android:text="@string/help" />
 
     </LinearLayout>
 
@@ -214,7 +214,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="7dp"
             android:id="@+id/Btn_Mypage_Info"
-            android:text="정보" />
+            android:text="@string/information" />
 
     </LinearLayout>
 

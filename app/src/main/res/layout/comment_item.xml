@@ -12,7 +12,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         app:cardCornerRadius="100dp">
 
         <ImageView
@@ -42,20 +42,20 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/pretendardregular"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                tools:text="작성자" />
+                tools:text="@string/post_writer" />
 
             <TextView
                 android:id="@+id/Tv_Comment_CreatedAt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:fontFamily="@font/pretendardregular"
                 tools:text="2022-09-25" />
 
@@ -65,12 +65,12 @@
             android:id="@+id/Tv_Comment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
             android:fontFamily="@font/pretendardregular"
             android:textColor="@color/black"
             android:textSize="13sp"
             android:textStyle="normal"
-            tools:text="댓글입니다."/>
+            tools:text="@string/comment"/>
     </LinearLayout>
 
 

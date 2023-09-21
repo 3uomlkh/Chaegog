@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="프로필 수정"
+            android:text="@string/profile_update"
             android:layout_gravity="center"
             android:textColor="@color/black" />
 
@@ -39,7 +39,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
-            android:src="@drawable/ic_baseline_account_circle_24" />
+            android:src="@drawable/ic_baseline_account_circle_24"
+            android:contentDescription="@string/profile_update"/>
 
     </androidx.cardview.widget.CardView>
 
@@ -54,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="40dp"
+            android:layout_marginStart="40dp"
             android:layout_marginVertical="10dp"
             android:orientation="vertical">
 
@@ -62,24 +63,26 @@
                 android:id="@+id/Et_Edit_Mypage_UserId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="사용자 닉네임"
+                android:hint="@string/user_name"
+                android:inputType="text"
                 android:textColor="@color/black"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:importantForAutofill="no"/>
 
         </LinearLayout>
 
         <View
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
         <Button
             android:id="@+id/Btn_EditAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="40dp"
+            android:layout_marginEnd="40dp"
             android:layout_gravity="center"
-            android:text="수정"/>
+            android:text="@string/modification"/>
 
     </LinearLayout>
 
@@ -97,7 +100,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="관심 분야" />
+        android:text="@string/interests" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -117,7 +120,7 @@
             android:layout_marginHorizontal="5dp"
             android:fontFamily="@font/pretendardregular"
             android:textSize="15sp"
-            android:text="환경"/>
+            android:text="@string/environment"/>
         <CheckBox
             android:id="@+id/Cb_Animal"
             android:layout_width="wrap_content"
@@ -129,7 +132,7 @@
             android:layout_marginHorizontal="5dp"
             android:fontFamily="@font/pretendardregular"
             android:textSize="15sp"
-            android:text="동물권"/>
+            android:text="@string/animal_right"/>
         <CheckBox
             android:id="@+id/Cb_Health"
             android:layout_width="wrap_content"
@@ -141,7 +144,7 @@
             android:layout_marginHorizontal="5dp"
             android:fontFamily="@font/pretendardregular"
             android:textSize="15sp"
-            android:text="건강"/>
+            android:text="@string/health"/>
         <CheckBox
             android:id="@+id/Cb_Religion"
             android:layout_width="wrap_content"
@@ -153,7 +156,7 @@
             android:layout_marginHorizontal="5dp"
             android:fontFamily="@font/pretendardregular"
             android:textSize="15sp"
-            android:text="종교"/>
+            android:text="@string/religion"/>
         <CheckBox
             android:id="@+id/Cb_Etc"
             android:layout_width="wrap_content"
@@ -165,7 +168,7 @@
             android:layout_marginHorizontal="5dp"
             android:fontFamily="@font/pretendardregular"
             android:textSize="15sp"
-            android:text="기타"/>
+            android:text="@string/etc"/>
 
         <TextView
             android:id="@+id/Tv_Edit_VeganReason"
@@ -179,10 +182,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="채식 타입" />
+        android:text="@string/diet_type" />
 
     <TableLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
 
@@ -202,7 +205,7 @@
                 android:button="@null"
                 android:fontFamily="@font/pretendardregular"
                 android:gravity="center"
-                android:text="비건"
+                android:text="@string/vegan"
                 android:textColor="@drawable/selector_radio_text"
                 android:textSize="15sp" />
 
@@ -215,7 +218,7 @@
                 android:button="@null"
                 android:fontFamily="@font/pretendardregular"
                 android:gravity="center"
-                android:text="락토"
+                android:text="@string/lacto"
                 android:textColor="@drawable/selector_radio_text"
                 android:textSize="15sp" />
 
@@ -228,7 +231,7 @@
                 android:button="@null"
                 android:fontFamily="@font/pretendardregular"
                 android:gravity="center"
-                android:text="오보"
+                android:text="@string/ovo"
                 android:textColor="@drawable/selector_radio_text"
                 android:textSize="15sp" />
 
@@ -241,7 +244,7 @@
                 android:button="@null"
                 android:fontFamily="@font/pretendardregular"
                 android:gravity="center"
-                android:text="락토오보"
+                android:text="@string/lacto_ovo"
                 android:textColor="@drawable/selector_radio_text"
                 android:textSize="15sp" />
 
@@ -253,7 +256,7 @@
                 android:background="@drawable/selector_radio_button_mini"
                 android:button="@null"
                 android:gravity="center"
-                android:text="폴로"
+                android:text="@string/pollo"
                 android:textColor="@drawable/selector_radio_text"
                 android:textSize="15sp" />
 
@@ -277,7 +280,7 @@
                 android:button="@null"
                 android:fontFamily="@font/pretendardregular"
                 android:gravity="center"
-                android:text="페스코"
+                android:text="@string/pesco"
                 android:textColor="@drawable/selector_radio_text"
                 android:textSize="15sp" />
 
@@ -290,7 +293,7 @@
                 android:button="@null"
                 android:fontFamily="@font/pretendardregular"
                 android:gravity="center"
-                android:text="지향없음"
+                android:text="@string/none"
                 android:textColor="@drawable/selector_radio_text"
                 android:textSize="15sp" />
         </RadioGroup>
@@ -307,7 +310,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="알러지 종류" />
+        android:text="@string/allergy_type" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -327,55 +330,55 @@
                         android:id="@+id/Cb_memil"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="메밀" />
+                        android:text="@string/buckwheat" />
 
                     <CheckBox
                         android:id="@+id/Cb_mil"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="밀" />
+                        android:text="@string/wheat" />
 
                     <CheckBox
                         android:id="@+id/Cb_daedu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="대두" />
+                        android:text="@string/soybean" />
 
                     <CheckBox
                         android:id="@+id/Cb_hodu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="호두" />
+                        android:text="@string/walnut" />
 
                     <CheckBox
                         android:id="@+id/Cb_peanut"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="땅콩" />
+                        android:text="@string/peanut" />
 
                     <CheckBox
                         android:id="@+id/Cb_peach"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="복숭아" />
+                        android:text="@string/peach" />
 
                     <CheckBox
                         android:id="@+id/Cb_tomato"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="토마토" />
+                        android:text="@string/tomato" />
 
                     <CheckBox
                         android:id="@+id/Cb_poultry"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="난류(가금류)" />
+                        android:text="@string/poultry" />
 
                     <CheckBox
                         android:id="@+id/Cb_milk"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="우유" />
+                        android:text="@string/milk" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -389,55 +392,55 @@
                         android:id="@+id/Cb_shrimp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="새우" />
+                        android:text="@string/shrimp" />
 
                     <CheckBox
                         android:id="@+id/Cb_mackerel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="고등어" />
+                        android:text="@string/mackerel" />
 
                     <CheckBox
                         android:id="@+id/Cb_mussel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="홍합" />
+                        android:text="@string/mussels" />
 
                     <CheckBox
                         android:id="@+id/Cb_abalone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="전복" />
+                        android:text="@string/abalone" />
 
                     <CheckBox
                         android:id="@+id/Cb_oyster"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="굴" />
+                        android:text="@string/oyster" />
 
                     <CheckBox
                         android:id="@+id/Cb_shellfish"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="조개류" />
+                        android:text="@string/shellfishery" />
 
                     <CheckBox
                         android:id="@+id/Cb_crab"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="게" />
+                        android:text="@string/crab" />
 
                     <CheckBox
                         android:id="@+id/Cb_squid"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="오징어" />
+                        android:text="@string/squid" />
 
                     <CheckBox
                         android:id="@+id/Cb_sulfurous"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="아황산 포함식품" />
+                        android:text="@string/sulfur_dioxide" />
 
                     <TextView
                         android:id="@+id/Tv_Edit_Allergy"
