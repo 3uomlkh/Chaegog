@@ -3,6 +3,7 @@ package com.example.finalprojectvegan;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,6 +46,8 @@ public class RegisterStep4Activity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
+
+    ProgressDialog pd;
 
     // 뒤로가기 버튼 클릭시 앱 종료
     @Override
@@ -157,6 +161,12 @@ public class RegisterStep4Activity extends AppCompatActivity {
         Btn_RegisterFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // 처리중 화면 띄우기
+                pd = new ProgressDialog(RegisterStep4Activity.this);
+                pd.setMessage("Please wait..");
+                pd.show();
+
                 // 선택 안한경우 text 바꿔서 저장
                 if (count == 0) {
                     Tv_SelectedAllergy.append(" 없음");
@@ -168,30 +178,68 @@ public class RegisterStep4Activity extends AppCompatActivity {
                 }
                 Log.d("LAST REGISTER", "SUCCESS");
 
-                // fcm token 구하기
-                FirebaseMessaging.getInstance().getToken()
-                        .addOnCompleteListener(new OnCompleteListener<String>() {
-                            @Override
-                            public void onComplete(@NonNull Task<String> task) {
-                                if (!task.isSuccessful()) {
-                                    Log.w("FirebaseMessaging", "Fetching FCM registration token failed", task.getException());
-                                    return;
-                                }
+                register(userEmail, userPw);
 
-                                // Get new FCM registration token
-                                userToken = task.getResult();
-                                Log.d("FirebaseMessaging", "Your device registration token is " + userToken);
-                                Toast.makeText(getApplicationContext(), "Your device registration token is " + userToken, Toast.LENGTH_SHORT).show();
-                                updateUserProfile(userId, userEmail, userPw, Array_userVeganReason, userVeganType, Array_userAllergy, userProfileImg, userToken);
-                                Log.d("로그인 정보", "비건계기 " + Array_userVeganReason + " 알러지 " + Array_userAllergy);
-                            }
-                        });
-
-                // 함수 선언
-                Intent intent3 = new Intent(RegisterStep4Activity.this, LoginActivity.class);
-                startActivity(intent3);
+//                // 함수 선언
+//                Intent intent3 = new Intent(RegisterStep4Activity.this, LoginActivity.class);
+//                startActivity(intent3);
+//
+//                pd.dismiss();
             }
         });
+    }
+
+    // 회원가입 정보 등록
+    private void register (String userEmail, String userPw) {
+
+        firebaseAuth.createUserWithEmailAndPassword(userEmail, userPw)
+                .addOnCompleteListener(RegisterStep4Activity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+
+                            Log.d("REGISTER1", "SUCCESS");
+
+                            getFCMToken();
+
+                            // 처리중 화면 종료
+                            Intent intent3 = new Intent(RegisterStep4Activity.this, LoginActivity.class);
+                            startActivity(intent3);
+
+                            pd.dismiss();
+
+                        } else {
+
+                            Log.d("REGISTER1", "FAILURE");
+
+                            // 유저입력 정보가 유효하지 않을경우
+                            pd.dismiss();
+                            Toast.makeText(RegisterStep4Activity.this, "회원가입 실패", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    //FCM Token 구하기
+    private void getFCMToken() {
+        // fcm token 구하기
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("FirebaseMessaging", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        userToken = task.getResult();
+                        Log.d("FirebaseMessaging", "Your device registration token is " + userToken);
+                        Toast.makeText(getApplicationContext(), "Your device registration token is " + userToken, Toast.LENGTH_SHORT).show();
+                        updateUserProfile(userId, userEmail, userPw, Array_userVeganReason, userVeganType, Array_userAllergy, userProfileImg, userToken);
+                        Log.d("로그인 정보", "비건계기 " + Array_userVeganReason + " 알러지 " + Array_userAllergy);
+                    }
+                });
     }
 
     // db에 회원정보 저장하는 함수

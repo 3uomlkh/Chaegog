@@ -65,7 +65,13 @@ public class RegisterStep1Activity extends AppCompatActivity {
                         Toast.makeText(RegisterStep1Activity.this, "비밀번호는 최소 6자리 이상으로 해주세요!", Toast.LENGTH_SHORT).show();
                     } else {
                         if (userPw.equals(userPwCheck)) {
-                            register(userId, userEmail, userPw);
+                            Intent intent = new Intent(RegisterStep1Activity.this, RegisterStep2Activity.class);
+                            intent.putExtra("userId", userId);
+                            intent.putExtra("userEmail", userEmail);
+                            intent.putExtra("userPw", userPw);
+                            startActivity(intent);
+                            pd.dismiss();
+//                            register(userId, userEmail, userPw);
                         } else {
                             Toast.makeText(RegisterStep1Activity.this, "비밀번호를 다시 확인해주세요", Toast.LENGTH_SHORT).show();
                         }
@@ -105,34 +111,34 @@ public class RegisterStep1Activity extends AppCompatActivity {
 
     }
 
-    // 회원가입 정보 등록
-    private void register (String userId, String userEmail, String userPw) {
-
-        firebaseAuth.createUserWithEmailAndPassword(userEmail, userPw)
-                .addOnCompleteListener(RegisterStep1Activity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-
-                            Log.d("REGISTER1", "SUCCESS");
-
-                            // 처리중 화면 종료
-                            pd.dismiss();
-                            Intent intent = new Intent(RegisterStep1Activity.this, RegisterStep2Activity.class);
-                            intent.putExtra("userId", userId);
-                            intent.putExtra("userEmail", userEmail);
-                            intent.putExtra("userPw", userPw);
-                            startActivity(intent);
-
-                        } else {
-
-                            Log.d("REGISTER1", "FAILURE");
-
-                            // 유저입력 정보가 유효하지 않을경우
-                            pd.dismiss();
-                            Toast.makeText(RegisterStep1Activity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
+//    // 회원가입 정보 등록
+//    private void register (String userId, String userEmail, String userPw) {
+//
+//        firebaseAuth.createUserWithEmailAndPassword(userEmail, userPw)
+//                .addOnCompleteListener(RegisterStep1Activity.this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//
+//                            Log.d("REGISTER1", "SUCCESS");
+//
+//                            // 처리중 화면 종료
+//                            pd.dismiss();
+//                            Intent intent = new Intent(RegisterStep1Activity.this, RegisterStep2Activity.class);
+//                            intent.putExtra("userId", userId);
+//                            intent.putExtra("userEmail", userEmail);
+//                            intent.putExtra("userPw", userPw);
+//                            startActivity(intent);
+//
+//                        } else {
+//
+//                            Log.d("REGISTER1", "FAILURE");
+//
+//                            // 유저입력 정보가 유효하지 않을경우
+//                            pd.dismiss();
+//                            Toast.makeText(RegisterStep1Activity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
+//    }
 }
