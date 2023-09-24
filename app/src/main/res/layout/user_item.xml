@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:fontFamily="@font/pretendardregular"
-            android:text="username"
+            android:text="@string/user_name"
             android:textColor="@color/green"
             android:textStyle="bold" />
 
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/pretendardregular"
             android:maxLines="1"
-            android:text="email" />
+            android:text="@string/user_email" />
 
     </LinearLayout>
 
