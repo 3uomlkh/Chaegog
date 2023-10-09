@@ -1,4 +1,4 @@
-package com.example.finalprojectvegan;
+package com.cchaegog.chaegog;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
