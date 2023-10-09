@@ -5,11 +5,21 @@ import java.util.ArrayList;
 public class ProductData {
     private String productName;
     private String productCompany;
+    private String productImg;
+    private String itemKey;
     private ArrayList<String> bookmarkIdList;
 
-    public ProductData(String name, String company) {
+    public ProductData(String name, String company, String image, String itemKey) {
         this.productName = name;
         this.productCompany = company;
+        this.productImg = image;
+        this.itemKey = itemKey;
+    }
+
+    public ProductData(String name, String company, String itemKey) {
+        this.productName = name;
+        this.productCompany = company;
+        this.itemKey = itemKey;
     }
 
     public String getProductName() {
@@ -34,5 +44,21 @@ public class ProductData {
 
     public void setBookmarkIdList(ArrayList<String> bookmarkIdList) {
         this.bookmarkIdList = bookmarkIdList;
+    }
+
+    public String getProductImg() {
+        return productImg;
+    }
+
+    public void setProductImg(String productImg) {
+        this.productImg = productImg;
+    }
+
+    public String getItemKey() {
+        return itemKey;
+    }
+
+    public void setItemKey(String itemKey) {
+        this.itemKey = itemKey;
     }
 }

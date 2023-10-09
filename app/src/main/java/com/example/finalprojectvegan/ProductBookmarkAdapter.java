@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.finalprojectvegan.Model.ProductData;
 import com.example.finalprojectvegan.Model.RecipeData;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +39,7 @@ public class ProductBookmarkAdapter extends RecyclerView.Adapter<ProductBookmark
         holder.saveImage.setImageResource(R.drawable.favorite_on);
 
         ArrayList<String> bookmarkIdList = productData.get(i).getBookmarkIdList();
+        String itemKey = productData.get(i).getItemKey();
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -49,7 +51,7 @@ public class ProductBookmarkAdapter extends RecyclerView.Adapter<ProductBookmark
                 bookmarkRef
                         .child(mAuth.getCurrentUser().getUid())
                         .child("product_bookmark")
-                        .child(bookmarkIdList.get(position))
+                        .child(itemKey)
                         .setValue(null);
                 Toast.makeText(view.getContext(), "북마크 삭제", Toast.LENGTH_SHORT).show();
             }
@@ -80,7 +82,8 @@ public class ProductBookmarkAdapter extends RecyclerView.Adapter<ProductBookmark
             saveImage = itemView.findViewById(R.id.product_save_image);
         }
         void onBind(ProductData data) {
-
+            productName.setText(data.getProductName());
+            productCompany.setText(data.getProductCompany());
         }
     }
 }
