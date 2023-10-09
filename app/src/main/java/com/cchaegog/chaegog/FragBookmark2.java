@@ -18,7 +18,7 @@ import java.util.ArrayList;
 // 제품 북마크
 public class FragBookmark2 extends Fragment {
     private View view;
-    private ArrayList<String> listName, listCompany,  bookmarkIdList;
+    private ArrayList<String> listName, listCompany,  bookmarkIdList, itemKey;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private RecyclerView recyclerView;
@@ -35,6 +35,10 @@ public class FragBookmark2 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bookmarkIdList = new ArrayList<>();
+        listName = new ArrayList<>();
+        listCompany = new ArrayList<>();
+        itemKey = new ArrayList<>();
     }
 
     @Override
@@ -48,45 +52,46 @@ public class FragBookmark2 extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new ProductBookmarkAdapter();
 
-//        getBookmark();
+        getBookmark();
         recyclerView.setAdapter(adapter);
 
         return view;
     }
 
-//    private void getBookmark() {
-//        mDatabase = FirebaseDatabase.getInstance().getReference("product");
-//        ValueEventListener postListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                bookmarkIdList.clear();
-//                listName.clear();
-//                listCompany.clear();
-//                bookmarkIdList.clear();
-//                adapter.removeItem();
-//
-//                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    bookmarkIdList.add(snapshot.getKey());
-//                    listName.add(snapshot.child("title").getValue().toString());
-//                    listCompany.add(snapshot.child("imageUrl").getValue().toString());
-//                }
-//
-//                for(int i=0; i<listName.size(); i++) {
-//                    ProductData data = new ProductData(listName.get(i), listCompany.get(i));
-//                    data.setBookmarkIdList(bookmarkIdList);
-//                    adapter.addItem(data);
-//                }
-//
-//                adapter.notifyItemRemoved(adapter.position);
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.w("RecipeFragment", "loadPost:onCancelled", databaseError.toException());
-//            }
-//        };
-//        mDatabase.child(mAuth.getCurrentUser().getUid()).child("product_bookmark").addValueEventListener(postListener);
-//    }
+    private void getBookmark() {
+        mDatabase = FirebaseDatabase.getInstance().getReference("bookmark");
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                listName.clear();
+                listCompany.clear();
+                bookmarkIdList.clear();
+                itemKey.clear();
+                adapter.removeItem();
+
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    bookmarkIdList.add(snapshot.getKey());
+                    itemKey.add(snapshot.child("itemKey").getValue().toString());
+                    listName.add(snapshot.child("productName").getValue().toString());
+                    listCompany.add(snapshot.child("productCompany").getValue().toString());
+                }
+
+                for(int i=0; i<listName.size(); i++) {
+                    ProductData data = new ProductData(listName.get(i), listCompany.get(i), itemKey.get(i));
+                    data.setBookmarkIdList(bookmarkIdList);
+                    adapter.addItem(data);
+                }
+
+                adapter.notifyItemRemoved(adapter.position);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("RecipeFragment", "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        mDatabase.child(mAuth.getCurrentUser().getUid()).child("product_bookmark").addValueEventListener(postListener);
+    }
 }

@@ -79,6 +79,7 @@ public class MypageActivity extends AppCompatActivity {
         Btn_EditAccount = findViewById(R.id.Btn_EditAccount);
         Btn_Mypage_help = findViewById(R.id.Btn_Mypage_help);
         Btn_Mypage_Info = findViewById(R.id.Btn_Mypage_Info);
+        Btn_Mypage_BlockInfo = findViewById(R.id.Btn_Mypage_BlockInfo);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -144,6 +145,14 @@ public class MypageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MypageActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Btn_Mypage_BlockInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MypageActivity.this, BlockActivity.class);
                 startActivity(intent);
             }
         });

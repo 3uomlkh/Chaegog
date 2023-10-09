@@ -36,7 +36,7 @@
                 android:textSize="18sp"
                 android:padding="5dp"
                 android:textStyle="bold"
-                tools:text="타이틀" />
+                tools:text="@string/post_title" />
 
             <TextView
                 android:id="@+id/Tv_MyFeed_item_CreatedAt"

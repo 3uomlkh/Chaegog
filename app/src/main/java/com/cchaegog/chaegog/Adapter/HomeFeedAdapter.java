@@ -1,5 +1,6 @@
 package com.cchaegog.chaegog.Adapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -44,6 +45,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -64,6 +66,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 
 //    private ArrayList<FeedInfo> FeedDataset = new ArrayList<>();
     private List<FeedInfo> feedInfoList = new ArrayList<>();
+    private ArrayList<BlockUserData> blockUserList = new ArrayList<>();
     private List<String> uidList = new ArrayList<>();
     private List<String> postId = new ArrayList<>();
     private Context context;
@@ -71,7 +74,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     private String FeedId, USER_ID, USER_PROFILE_IMG, post;
     private List<String> userIdList = new ArrayList<>();
     private String FeedPublisher, FeedTitle, FeedContent, FeedUri, blockUserID, FeedKey;
-    private String postPublisher, token;
+    private String blockUserName, blockUserProfile;
+    private String postPublisher, token, getPostPublisher;
     private PushNotification pushNotification;
 
     private PopupMenu popupMenu;
@@ -81,6 +85,10 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     private FirebaseFirestore db;
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
+    private boolean blockIsTrue;
+    private ArrayList<String> blockUserNameList = new ArrayList<>();
+    private ArrayList<String> blockUserIdList = new ArrayList<>();
+    public int blockPosition;
 
     private TextView feed_report;
 
@@ -93,7 +101,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
         public ViewHolder(CardView view) {
             super(view);
             cardView = view;
-
+            blockPosition = getAdapterPosition();
             // 변수 초기화
 
             db = FirebaseFirestore.getInstance();
@@ -218,37 +226,71 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                             ReportDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
+
                                                 }
                                             });
                                             ReportDialogBuilder.show();
+//                                            Report();
                                             return true;
-
-//                                        case R.id.feed_report_cancle:
-//                                            // Dialog를 통해 진행여부 확인.
-//                                            AlertDialog.Builder ReportCancleDialogBuilder = new AlertDialog.Builder(context);
-//                                            ReportCancleDialogBuilder.setTitle("게시물 신고 취소");
-//                                            ReportCancleDialogBuilder.setMessage("정말 신고 취소하시겠습니까?");
-//                                            ReportCancleDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                                @Override
-//                                                public void onClick(DialogInterface dialogInterface, int i) {
-//                                                    if (uidList.size() != 0 ) {
-//                                                        onReportClicked(firebaseDatabase.getReference().child("posts").child(uidList.get(pos)), pos);
-//                                                    }
-//                                                }
-//                                            });
-//                                            ReportCancleDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-//                                                @Override
-//                                                public void onClick(DialogInterface dialogInterface, int i) {
-//                                                }
-//                                            });
-//                                            ReportCancleDialogBuilder.show();
-//                                            return true;
 
                                         // 게시물 차단 클릭시
                                         case R.id.feed_block:
 
-                                            Block(FeedPublisher);
+                                            db.collection("users")
+                                                    .get()
+                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                            if (task.isSuccessful()) {
+                                                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                                                    String feedPublisher = documentSnapshot.getId();
+                                                                    if(FeedPublisher.equals(feedPublisher)) {
+                                                                        blockUserName = documentSnapshot.getData().get("userId").toString();
+                                                                        blockUserProfile = documentSnapshot.getData().get("userProfileImg").toString();
+                                                                    }
 
+                                                                }
+
+                                                            } else {
+                                                                Log.d("error", "Error getting documents", task.getException());
+                                                            }
+                                                        }
+                                                    });
+
+//                                            blockUserName = blockUserList.get(position).getName();
+//                                            blockUserProfile = blockUserList.get(position).getProfile(); //id
+//                                            Log.d("HomeFeedBlockUser", "차단한 사용자 닉네임 : " + blockUserName);
+//                                            Log.d("HomeFeedBlockUser", "차단한 사용자 id : " + blockUserProfile);
+
+                                            //Block(FeedPublisher);
+
+
+                                            AlertDialog.Builder BlockDialogBuilder = new AlertDialog.Builder(context);
+                                            BlockDialogBuilder.setTitle("사용자 차단");
+                                            BlockDialogBuilder.setMessage("정말 차단하시겠습니까?");
+                                            BlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    databaseReference
+                                                            .child("block_user")
+                                                            .child(firebaseAuth.getCurrentUser().getUid())
+                                                            .child(FeedPublisher)
+                                                            .setValue(new BlockUserData(FeedPublisher, blockUserName, blockUserProfile));
+                                                    databaseReference
+                                                            .child("blocked_user")
+                                                            .child(FeedPublisher)
+                                                            .child(firebaseAuth.getCurrentUser().getUid())
+                                                            .setValue(true);
+                                                    blockPosition = getAdapterPosition();
+                                                }
+                                            });
+                                            BlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                                }
+                                            });
+                                            BlockDialogBuilder.show();
                                             return true;
                                         default:
                                             return false;
@@ -293,8 +335,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
         }
 
         void onBind(FeedInfo data) {
-
         // posts RecyclerView에서 게시글 작성자 닉네임과 프로필 이미지를 표시하기 위해 추가로 users DB에서 데이터 가져오기
+
             db.collection("users")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -322,6 +364,26 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                     .load(USER_PROFILE_IMG)
                                     .skipMemoryCache(false)
                                     .into(Iv_HomeFeed_Profile);
+                                getPostPublisher = postPublisher;
+//                                FeedPublisher = data.getPublisher();
+////        Log.d("HomeFeedBlock", "blockList : "+ blockUserList );
+////        Log.d("HomeFeedBlock", "feedPublisher : "+ FeedPublisher );
+////                                for(int i=0; i<feedInfoList.size(); i++) {
+////                                    Log.d("FeedArange", "피드 순서? : " + feedInfoList.get(i).getContent());
+////                                }
+//                                for(int i=0; i<blockUserList.size(); i++) {
+////            Log.d("BLOCKUSER", "blockList : "+ blockUserList.get(i).getId());
+//                                    if(blockUserList.get(i).getId().equals(FeedPublisher)) {
+//
+//                                        if(postPublisher.equals(FeedPublisher)) {
+//                                            int pos = getAdapterPosition();
+//                                            blockPosition = pos;
+//                                            Log.d("blockPosition", "BLOCK된 사용자의 위치 : " + blockPosition);
+//                                            feedInfoList.remove();
+//                                        }
+////                                        cardView.setVisibility(View.GONE);
+//                                    }
+//                                }
 
                             } else {
                                 Log.d("ERROR", "HOMEFEED_USER DATA GET", task.getException());
@@ -398,6 +460,34 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             }
         });
 
+//        if (feedInfoList.get(position).getReport() != null) {
+//            if (feedInfoList.get(position).getReport().containsKey(firebaseUser.getUid())) {
+//                feedInfoList.remove(position);
+//                notifyItemRemoved(position);
+//            }
+//        } else {
+//
+//        }
+
+//        FeedPublisher = feedInfoList.get(position).getPublisher();
+////        Log.d("HomeFeedBlock", "blockList : "+ blockUserList );
+////        Log.d("HomeFeedBlock", "feedPublisher : "+ FeedPublisher );
+//        for(int i=0; i<blockUserList.size(); i++) {
+////            Log.d("BLOCKUSER", "blockList : "+ blockUserList.get(i).getId());
+//            if(blockUserList.get(i).getId().equals(FeedPublisher)) {
+//
+////                if(FeedPublisher.equals(getPostPublisher)) {
+////                    blockPosition = holder.getAdapterPosition();
+////                    Log.d("blockPosition", "BLOCK된 사용자의 위치 : " + blockPosition);
+////                    feedInfoList.remove(0);
+////                }
+////                holder.cardView.setVisibility(View.GONE);
+//
+//
+//            }
+//        }
+
+
     }
 
     private void sendCommentToFCM() {
@@ -453,6 +543,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                 if (feedInfo == null) {
                     return Transaction.success(currentData);
                 }
+
                 if (feedInfo.getFavorites().containsKey(firebaseUser.getUid())) {
                     // Unstar the post and remove self from stars
                     feedInfo.setFavoriteCount(feedInfo.getFavoriteCount() - 1);
@@ -515,45 +606,76 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
         return feedInfoList.size();
     }
 
-    // 차단 버튼 클릭시 실행 함수
-    public void Block(String BlockUserID) {
-
-//        BlockInfo blockInfo = new BlockInfo(BlockUserID);
-//        String blockUserID;
-
-        db.collection("BLOCKS")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                if (documentSnapshot.getId().equals(firebaseUser.getUid())) {
-                                    blockUserID = documentSnapshot.getData().get("BlockUserID").toString();
-                                }
-                            }
-                        }
-                    }
-                });
-        if (blockUserID.equals(BlockUserID)) {
-            AlertDialog.Builder AlreadyBlockDialogBuilder = new AlertDialog.Builder(context);
-            AlreadyBlockDialogBuilder.setTitle("사용자 차단");
-            AlreadyBlockDialogBuilder.setMessage("이미 차단되어있습니다\n차단을 해제하시겠습니까?");
-            AlreadyBlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-
-                }
-            });
-            AlreadyBlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-
-                }
-            });
-            AlreadyBlockDialogBuilder.show();
-        } else {
-
-        }
+    public void addBlockUser(BlockUserData data) {
+        blockUserList.add(data);
     }
+    public void removeItem() {
+        feedInfoList.clear();
+    }
+
+
+    // 신고 버튼 클릭시 실행 함수
+//    public void Report() {
+//        AlertDialog.Builder ReportDialogBuilder = new AlertDialog.Builder(context);
+//        ReportDialogBuilder.setTitle("게시물 신고");
+//        ReportDialogBuilder.setMessage("정말 신고하시겠습니까?");
+//        ReportDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                onReportClicked(firebaseDatabase.getReference().child("posts").child(uidList.get(holder.getAbsoluteAdapterPosition())));
+//
+//            }
+//        });
+//        ReportDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//        ReportDialogBuilder.show();
+//    }
+
+    // 차단 버튼 클릭시 실행 함수
+//    public void Block(String BlockUserID) {
+//
+//        if (blockUserID.equals(BlockUserID)) {
+//            AlertDialog.Builder AlreadyBlockDialogBuilder = new AlertDialog.Builder(context);
+//            AlreadyBlockDialogBuilder.setTitle("사용자 차단");
+//            AlreadyBlockDialogBuilder.setMessage("이미 차단되어있습니다\n차단을 해제하시겠습니까?");
+//            AlreadyBlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                }
+//            });
+//            AlreadyBlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                }
+//            });
+//            AlreadyBlockDialogBuilder.show();
+//        } else {
+//            AlertDialog.Builder BlockDialogBuilder = new AlertDialog.Builder(context);
+//            BlockDialogBuilder.setTitle("사용자 차단");
+//            BlockDialogBuilder.setMessage("정말 차단하시겠습니까?");
+//            BlockDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    databaseReference
+//                            .child(firebaseAuth.getCurrentUser().getUid())
+//                            .child("blockUser")
+//                            .setValue(new BlockUserData(USER_ID, USER_PROFILE_IMG));
+//                }
+//            });
+//            BlockDialogBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                }
+//            });
+//            BlockDialogBuilder.show();
+//        }
+//
+//    }
 }

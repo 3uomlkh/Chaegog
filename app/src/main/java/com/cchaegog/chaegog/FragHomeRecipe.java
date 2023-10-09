@@ -38,13 +38,12 @@ public class FragHomeRecipe extends Fragment {
     private ArrayList<String> listTitle = new ArrayList<>();
     private ArrayList<String> listThumb = new ArrayList<>();
     private ArrayList<String> clickUrl = new ArrayList<>();
-    private ArrayList<String> itemKeyList = new ArrayList<>();
     private ArrayList<String> bookmarkIdList = new ArrayList<>();
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
-    RecyclerView recyclerView;
-    RecipeAdapter adapter;
-    Document doc;
+    private RecyclerView recyclerView;
+    private RecipeAdapter adapter;
+    private Document doc;
 
     public static FragHomeRecipe newInstance(String param1, String param2) throws IOException, ParserConfigurationException, SAXException {
         FragHomeRecipe fragment = new FragHomeRecipe();
