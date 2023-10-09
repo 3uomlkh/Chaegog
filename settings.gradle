@@ -23,5 +23,5 @@ dependencyResolutionManagement {
         maven { url 'https://devrepo.kakao.com/nexus/content/groups/public/' }
     }
 }
-rootProject.name = "FinalProjectVegan"
+rootProject.name = "chaegog"
 include ':app'

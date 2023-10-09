@@ -1,81 +1,26 @@
 {
   "project_info": {
-    "project_number": "313229751837",
-    "project_id": "finalprojectvegan",
-    "storage_bucket": "finalprojectvegan.appspot.com"
+    "project_number": "71120980966",
+    "project_id": "chaegogchaegog",
+    "storage_bucket": "chaegogchaegog.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:313229751837:android:c3b9e4aaf87c759ef578f4",
+        "mobilesdk_app_id": "1:71120980966:android:eba0935938ef2596dba427",
         "android_client_info": {
-          "package_name": "com.example.finalprojectvegan"
+          "package_name": "com.cchaegog.chaegog"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "313229751837-0h7g07grb1hdcqtasd0ph649uej5dnt5.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.finalprojectvegan",
-            "certificate_hash": "7d13cc2b0a7c6fc17405ef9bf2d1b97e9c86b0a1"
-          }
-        },
-        {
-          "client_id": "313229751837-gubo9sp87luuh3st5dq0d5s26ml1eeb0.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAoRgucHwpDNvqu2e3eNuf6o1hAZsQmeDs"
+          "current_key": "AIzaSyDOrfmXjFZeyV38el3dq9_Hag26ery08RM"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "313229751837-gubo9sp87luuh3st5dq0d5s26ml1eeb0.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:313229751837:android:91d3b19f59888d88f578f4",
-        "android_client_info": {
-          "package_name": "com.example.veganproject"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "313229751837-fn48mcs0gkg7qm9r3cp3tiivtfr9a8vd.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.veganproject",
-            "certificate_hash": "7d13cc2b0a7c6fc17405ef9bf2d1b97e9c86b0a1"
-          }
-        },
-        {
-          "client_id": "313229751837-gubo9sp87luuh3st5dq0d5s26ml1eeb0.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAoRgucHwpDNvqu2e3eNuf6o1hAZsQmeDs"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "313229751837-gubo9sp87luuh3st5dq0d5s26ml1eeb0.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

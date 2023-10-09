@@ -142,6 +142,10 @@
     <string name="delete">삭제</string>
     <string name="cancel">취소</string>
     <string name="choose_logout">로그아웃 하시겠습니까?</string>
+    <string name="email_authentication_text"> 이메일 인증을 진행해주세요.</string>
+    <string name="email_re_authentication_text"> 이메일 인증이 확인되지 않습니다.\n다시 시도해주세요.</string>
+    <string name="email_authentication_resend">재전송</string>
+    <string name="email_authentication_success">인증 완료</string>\
 
     <string name="my_feed_text">게시물을 올려 사용자들과 자유롭게 공유하세요</string>
     <string name="in_progress">준비 중입니다..</string>
