@@ -94,6 +94,7 @@
 
     <string name="mypage">마이페이지</string>
     <string name="setting">설정</string>
+    <string name="changePw">비밀번호 변경</string>
     <string name="block_list">차단</string>
     <string name="cancle_block">차단 해제</string>
     <string name="help">도움말</string>
