@@ -1,4 +1,4 @@
-package com.example.finalprojectvegan;
+package com.cchaegog.chaegog;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.finalprojectvegan.Adapter.BlockListAdapter;
-import com.example.finalprojectvegan.Model.BlockUserData;
+import com.cchaegog.chaegog.Adapter.BlockListAdapter;
+import com.cchaegog.chaegog.Model.BlockUserData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

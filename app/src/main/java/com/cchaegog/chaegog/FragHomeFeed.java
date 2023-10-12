@@ -24,6 +24,7 @@ import com.cchaegog.chaegog.Model.BlockUserData;
 import com.cchaegog.chaegog.Model.FeedInfo;
 import com.cchaegog.chaegog.Model.MapData;
 import com.cchaegog.chaegog.Model.RecipeData;
+import com.cchaegog.chaegog.Model.ReportInfo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -222,7 +223,7 @@ public class FragHomeFeed extends Fragment {
                             if (ReportPost.contains(feedInfo.getPostId())) {
 
                             } else {
-                                if(!blockedUserIdList.contains(publisher) && !blockerIdList.contains(publisher)) {
+                                if (!blockedUserIdList.contains(publisher) && !blockerIdList.contains(publisher)) {
                                     feedInfoList.add(feedInfo);
                                     uidList.add(uidKey);
                                 }
@@ -249,7 +250,7 @@ public class FragHomeFeed extends Fragment {
                         }
                     }
 
-                    if(!blockedUserIdList.contains(publisher) && !blockerIdList.contains(publisher)) {
+                    if (!blockedUserIdList.contains(publisher) && !blockerIdList.contains(publisher)) {
                         feedInfoList.add(feedInfo);
                         uidList.add(uidKey);
                     }
@@ -264,9 +265,6 @@ public class FragHomeFeed extends Fragment {
 
             }
         });
-    }
-
-        return view;
     }
 
 }

@@ -31,6 +31,7 @@ import com.cchaegog.chaegog.Fcm.NotificationAPI;
 import com.cchaegog.chaegog.Fcm.NotificationData;
 import com.cchaegog.chaegog.Fcm.PushNotification;
 import com.cchaegog.chaegog.Fcm.RetrofitInstance;
+import com.cchaegog.chaegog.Model.BlockUserData;
 import com.cchaegog.chaegog.Model.FeedInfo;
 import com.cchaegog.chaegog.Model.ReportInfo;
 import com.cchaegog.chaegog.R;
