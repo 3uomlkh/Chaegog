@@ -32,10 +32,13 @@
         android:theme="@style/Theme.FinalProjectVegan"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".EditPwActivity"
+            android:exported="false" />
+        <activity
             android:name=".BlockActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.InfoActivity"
+            android:name=".InfoActivity"
             android:exported="false" /> <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -47,11 +50,11 @@
         <!-- </intent-filter> -->
         <!-- </service> -->
         <activity
-            android:name="com.cchaegog.chaegog.SettingActivity"
+            android:name=".SettingActivity"
             android:exported="false" />
 
         <service
-            android:name="com.cchaegog.chaegog.Fcm.MyFirebaseMessagingService"
+            android:name=".Fcm.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -59,62 +62,62 @@
         </service>
 
         <activity
-            android:name="com.cchaegog.chaegog.MapSearchActivity"
+            android:name=".MapSearchActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.MapButtonActivity"
+            android:name=".MapButtonActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.EditProfileActivity"
+            android:name=".EditProfileActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.EditReviewActivity"
+            android:name=".EditReviewActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.Model.PhotoActivity"
+            android:name=".Model.PhotoActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.RoadingActivity"
+            android:name=".RoadingActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.CropperActivity"
+            android:name=".CropperActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.WriteReviewActivity"
+            android:name=".WriteReviewActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.cchaegog.chaegog.BookmarkActivity"
+            android:name=".BookmarkActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.WritePostActivity"
+            android:name=".WritePostActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.SearchActivity"
+            android:name=".SearchActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.CommentActivity"
+            android:name=".CommentActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.ProfileImageActivity"
+            android:name=".ProfileImageActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.MypageActivity"
+            android:name=".MypageActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.PasswordResetActivity"
+            android:name=".PasswordResetActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.PostActivity"
+            android:name=".PostActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.OcrActivity"
+            android:name=".OcrActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.MapInfoActivity"
+            android:name=".MapInfoActivity"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.MapActivity"
+            android:name=".MapActivity"
             android:exported="false" />
 
         <meta-data
@@ -122,7 +125,7 @@
             android:value="79m1y0thya" />
 
         <activity
-            android:name="com.cchaegog.chaegog.SplashActivity"
+            android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -132,27 +135,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.cchaegog.chaegog.RegisterStep4Activity"
+            android:name=".RegisterStep4Activity"
             android:exported="false"
-            android:parentActivityName="com.cchaegog.chaegog.RegisterStep3Activity" />
+            android:parentActivityName=".RegisterStep3Activity" />
         <activity
-            android:name="com.cchaegog.chaegog.RegisterStep3Activity"
+            android:name=".RegisterStep3Activity"
             android:exported="false"
-            android:parentActivityName="com.cchaegog.chaegog.RegisterStep2Activity" />
+            android:parentActivityName=".RegisterStep2Activity" />
         <activity
-            android:name="com.cchaegog.chaegog.RegisterStep2Activity"
+            android:name=".RegisterStep2Activity"
             android:exported="false"
-            android:parentActivityName="com.cchaegog.chaegog.RegisterStep1Activity" />
+            android:parentActivityName=".RegisterStep1Activity" />
         <activity
-            android:name="com.cchaegog.chaegog.RegisterStep1Activity"
+            android:name=".RegisterStep1Activity"
             android:exported="false"
-            android:parentActivityName="com.cchaegog.chaegog.LoginActivity" />
+            android:parentActivityName=".LoginActivity" />
         <activity
-            android:name="com.cchaegog.chaegog.LoginActivity"
+            android:name=".LoginActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name="com.cchaegog.chaegog.MainActivity"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"

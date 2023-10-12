@@ -26,7 +26,7 @@ public class SettingActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     private SwitchCompat alert_switch;
-    private TextView Btn_Mypage_Logout, Btn_Mypage_DeleteAccount;
+    private TextView Btn_Mypage_Logout, Btn_Mypage_DeleteAccount, Btn_Mypage_ChangePW;
     private String DELETE_POST;
     private Dialog dialog;
     private FirebaseUser firebaseUser;
@@ -94,6 +94,15 @@ public class SettingActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
+            }
+        });
+
+        Btn_Mypage_ChangePW = findViewById(R.id.Btn_Mypage_ChangePW);
+        Btn_Mypage_ChangePW.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SettingActivity.this, EditPwActivity.class);
+                startActivity(intent);
             }
         });
 
