@@ -1,4 +1,4 @@
-package com.example.finalprojectvegan.Adapter;
+package com.cchaegog.chaegog.Adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.finalprojectvegan.Model.BlockUserData;
-import com.example.finalprojectvegan.Model.RecipeData;
-import com.example.finalprojectvegan.R;
+import com.cchaegog.chaegog.Model.BlockUserData;
+import com.cchaegog.chaegog.Model.RecipeData;
+import com.cchaegog.chaegog.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

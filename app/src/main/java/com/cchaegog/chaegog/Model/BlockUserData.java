@@ -1,4 +1,4 @@
-package com.example.finalprojectvegan.Model;
+package com.cchaegog.chaegog.Model;
 
 public class BlockUserData {
     private String id;
