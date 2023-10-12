@@ -63,7 +63,9 @@
         android:hint="@string/write_post"
         android:importantForAutofill="no"
         android:inputType="textImeMultiLine"
-        android:lines="4"/>
+        android:maxLength="200"
+        android:cursorVisible="true"
+        android:scrollHorizontally="true"/>
 
     <Button
         android:id="@+id/Btn_UploadPost"

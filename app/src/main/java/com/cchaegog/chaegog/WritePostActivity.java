@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -87,6 +88,20 @@ public class WritePostActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // 엔터 키 클릭시 구현 -> 실패ㅜ
+//        Et_Post_Contents = findViewById(R.id.Et_Post_Content);
+//        Et_Post_Contents.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+//                switch (i) {
+//                    case KeyEvent.KEYCODE_ENTER:
+//                        Et_Post_Contents.setText(Et_Post_Contents.getText().append("\n"));
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
 
         Btn_UploadPost.setOnClickListener(new View.OnClickListener() {
             @Override
