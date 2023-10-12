@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 // 처리중 화면 띄우기
-                ProgressDialog pd = new ProgressDialog(LoginActivity.this);
+                pd = new ProgressDialog(LoginActivity.this);
                 pd.setMessage("Please wait..");
                 pd.show();
 
@@ -125,61 +125,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPassword)) {
                     Toast.makeText(LoginActivity.this, "모두 작성해 주세요!", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (firebaseUser.isEmailVerified()) {
-                        Toast.makeText(LoginActivity.this, "인증된 계정입니다", Toast.LENGTH_SHORT).show();
-                    }
-                    firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword)
-                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-
-//                                        FirebaseUser user = firebaseAuth.getCurrentUser();
-
-                                        pd.dismiss();
-
-                                        Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        startActivity(intent);
-//                                        updateUI(user);
-
-//                                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users")
-//                                                .child(firebaseAuth.getCurrentUser().getUid());
-//
-//                                        // 데이터베이스 정보 불러오기
-//                                        reference.addValueEventListener(new ValueEventListener() {
-//                                            @Override
-//                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                                pd.dismiss();
-//                                                Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
-//                                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                                startActivity(intent);
-//                                                finish();
-//                                            }
-//
-//                                            @Override
-//                                            public void onCancelled(@NonNull DatabaseError error) {
-//                                                pd.dismiss();
-//                                            }
-//                                        });
-
-                                    } else {
-                                        pd.dismiss();
-                                        Toast.makeText(LoginActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
-                                        // 아래 내용 필요한지 아닌지
-//                                        if (task.getException() != null) {
-//                                            Toast.makeText(LoginActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
-//                                        }
-                                        Log.d("SIGNIN", "signInWithEmail:failure", task.getException());
-                                        Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                                Toast.LENGTH_SHORT).show();
-//                                        updateUI(null);
-                                    }
-                                }
-                            });
+                    SignIn(userEmail, userPassword);
                 }
-
             }
         });
 
@@ -213,6 +160,35 @@ public class LoginActivity extends AppCompatActivity {
 //            }
 //        });
 
+    }
+
+    public void SignIn(String userEmail, String userPassword) {
+
+        firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+
+                            pd.dismiss();
+
+                            Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+
+                        } else {
+                            pd.dismiss();
+                            Toast.makeText(LoginActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
+                            // 아래 내용 필요한지 아닌지
+//                                        if (task.getException() != null) {
+//                                            Toast.makeText(LoginActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+//                                        }
+                            Log.d("SIGNIN", "signInWithEmail:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     public void Delete(FirebaseUser user) {

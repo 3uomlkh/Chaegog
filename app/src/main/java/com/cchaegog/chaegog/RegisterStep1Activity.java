@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +27,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+import kotlinx.coroutines.Delay;
+
 public class RegisterStep1Activity extends AppCompatActivity {
 
     // 변수 선언
@@ -38,6 +41,7 @@ public class RegisterStep1Activity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private Dialog dialog, dialogSuccess, dialogMailVerify;
     ProgressDialog pd;
+    Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,7 +185,18 @@ public class RegisterStep1Activity extends AppCompatActivity {
                             Btn_Success.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    verifyEmail(firebaseAuth.getCurrentUser(), userId, userEmail, userPw);
+                                    pd = new ProgressDialog(RegisterStep1Activity.this);
+                                    pd.setMessage("Please wait..");
+                                    pd.show();
+
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            pd.dismiss();
+                                            user.reload();
+                                            verifyEmail(user, userId, userEmail, userPw);
+                                        }
+                                    }, 5000);
                                 }
                             });
 
@@ -202,7 +217,9 @@ public class RegisterStep1Activity extends AppCompatActivity {
     }
 
     private void verifyEmail(FirebaseUser user, String userId, String userEmail, String userPw) {
-        if (user.isEmailVerified()) {
+//        user.reload();
+//        firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser.isEmailVerified()) {
             Log.d(TAG, "메일 인증 성공");
 
             Intent intent = new Intent(RegisterStep1Activity.this, RegisterStep2Activity.class);
