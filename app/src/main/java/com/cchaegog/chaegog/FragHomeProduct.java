@@ -74,9 +74,9 @@ public class FragHomeProduct extends Fragment {
         adapter = new ProductAdapter();
 
 
-        getBookmark();
-        getproductData();
-//        getData();
+//        getBookmark();
+//        getproductData();
+        getData();
 
 
         return view;
@@ -91,13 +91,15 @@ public class FragHomeProduct extends Fragment {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     productName.add(snapshot.child("productName").getValue().toString());
                     productCompany.add(snapshot.child("productCompany").getValue().toString());
+                    productImg.add(snapshot.child("productImg").getValue().toString());
                     itemKeyList.add(snapshot.getKey());
                 }
 
                 for (int k = 0; k < productName.size(); k++) {
 
-                    ProductData data = new ProductData(productName.get(k), productCompany.get(k), itemKeyList.get(k));
+                    ProductData data = new ProductData(productName.get(k), productCompany.get(k), productImg.get(k));
                     data.setBookmarkIdList(bookmarkIdList);
+                    data.setItemKey(itemKeyList.get(k));
 
                     adapter.addItem(data);
                 }
@@ -149,41 +151,45 @@ public class FragHomeProduct extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                String urlString = "https://lovinghut.co.kr/product/list.html?cate_no=43";
+                String urlString = "https://altist.com/category/%EA%B3%A0%EA%B8%B0%EB%8C%80%EC%8B%A0/23/";
                 doc = Jsoup.connect(urlString).get();
 
-                final Elements title = doc.select("div div[class=box] a > span[style$=;]");
-                final Elements image = doc.select("div div[class=box] p[class=prdImg] a img[src$=jpg]"); // 왜 안되죠???
+                final Elements title = doc.select("div ul li div[class=description] a > span[style$=;]");
+                final Elements image = doc.select("div ul li div[class=thumbnail] div[class=prdImg] a > img");
 
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+
                         for (Element element : title) {
                             productName.add(element.text());
-                            productCompany.add("러빙헛");
-                            productImg.add("");
+                            productCompany.add("고기대신");
                         }
 
-//                        for (Element element : image) {
-//                            productImg.add(element.text());
-//                        }
+                        for (Element element : image) {
+                            String img = element.attr("src").substring(13);
+                            productImg.add("https://altist.com/" + img);
+                        }
 
                         for (int i=0; i<productName.size(); i++) {
-                            Log.d("ProductName", "[리빙헛] " + productImg.get(i));
-
+                            Log.d("ProductName", "[제품명] " + productName.get(i));
+                            Log.d("ProductImg", "[URL] " + productImg.get(i+1));
                             mDatabase = FirebaseDatabase.getInstance().getReference("product");
-                            mDatabase
-                                    .push()
-                                    .setValue(new ProductData(productName.get(i), productCompany.get(i), productImg.get(i)));
-
-
-                            ProductData data = new ProductData(productName.get(i), productCompany.get(i), "");
-
-                            adapter.addItem(data);
+                            if(mDatabase.child("ProductCompany").equals("고기대신")) {
+                                mDatabase.setValue(null);
+                            }
+//                            mDatabase
+//                                    .push()
+//                                    .setValue(new ProductData(productName.get(i), productCompany.get(i), productImg.get(i)));
+//
+//
+//                            ProductData data = new ProductData(productName.get(i), productCompany.get(i), productImg.get(i));
+//
+//                            adapter.addItem(data);
 
                         }
-                        adapter.notifyDataSetChanged();
+//                        adapter.notifyDataSetChanged();
                     }
                 });
             } catch (Exception e) {

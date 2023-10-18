@@ -10,6 +10,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.cchaegog.chaegog.Model.ProductData;
 import com.cchaegog.chaegog.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -81,16 +84,22 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         private TextView productName;
         private TextView productCompany;
         private ImageView saveImage;
+        private ImageView thumbnail;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             productName = itemView.findViewById(R.id.ProductNameTv);
             productCompany = itemView.findViewById(R.id.ProductCompanyTv);
             saveImage = itemView.findViewById(R.id.product_save_image);
+            thumbnail = itemView.findViewById(R.id.ProductImageView);
         }
         void onBind(ProductData data) {
             productName.setText(data.getProductName());
             productCompany.setText(data.getProductCompany());
+            Glide.with(itemView.getContext())
+                    .load(data.getProductImg())
+                    .override(200,200)
+                    .into(thumbnail);
         }
     }
 }
