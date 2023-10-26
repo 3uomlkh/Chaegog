@@ -103,17 +103,17 @@
         android:fontFamily="@font/pretendardregular"
         android:text="@string/login" />
 
-    <Button
-        android:id="@+id/Btn_LoginKakao"
-        android:layout_width="312sp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="30dp"
-        android:backgroundTint="#f7e600"
-        android:fontFamily="@font/pretendardregular"
-        android:text="@string/login_kakao" />
+<!--    <Button-->
+<!--        android:id="@+id/Btn_LoginKakao"-->
+<!--        android:layout_width="312sp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_marginLeft="30dp"-->
+<!--        android:layout_marginTop="2dp"-->
+<!--        android:layout_marginRight="30dp"-->
+<!--        android:backgroundTint="#f7e600"-->
+<!--        android:fontFamily="@font/pretendardregular"-->
+<!--        android:text="@string/login_kakao" />-->
 
     <Button
         android:id="@+id/Btn_Register"
@@ -126,16 +126,16 @@
         android:fontFamily="@font/pretendardregular"
         android:text="@string/register" />
 
-    <Button
-        android:id="@+id/Btn_NoRegister"
-        android:layout_width="312sp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="30dp"
-        android:layout_gravity="center"
-        android:fontFamily="@font/pretendardregular"
-        android:text="@string/guest" />
+<!--    <Button-->
+<!--        android:id="@+id/Btn_NoRegister"-->
+<!--        android:layout_width="312sp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:layout_marginLeft="30dp"-->
+<!--        android:layout_marginTop="2dp"-->
+<!--        android:layout_marginRight="30dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:fontFamily="@font/pretendardregular"-->
+<!--        android:text="@string/guest" />-->
 
     <TextView
         android:id="@+id/Btn_PasswordReset"
