@@ -17,6 +17,7 @@
         android:id="@+id/map_search_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/pretendardregular"
         android:layout_gravity="top|end"
         android:layout_margin="30dp"
         android:backgroundTint="@color/green_light"
@@ -57,6 +58,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/restaurant_name"
+                    android:fontFamily="@font/pretendardregular"
+                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
@@ -64,6 +67,7 @@
                     android:id="@+id/map_info_addr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/pretendardregular"
                     android:text="@string/restaurant_address"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
@@ -74,6 +78,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendardregular"
                         android:text="@string/restaurant_time"
                         android:textStyle="bold"
                         android:textColor="@color/white"
@@ -83,6 +88,7 @@
                         android:id="@+id/map_info_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendardregular"
                         android:text="@string/restaurant_time"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
@@ -95,6 +101,7 @@
                         android:id="@+id/map_info_day_off_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendardregular"
                         android:text="@string/restaurant_dayoff"
                         android:visibility="visible"
                         android:textColor="@color/white"
@@ -104,6 +111,7 @@
                         android:id="@+id/map_info_day_off"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendardregular"
                         android:text="@string/restaurant_dayoff"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
@@ -117,8 +125,7 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:src="@drawable/red_arrow"
-                android:background="@null"
-                android:contentDescription="@string/restaurant_info_btn"/>
+                android:background="@null"/>
         </LinearLayout>
     </LinearLayout>
 

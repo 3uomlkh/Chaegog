@@ -10,7 +10,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="72dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,15 +23,22 @@
             android:layout_height="wrap_content"
             android:text="@string/mypage"
             android:layout_gravity="center"
+            android:fontFamily="@font/pretendardregular"
             android:textColor="@color/black" />
 
     </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1sp"
+        android:background="@drawable/dividingline" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        app:cardCornerRadius="100dp">
+        app:cardCornerRadius="100dp"
+        android:layout_marginTop="24dp">
 
         <ImageView
             android:id="@+id/Iv_Mypage_Profile"
@@ -47,9 +54,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp"
-        android:background="#DFDFDF"
-        android:orientation="horizontal" >
+        android:layout_marginTop="24dp"
+        android:background="#fff8e1"
+        android:orientation="horizontal">
 
 
 <!--        <androidx.cardview.widget.CardView-->
@@ -81,6 +88,7 @@
                 android:id="@+id/Tv_Mypage_UserId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendardregular"
                 android:text="@string/user_name"
                 android:textColor="@color/black"
                 android:textSize="20dp"
@@ -89,6 +97,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendardregular"
                 android:id="@+id/Tv_Mypage_VeganType"
                 android:text="@string/user_type"
                 android:textColor="@color/black"
@@ -98,6 +107,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendardregular"
                 android:id="@+id/Tv_Mypage_Allergy"
                 android:text="@string/user_allergy"
                 android:textColor="@color/black"
@@ -116,6 +126,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="40dp"
             android:layout_gravity="center"
+            android:backgroundTint="@color/tomato_juice"
+            android:fontFamily="@font/pretendardregular"
             android:text="@string/modification"/>
 
     </LinearLayout>
@@ -149,7 +161,8 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:id="@+id/Btn_Mypage_Setting"
-            android:text="설정" />
+            android:text="설정"
+            android:fontFamily="@font/pretendardregular"/>
 
     </LinearLayout>
 
@@ -171,6 +184,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:id="@+id/Btn_Mypage_BlockInfo"
+            android:fontFamily="@font/pretendardregular"
             android:text="@string/block_list" />
     </LinearLayout>
 
@@ -199,21 +213,22 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="38dp"
+        android:layout_marginLeft="40dp"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="37dp"
-            android:layout_height="37dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/info" />
 
         <TextView
+            android:id="@+id/Btn_Mypage_Info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="7dp"
-            android:id="@+id/Btn_Mypage_Info"
+            android:fontFamily="@font/pretendardregular"
             android:text="@string/information" />
 
     </LinearLayout>

@@ -5,18 +5,19 @@
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:fontFamily="@font/pretendardregular">
+
     <TextView
         android:id="@+id/menu_name"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:textSize="18sp"
-        android:text="   메뉴명"
+        android:layout_height="48dp"
         android:fontFamily="@font/pretendardregular"
-        android:padding="10dp"
+        android:gravity="center_vertical"
+        android:padding="10sp"
+        android:text="   메뉴명"
         android:textAlignment="@id/menu_name"
         android:textColor="@color/black"
-        android:gravity="center_vertical"
-        android:background="@drawable/menuboarder"/>
+        android:textSize="16sp"/>
+<!--        android:background="@drawable/menu" -->
 
     <View
         android:layout_width="match_parent"
