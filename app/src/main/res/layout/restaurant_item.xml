@@ -28,37 +28,41 @@
         android:layout_height="wrap_content"
         android:text="전화걸기"/>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textSize="17dp"
-                android:textColor="#424242"
-                android:textStyle="bold"
                 android:id="@+id/map_info_detail_name"
-                android:text="식당명"/>
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="식당명"
+                android:textColor="#424242"
+                android:textSize="17dp"
+                android:textStyle="bold" />
+
             <ImageView
+                android:id="@+id/map_info_save_image"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="@drawable/favorite_off"
-                android:id="@+id/map_info_save_image"/>
+                android:src="@drawable/favorite_off" />
         </LinearLayout>
 
         <TextView
+            android:id="@+id/map_info_detail_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/map_info_detail_category"
             android:text="종류"
-            android:textColor="#424242"/>
+            android:textColor="#424242" />
         <!--            <TextView-->
         <!--                android:layout_width="wrap_content"-->
         <!--                android:layout_height="wrap_content"-->
@@ -69,86 +73,93 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17dp"
-            android:textStyle="bold"
             android:text="메뉴"
-            android:textColor="#424242"/>
+            android:textColor="#424242"
+            android:textSize="17dp"
+            android:textStyle="bold" />
         <!--        <androidx.recyclerview.widget.RecyclerView-->
         <!--            android:layout_width="match_parent"-->
         <!--            android:layout_height="0dp"-->
         <!--            android:layout_weight="1"-->
         <!--            android:id="@+id/map_info_recyclerView"/>-->
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/map_info_detail_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="메뉴"
-            android:textColor="#424242"/>
+            android:textColor="#424242" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17dp"
-            android:textStyle="bold"
             android:text="주소"
-            android:textColor="#424242"/>
+            android:textColor="#424242"
+            android:textSize="17dp"
+            android:textStyle="bold" />
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/map_info_detail_addr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="주소"
-            android:textColor="#424242"/>
+            android:textColor="#424242" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17dp"
             android:text="영업시간"
             android:textColor="#424242"
-            android:textStyle="bold"/>
+            android:textSize="17dp"
+            android:textStyle="bold" />
+
         <TextView
+            android:id="@+id/map_info_detail_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/map_info_detail_time"
             android:text="영업시간"
-            android:textColor="#424242"/>
+            android:textColor="#424242" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/map_info_detail_dayoff_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17dp"
             android:text="휴무일"
             android:textColor="#424242"
-            android:textStyle="bold"/>
+            android:textSize="17dp"
+            android:textStyle="bold" />
+
         <TextView
+            android:id="@+id/map_info_detail_dayoff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/map_info_detail_dayoff"
             android:text="휴무일"
-            android:textColor="#424242"/>
+            android:textColor="#424242" />
     </LinearLayout>
 </LinearLayout>

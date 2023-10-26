@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="#fff8e1"
+    android:background="#ff6f60"
     tools:context=".SplashActivity">
 
     <TextView
@@ -18,7 +18,7 @@
         android:lineSpacingExtra="-10sp"
         android:text="채곡채곡"
         android:textAlignment="center"
-        android:textColor="#ff6f60"
+        android:textColor="#FFF8E1"
         android:textSize="60sp"
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"

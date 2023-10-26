@@ -10,7 +10,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="72dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,17 +21,25 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="마이페이지"
             android:layout_gravity="center"
+            android:fontFamily="@font/pretendardregular"
+            android:text="마이페이지"
             android:textColor="@color/black" />
 
+
     </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1sp"
+        android:background="@drawable/dividingline" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        app:cardCornerRadius="100dp">
+        app:cardCornerRadius="100dp"
+        android:layout_marginTop="24dp">
 
         <ImageView
             android:id="@+id/Iv_Mypage_Profile"
@@ -47,58 +55,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp"
-        android:background="#DFDFDF"
-        android:orientation="horizontal" >
+        android:layout_marginTop="24dp"
+        android:background="#fff8e1"
+        android:orientation="horizontal">
 
 
-<!--        <androidx.cardview.widget.CardView-->
-<!--            android:layout_width="100dp"-->
-<!--            android:layout_height="100dp"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginLeft="30dp"-->
-<!--            app:cardCornerRadius="100dp">-->
+        <!--        <androidx.cardview.widget.CardView-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:layout_marginLeft="30dp"-->
+        <!--            app:cardCornerRadius="100dp">-->
 
-<!--            <ImageView-->
-<!--                android:id="@+id/Iv_Mypage_Profile"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:adjustViewBounds="true"-->
-<!--                android:src="@drawable/ic_baseline_account_circle_24" />-->
+        <!--            <ImageView-->
+        <!--                android:id="@+id/Iv_Mypage_Profile"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:layout_gravity="center"-->
+        <!--                android:adjustViewBounds="true"-->
+        <!--                android:src="@drawable/ic_baseline_account_circle_24" />-->
 
-<!--        </androidx.cardview.widget.CardView>-->
+        <!--        </androidx.cardview.widget.CardView>-->
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="40dp"
             android:layout_marginVertical="10dp"
+            android:layout_marginLeft="40dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/Tv_Mypage_UserId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendardregular"
                 android:text="사용자 닉네임"
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/Tv_Mypage_VeganType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/Tv_Mypage_VeganType"
+                android:fontFamily="@font/pretendardregular"
                 android:text="사용자 비건타입"
                 android:textColor="@color/black"
                 android:textSize="15dp"
                 android:textStyle="normal" />
 
             <TextView
+                android:id="@+id/Tv_Mypage_Allergy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/Tv_Mypage_Allergy"
+                android:fontFamily="@font/pretendardregular"
                 android:text="사용자 알러지"
                 android:textColor="@color/black"
                 android:textSize="15dp"
@@ -110,13 +121,16 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1" />
+
         <Button
             android:id="@+id/Btn_EditAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="40dp"
             android:layout_gravity="center"
-            android:text="수정"/>
+            android:layout_marginRight="40dp"
+            android:backgroundTint="@color/tomato_juice"
+            android:fontFamily="@font/pretendardregular"
+            android:text="수정" />
 
     </LinearLayout>
 
@@ -149,7 +163,8 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:id="@+id/Btn_Mypage_Setting"
-            android:text="설정" />
+            android:text="설정"
+            android:fontFamily="@font/pretendardregular"/>
 
     </LinearLayout>
 
@@ -171,7 +186,8 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:id="@+id/Btn_Mypage_BlockInfo"
-            android:text="차단" />
+            android:text="차단"
+            android:fontFamily="@font/pretendardregular"/>
     </LinearLayout>
 
     <LinearLayout
@@ -182,7 +198,7 @@
         android:orientation="horizontal" >
 
         <ImageView
-            android:layout_width="30dp"
+            android:layout_width="28dp"
             android:layout_height="30dp"
             android:src="@drawable/baseline_logout_24" />
 
@@ -192,7 +208,8 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:id="@+id/Btn_Mypage_Logout"
-            android:text="로그아웃" />
+            android:text="로그아웃"
+            android:fontFamily="@font/pretendardregular"/>
 
     </LinearLayout>
 
@@ -204,8 +221,8 @@
         android:orientation="horizontal" >
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/ic_baseline_delete_forever_24" />
 
         <TextView
@@ -214,7 +231,8 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:id="@+id/Btn_Mypage_DeleteAccount"
-            android:text="계정삭제" />
+            android:text="계정삭제"
+            android:fontFamily="@font/pretendardregular"/>
 
     </LinearLayout>
 
@@ -243,21 +261,22 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="38dp"
+        android:layout_marginLeft="40dp"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="37dp"
-            android:layout_height="37dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/info" />
 
         <TextView
+            android:id="@+id/Btn_Mypage_Info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="7dp"
-            android:id="@+id/Btn_Mypage_Info"
+            android:fontFamily="@font/pretendardregular"
             android:text="정보" />
 
     </LinearLayout>

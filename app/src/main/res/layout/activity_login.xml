@@ -140,7 +140,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/pretendardregular"
-        android:text="비밀번호가 기억나지 않으신가요?"
+        android:text="비밀번호 찾기"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

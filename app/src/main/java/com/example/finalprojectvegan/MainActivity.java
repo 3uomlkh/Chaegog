@@ -153,8 +153,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, MapActivity.class);
                         startActivity(intent);
                         return true;
-                    case R.id.ocr:
-                        Intent ocrIntent = new Intent(MainActivity.this, OcrActivity.class);
+                    case R.id.ocr: Intent ocrIntent = new Intent(MainActivity.this, OcrActivity.class);
                         startActivity(ocrIntent);
                         return true;
                     case R.id.bookmark:
