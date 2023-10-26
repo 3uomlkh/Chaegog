@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.FinalProjectVegan" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#81c784</item>
+        <item name="colorPrimary">@color/green_light</item>
         <item name="colorPrimaryVariant">#ffa18e</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->

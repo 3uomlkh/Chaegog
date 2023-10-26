@@ -36,7 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView Btn_PasswordReset;
     private String userToken;
     private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser, currentUser;
+    private FirebaseUser firebaseUser;
+    private String currentUser;
     private FirebaseFirestore db;
     private ArrayList<String> userIdList = new ArrayList();
 
@@ -53,27 +54,10 @@ public class LoginActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        currentUser = firebaseAuth.getCurrentUser();
-        if (currentUser != null) {
-            db.collection("users").get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                    userIdList.add(documentSnapshot.getId());
-                                }
-                                Log.d(TAG, userIdList + "입니다.");
-                                if (userIdList.contains(currentUser.getUid())) {
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                } else {
-                                    Log.d(TAG, currentUser.getUid());
-                                    Delete(currentUser);
-                                }
-                            }
-                        }
-                    });
+        firebaseUser = firebaseAuth.getCurrentUser();
+        Log.d("Log", currentUser + "입니다");
+        if (firebaseUser != null) {
+            checkAccount(firebaseUser);
         } else{
             Log.d(TAG, "계정이 존재하지 않음");
         }
@@ -191,17 +175,45 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    public void Delete(FirebaseUser user) {
-        Log.d(TAG, user.getUid());
-        user.delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+    public void Delete(FirebaseUser firebaseUser) {
+        if (firebaseUser != null) {
+            firebaseUser.delete()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "계정 삭제 성공");
+                            } else {
+                                Log.d(TAG, "계정 삭제 실패");
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void checkAccount(FirebaseUser firebaseUser) {
+        Log.d("Log", "checkAccount 실행");
+        currentUser = firebaseUser.getUid();
+        db.collection("users").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            user.delete();
-                            Log.d("계정삭제", "성공");
-                        } else {
-                            Log.d("계정삭제", "실패");
+                            Log.d(TAG, "db 실행 성공");
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                userIdList.add(documentSnapshot.getId());
+                            }
+                            Log.d(TAG, userIdList + "입니다.");
+                            if (userIdList.contains(currentUser)) {
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            } else {
+                                Log.d(TAG, currentUser + "포함하지 않음");
+                                Delete(firebaseUser);
+                            }
+                        }
+                        else {
+                            Log.d(TAG, "db 실행 실패");
                         }
                     }
                 });

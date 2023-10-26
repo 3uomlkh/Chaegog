@@ -19,6 +19,9 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.cchaegog.chaegog.CommentActivity;
 import com.cchaegog.chaegog.EditFeedActivity;
 import com.cchaegog.chaegog.Model.FeedInfo;
@@ -239,6 +242,9 @@ public class MyFeedAdapter extends RecyclerView.Adapter<MyFeedAdapter.ViewHolder
 
                                             Glide.with(cardView)
                                                     .load(url)
+                                                    .override(800, 800)
+                                                    .apply(new RequestOptions().transform(new CenterCrop(),
+                                                            new RoundedCorners(10)))
                                                     .into(Iv_MyFeed_Item);
 
                                         } else {

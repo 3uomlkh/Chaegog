@@ -57,10 +57,13 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
+            android:minLines="1"
+            android:maxLines="5"
+            android:ellipsize="end"
             android:fontFamily="@font/pretendardregular"
             android:padding="5dp"
             android:textColor="@color/black"
-            android:textSize="16dp"
+            android:textSize="13sp"
             android:textStyle="normal"
             tools:text="우선 물을 넉넉히 끓여 채소를 넣었을 때 물의 온도가 내려가지 않도록한다. 또 물이  팔팔 끓을 때 뚜껑을 열고 데쳐내야 하고, 삶을 때 끓는 물에 소금을 조금 넣으면 ...." />
 
@@ -69,7 +72,8 @@
             android:layout_width="310dp"
             android:layout_height="300dp"
             android:layout_gravity="center"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
+            android:scaleType="centerInside"
             android:background="#00dfdfdf" />
 
         <LinearLayout
