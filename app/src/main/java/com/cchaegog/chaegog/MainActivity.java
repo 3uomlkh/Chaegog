@@ -13,11 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,6 +27,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
     FloatingActionButton Btn_addFeed;
     // 객체 선언
@@ -45,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String userToken, refreshToken;
-    private AdView mAdView;
+//    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +50,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // AdMob 광고 SDK 초기화
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+//        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+//            @Override
+//            public void onInitializationComplete(InitializationStatus initializationStatus) {
+//            }
+//        });
+//
+//        mAdView = findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
 
 
         Btn_addFeed = (FloatingActionButton) findViewById(R.id.Btn_addFeed);
@@ -191,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // Get new FCM registration token
                         refreshToken = task.getResult();
+//                        myTokenUpdate();
                         Log.d("MyToken", "My New Token : " + refreshToken);
                     }
                 });
@@ -201,8 +199,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            userToken = documentSnapshot.get("userToken").toString();
+                            userToken = Objects.requireNonNull(documentSnapshot.get("userToken")).toString();
                             Log.d("MyToken", "My Old Token : " + userToken);
+
                             if(!userToken.equals(refreshToken)) {
                                 myTokenUpdate();
                             }
