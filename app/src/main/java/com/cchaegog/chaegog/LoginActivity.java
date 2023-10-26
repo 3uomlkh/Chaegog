@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         Btn_Login = findViewById(R.id.Btn_Login);
         Btn_Register = findViewById(R.id.Btn_Register);
         Btn_PasswordReset = findViewById(R.id.Btn_PasswordReset);
-        Btn_LoginKakao = findViewById(R.id.Btn_LoginKakao);
+//        Btn_LoginKakao = findViewById(R.id.Btn_LoginKakao);
 
         firebaseAuth = FirebaseAuth.getInstance(); // 초기화
         firebaseUser = firebaseAuth.getCurrentUser();
