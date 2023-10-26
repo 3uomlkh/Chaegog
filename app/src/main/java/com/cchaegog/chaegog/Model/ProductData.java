@@ -16,10 +16,10 @@ public class ProductData {
         this.itemKey = itemKey;
     }
 
-    public ProductData(String name, String company, String itemKey) {
+    public ProductData(String name, String company, String image) {
         this.productName = name;
         this.productCompany = company;
-        this.itemKey = itemKey;
+        this.productImg = image;
     }
 
     public String getProductName() {

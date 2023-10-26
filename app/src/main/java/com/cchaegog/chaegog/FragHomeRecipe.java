@@ -31,6 +31,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -73,7 +74,7 @@ public class FragHomeRecipe extends Fragment {
 
         getBookmark();
         getRecipeData();
-        //getData();
+//        getData();
 
         return view;
     }
@@ -85,16 +86,14 @@ public class FragHomeRecipe extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    listTitle.add(snapshot.child("title").getValue().toString());
-                    listThumb.add(snapshot.child("imageUrl").getValue().toString());
-                    clickUrl.add(snapshot.child("clickUrl").getValue().toString());
+                    listTitle.add(Objects.requireNonNull(snapshot.child("title").getValue()).toString());
+                    listThumb.add(Objects.requireNonNull(snapshot.child("imageUrl").getValue()).toString());
+                    clickUrl.add(Objects.requireNonNull(snapshot.child("clickUrl").getValue()).toString());
                 }
 
                 for (int k = 0; k < listTitle.size(); k++) {
-
                     RecipeData data = new RecipeData(listThumb.get(k), listTitle.get(k), clickUrl.get(k));
                     data.setBookmarkIdList(bookmarkIdList);
-
                     adapter.addItem(data);
                 }
 
@@ -123,7 +122,7 @@ public class FragHomeRecipe extends Fragment {
                     bookmarkIdList.add(snapshot.getKey());
                 }
 
-                Log.d("bookmarkIdList", bookmarkIdList.toString());
+//                Log.d("bookmarkIdList", bookmarkIdList.toString());
                 adapter.notifyDataSetChanged();
             }
 
@@ -169,33 +168,24 @@ public class FragHomeRecipe extends Fragment {
                                 String detailUrl = element.attr("href");
                                 clickUrl.add(detailUrl);
                             }
-                            for (int k = 0; k < listTitle.size(); k++) {
-                                // 모든 레시피 firebase db에 저장, 최초에 1번 실행
-//                                if(finalI == 8) {
-//                                    mDatabase = FirebaseDatabase.getInstance().getReference("recipe");
-//                                    mDatabase
-//                                            .push()
-//                                            .setValue(new RecipeData(listThumb.get(k), listTitle.get(k), clickUrl.get(k)));
-//                                }
 
-                                RecipeData data = new RecipeData();
+//                            Log.d("recipeDataSize", "listTitle : " + listTitle.size() + "");
+//                            Log.d("recipeDataSize", "listThumb : " + listThumb.size() + "");
+//                            Log.d("recipeDataSize", "bookmarkIdList : " + bookmarkIdList + "");
 
-                                data.setTitle(listTitle.get(k));
-                                data.setImageUrl(listThumb.get(k));
-                                data.setClickUrl(clickUrl.get(k));
-                                data.setBookmarkIdList(bookmarkIdList);
-
-                                adapter.addItem(data);
-                            }
-
-                            Log.d("recipeDataSize", "listTitle : " + listTitle.size() + "");
-                            Log.d("recipeDataSize", "listThumb : " + listThumb.size() + "");
-                            Log.d("recipeDataSize", "bookmarkIdList : " + bookmarkIdList + "");
-
-                            adapter.notifyDataSetChanged();
                         }
                     });
                 }
+
+                for (int k = 0; k < listTitle.size(); k++) { // ArrayList에 추가된 레시피들을 Firebase DB에 push
+                    mDatabase = FirebaseDatabase.getInstance().getReference("recipe");
+                    mDatabase
+                            .push()
+                            .setValue(new RecipeData(listThumb.get(k), listTitle.get(k), clickUrl.get(k)));
+
+//                    Log.d("recipeDataSize", "listTitle : " + listTitle.get(k) + "(" + k + ")");
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
