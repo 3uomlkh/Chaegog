@@ -35,12 +35,6 @@ import java.util.List;
 
 public class FragMyFeed extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
     private RecyclerView recyclerView;
     private List<FeedInfo> feedInfoList = new ArrayList<>();
     private List<String> uidList = new ArrayList<>();
@@ -70,10 +64,6 @@ public class FragMyFeed extends Fragment {
 
     public static FragMyFeed newInstance(String param1, String param2) {
         FragMyFeed fragment = new FragMyFeed();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -83,10 +73,6 @@ public class FragMyFeed extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override

@@ -139,11 +139,6 @@ public class FragHomeFeed extends Fragment {
             }
         }, 2000);
 
-//        DatabaseReference postRef = databaseReference.child("post");
-//        DatabaseReference reportRef = databaseReference.child("report");
-
-
-
         return view;
     }
 
@@ -248,11 +243,6 @@ public class FragHomeFeed extends Fragment {
                             ReportInfo reportInfo = new ReportInfo(null, mail);
                             databaseReference.child("report").child("mail").child(feedInfo.getPostId()).setValue(reportInfo);
                         }
-                    }
-
-                    if (!blockedUserIdList.contains(publisher) && !blockerIdList.contains(publisher)) {
-                        feedInfoList.add(feedInfo);
-                        uidList.add(uidKey);
                     }
 
                 }
