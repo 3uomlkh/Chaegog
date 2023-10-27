@@ -190,9 +190,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                             // 현재 사용자 작성 게시물이 아닌 경우 -> feed_menu.xml 표시 -> 신고/차단
                             popupMenu.getMenuInflater().inflate(R.menu.feed_menu, popupMenu.getMenu());
 
-//                            MenuItem reportItem = popupMenu.getMenu().findItem(R.id.feed_report);
-//                            MenuItem reportCancleItem = popupMenu.getMenu().findItem(R.id.feed_report_cancle);
-
                             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem menuItem) {
@@ -208,19 +205,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     if (uidList.size() != 0 ) {
                                                         onReportClicked(firebaseDatabase.getReference().child("posts").child(uidList.get(pos)), pos);
-//                                                        feedInfoList.remove(pos);
-//                                                        if (feedInfoList.get(pos).getReport() != null) {
-//                                                            if (feedInfoList.get(pos).getReport().containsKey(firebaseUser.getUid())) {
-//                                                                feedInfoList.remove(pos);
-//                                                                notifyItemRemoved(pos);
-//                                                            } else {
-//
-//                                                            }
-//                                                        }
-//                                                        else {
-//
-//                                                        }
-//                                                        notifyItemRemoved(pos);
                                                     }
                                                 }
                                             });
@@ -257,14 +241,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                                             }
                                                         }
                                                     });
-
-//                                            blockUserName = blockUserList.get(position).getName();
-//                                            blockUserProfile = blockUserList.get(position).getProfile(); //id
-//                                            Log.d("HomeFeedBlockUser", "차단한 사용자 닉네임 : " + blockUserName);
-//                                            Log.d("HomeFeedBlockUser", "차단한 사용자 id : " + blockUserProfile);
-
-                                            //Block(FeedPublisher);
-
 
                                             AlertDialog.Builder BlockDialogBuilder = new AlertDialog.Builder(context);
                                             BlockDialogBuilder.setTitle("사용자 차단");
@@ -366,25 +342,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                     .skipMemoryCache(false)
                                     .into(Iv_HomeFeed_Profile);
                                 getPostPublisher = postPublisher;
-//                                FeedPublisher = data.getPublisher();
-////        Log.d("HomeFeedBlock", "blockList : "+ blockUserList );
-////        Log.d("HomeFeedBlock", "feedPublisher : "+ FeedPublisher );
-////                                for(int i=0; i<feedInfoList.size(); i++) {
-////                                    Log.d("FeedArange", "피드 순서? : " + feedInfoList.get(i).getContent());
-////                                }
-//                                for(int i=0; i<blockUserList.size(); i++) {
-////            Log.d("BLOCKUSER", "blockList : "+ blockUserList.get(i).getId());
-//                                    if(blockUserList.get(i).getId().equals(FeedPublisher)) {
-//
-//                                        if(postPublisher.equals(FeedPublisher)) {
-//                                            int pos = getAdapterPosition();
-//                                            blockPosition = pos;
-//                                            Log.d("blockPosition", "BLOCK된 사용자의 위치 : " + blockPosition);
-//                                            feedInfoList.remove();
-//                                        }
-////                                        cardView.setVisibility(View.GONE);
-//                                    }
-//                                }
 
                             } else {
                                 Log.d("ERROR", "HOMEFEED_USER DATA GET", task.getException());
@@ -460,34 +417,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                 }
             }
         });
-
-//        if (feedInfoList.get(position).getReport() != null) {
-//            if (feedInfoList.get(position).getReport().containsKey(firebaseUser.getUid())) {
-//                feedInfoList.remove(position);
-//                notifyItemRemoved(position);
-//            }
-//        } else {
-//
-//        }
-
-//        FeedPublisher = feedInfoList.get(position).getPublisher();
-////        Log.d("HomeFeedBlock", "blockList : "+ blockUserList );
-////        Log.d("HomeFeedBlock", "feedPublisher : "+ FeedPublisher );
-//        for(int i=0; i<blockUserList.size(); i++) {
-////            Log.d("BLOCKUSER", "blockList : "+ blockUserList.get(i).getId());
-//            if(blockUserList.get(i).getId().equals(FeedPublisher)) {
-//
-////                if(FeedPublisher.equals(getPostPublisher)) {
-////                    blockPosition = holder.getAdapterPosition();
-////                    Log.d("blockPosition", "BLOCK된 사용자의 위치 : " + blockPosition);
-////                    feedInfoList.remove(0);
-////                }
-////                holder.cardView.setVisibility(View.GONE);
-//
-//
-//            }
-//        }
-
 
     }
 
