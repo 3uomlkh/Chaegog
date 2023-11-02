@@ -126,7 +126,14 @@ public class MapSearchAdapter extends RecyclerView.Adapter<MapSearchAdapter.View
         void onBind(MapData data) {
             title.setText(data.getName());
             addr.setText(data.getAddress());
-            Glide.with(itemView.getContext()).load(data.getImageUrl()).into(thumbnail);
+            thumbnail.setImageResource(R.drawable.chaegog_restaurant);
+            if(data.getCategory().equals("까페") || data.getCategory().equals("카페")) {
+                thumbnail.setImageResource(R.drawable.chaegog_cafe);
+            }
+            if(data.getCategory().equals("베이커리")) {
+                thumbnail.setImageResource(R.drawable.chaegog_bakery);
+            }
+//            Glide.with(itemView.getContext()).load(data.getImageUrl()).into(thumbnail);
         }
     }
 

@@ -2,6 +2,7 @@ package com.cchaegog.chaegog;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -148,11 +149,19 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
             }
             dayoff.setText(data.getDayoff());
 
-            Glide.with(itemView.getContext())
-                    .load(data.getImageUrl())
-                    .apply(new RequestOptions().transform(new CenterCrop(),
-                            new RoundedCorners(10)))
-                    .into(image);
+//            Glide.with(itemView.getContext())
+//                    .load(data.getImageUrl())
+//                    .apply(new RequestOptions().transform(new CenterCrop(),
+//                            new RoundedCorners(10)))
+//                    .into(image);
+            image.setImageResource(R.drawable.chaegog_restaurant);
+            if(data.getCategory().equals("까페") || data.getCategory().equals("카페")) {
+                image.setImageResource(R.drawable.chaegog_cafe);
+            }
+            if(data.getCategory().equals("베이커리")) {
+                image.setImageResource(R.drawable.chaegog_bakery);
+            }
+
         }
     }
 }
