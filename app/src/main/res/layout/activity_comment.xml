@@ -8,7 +8,7 @@
     tools:context=".CommentActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbar_comment"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_marginBottom="20dp"
@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="댓글"
+            android:text="@string/comment"
             android:textColor="@color/black" />
 
     </androidx.appcompat.widget.Toolbar>
@@ -49,17 +49,19 @@
         <EditText
             android:id="@+id/Et_Comment"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:layout_marginRight="10dp"
-            android:hint="댓글을 입력하세요"/>
+            android:layout_marginEnd="10dp"
+            android:hint="@string/comment_input"
+            android:importantForAutofill="no"
+            android:inputType="textImeMultiLine"/>
 
         <Button
             android:id="@+id/Btn_UploadComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="등록"/>
+            android:layout_gravity="end"
+            android:text="@string/registration"/>
 
     </LinearLayout>
 

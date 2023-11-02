@@ -17,7 +17,6 @@
         android:id="@+id/map_search_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/pretendardregular"
         android:layout_gravity="top|end"
         android:layout_margin="30dp"
         android:backgroundTint="@color/green_light"
@@ -55,9 +54,7 @@
                     android:id="@+id/map_info_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/pretendardregular"
                     android:text="식당명"
-                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textSize="16dp" />
 
@@ -65,7 +62,6 @@
                     android:id="@+id/map_info_addr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/pretendardregular"
                     android:text="주소"
                     android:textColor="@color/white"
                     android:textSize="12dp" />
@@ -76,7 +72,6 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/pretendardregular"
                         android:text="영업시간 "
                         android:textStyle="bold"
                         android:textColor="@color/white"
@@ -86,7 +81,6 @@
                         android:id="@+id/map_info_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/pretendardregular"
                         android:text="영업시간"
                         android:textColor="@color/white"
                         android:textSize="12dp" />
@@ -99,7 +93,6 @@
                         android:id="@+id/map_info_day_off_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/pretendardregular"
                         android:text="휴무일 "
                         android:visibility="visible"
                         android:textColor="@color/white"
@@ -109,7 +102,6 @@
                         android:id="@+id/map_info_day_off"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/pretendardregular"
                         android:text="휴무일"
                         android:textColor="@color/white"
                         android:textSize="12dp" />

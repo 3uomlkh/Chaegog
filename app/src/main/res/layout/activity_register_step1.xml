@@ -14,7 +14,7 @@
         android:fontFamily="@font/hssaemaul_regular"
         android:gravity="center_horizontal"
         android:lineSpacingExtra="1sp"
-        android:text="채곡채곡 1/4"
+        android:text="@string/register_step1"
         android:textAlignment="center"
         android:textColor="#1b1b1b"
         android:textSize="40sp"
@@ -32,7 +32,7 @@
         android:layout_marginTop="5dp"
         android:fontFamily="@font/pretendardregular"
         android:lineSpacingExtra="12sp"
-        android:text="가입자 정보를 채워주세요."
+        android:text="@string/fill_info"
         android:textAlignment="center"
         android:textColor="#1b1b1b"
         android:textSize="18sp"
@@ -49,7 +49,9 @@
         android:layout_marginTop="60dp"
         android:background="@drawable/selectboxred"
         android:fontFamily="@font/pretendardregular"
-        android:hint="닉네임"
+        android:hint="@string/user_nickname"
+        android:inputType="text"
+        android:autofillHints="name"
         android:padding="10dp"
         android:textColor="#1b1b1b"
         android:textSize="15sp"
@@ -93,43 +95,74 @@
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/pretendardregular"
         android:lineSpacingExtra="2sp"
-        android:text="닉네임"
+        android:text="@string/user_nickname"
         android:textColor="#424242"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/Et_Register_Id"
         app:layout_constraintStart_toStartOf="@+id/Et_Register_Id" />
 
-    <EditText
-        android:id="@+id/Et_Register_Email"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/selectboxred"
-        android:fontFamily="@font/pretendardregular"
-        android:hint="이메일"
-        android:padding="10dp"
-        android:textColor="#1b1b1b"
-        android:textSize="15dp"
-        android:textStyle="normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Et_Register_Id" />
-
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:paddingTop="12dp"
         android:fontFamily="@font/pretendardregular"
         android:lineSpacingExtra="2sp"
-        android:text="이메일"
+        android:text="@string/user_email"
         android:textColor="#424242"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/Et_Register_Email"
-        app:layout_constraintStart_toStartOf="@+id/Et_Register_Email" />
+        app:layout_constraintTop_toTopOf="@+id/Ll_Email"
+        app:layout_constraintStart_toStartOf="@+id/Ll_Email" />
+
+    <LinearLayout
+        android:id="@+id/Ll_Email"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingTop="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/Et_Register_Id">
+
+        <EditText
+            android:id="@+id/Et_Register_Email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selectboxred"
+            android:fontFamily="@font/pretendardregular"
+            android:hint="@string/user_email"
+            android:autofillHints="emailAddress"
+            android:inputType="textEmailAddress"
+            android:padding="10dp"
+            android:textColor="#1b1b1b"
+            android:textSize="15sp"
+            android:textStyle="normal" />
+
+        <ImageView
+            android:id="@+id/Iv_Verify_Send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingHorizontal="5dp"
+            android:src="@drawable/verify_send" />
+
+        <ImageView
+            android:id="@+id/Iv_Verify_Check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/verify_uncheck" />
+
+    </LinearLayout>
+
+
+
+<!--    android:drawableTint="@color/white"-->
+<!--    android:drawableTintMode="src_over"-->
+
 
     <EditText
         android:id="@+id/Et_Register_Pw"
@@ -138,15 +171,17 @@
         android:layout_marginTop="40dp"
         android:background="@drawable/selectboxred"
         android:fontFamily="@font/pretendardregular"
-        android:hint="비밀번호"
+        android:hint="@string/user_password"
+        android:autofillHints="password"
+        android:inputType="textPassword"
         android:padding="10dp"
         android:textColor="#1b1b1b"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Et_Register_Email" />
+        app:layout_constraintTop_toBottomOf="@+id/Ll_Email" />
 
     <TextView
         android:id="@+id/textView5"
@@ -155,7 +190,7 @@
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/pretendardregular"
         android:lineSpacingExtra="2sp"
-        android:text="비밀번호"
+        android:text="@string/user_password"
         android:textColor="#424242"
         android:textSize="14sp"
         android:textStyle="bold"
@@ -169,7 +204,9 @@
         android:layout_marginTop="40dp"
         android:background="@drawable/selectboxred"
         android:fontFamily="@font/pretendardregular"
-        android:hint="비밀번호 확인"
+        android:hint="@string/confirm_password"
+        android:autofillHints="password"
+        android:inputType="textPassword"
         android:padding="10dp"
         android:textColor="#1b1b1b"
         android:textSize="15sp"
@@ -186,23 +223,36 @@
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/pretendardregular"
         android:lineSpacingExtra="2sp"
-        android:text="비밀번호 확인"
+        android:text="@string/confirm_password"
         android:textColor="#424242"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/Et_Register_PwCheck"
         app:layout_constraintStart_toStartOf="@+id/Et_Register_PwCheck" />
 
+    <TextView
+        android:id="@+id/Tv_Email_Verify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/pretendardregular"
+        android:text="@string/email_verify"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Et_Register_PwCheck" />
+
     <Button
         android:id="@+id/Btn_Register1To2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/pretendardregular"
-        android:text="다음 단계로"
+        android:text="@string/next_step"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="@color/gray_9b"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

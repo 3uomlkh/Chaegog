@@ -55,7 +55,7 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    tools:text="작성자" />
+                    tools:text="@string/post_writer" />
                 <RatingBar
                     android:id="@+id/review_ratingbar2"
                     android:layout_width="wrap_content"
@@ -96,7 +96,7 @@
             android:textColor="@color/black"
             android:textSize="16dp"
             android:textStyle="normal"
-            tools:text="식당에 대한 리뷰입니다."/>
+            tools:text="@string/restaurant_review"/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

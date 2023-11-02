@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="리뷰"
+            android:text="@string/restaurant_review"
             android:textColor="@color/black" />
         <Button
             android:id="@+id/Btn_uploadReview"
@@ -31,7 +31,7 @@
             android:clickable="false"
             android:textColor="@color/green"
             android:background="#00ff0000"
-            android:text="등록" />
+            android:text="@string/registration" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="비건식당"
+        android:text="@string/restaurant_name"
         android:fontFamily="@font/pretendardregular"
         android:textSize="16sp"
         android:textColor="@color/black" />
@@ -53,7 +53,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="별점"
+        android:text="@string/restaurant_rating"
         android:fontFamily="@font/pretendardregular"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="5dp"
@@ -63,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:contentDescription="별점"
+        android:contentDescription="@string/restaurant_rating"
         android:isIndicator="false"
         style="@style/Widget.AppCompat.RatingBar.Indicator"
         android:numStars="5"
@@ -73,7 +73,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="사진 등록"
+        android:text="@string/upload_photo"
         android:fontFamily="@font/pretendardregular"
         android:layout_marginTop="8dp"
         android:layout_marginStart="10dp"
@@ -92,16 +92,17 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:scaleType="center"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/review_border"
+            android:contentDescription="@string/upload_photo"
             android:src="@drawable/ic_baseline_add_circle_24"/>
         <ImageView
             android:id="@+id/review_imageView"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:scaleType="center"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/review_border"/>
     </LinearLayout>
@@ -123,7 +124,7 @@
 <!--            android:layout_width="120dp"-->
 <!--            android:layout_height="120dp"-->
 <!--            android:scaleType="center"-->
-<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginStart="10dp"-->
 <!--            android:layout_marginTop="10dp"-->
 <!--            android:background="@drawable/review_border"-->
 <!--            android:src="@drawable/ic_baseline_add_circle_24"/>-->
@@ -132,7 +133,7 @@
 <!--            android:layout_width="120dp"-->
 <!--            android:layout_height="120dp"-->
 <!--            android:scaleType="center"-->
-<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginStart="10dp"-->
 <!--            android:layout_marginTop="10dp"-->
 <!--            android:background="@drawable/review_border"-->
 <!--            android:src="@drawable/ic_baseline_add_circle_24"/>-->
@@ -141,7 +142,7 @@
 <!--            android:layout_width="120dp"-->
 <!--            android:layout_height="120dp"-->
 <!--            android:scaleType="center"-->
-<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginStart="10dp"-->
 <!--            android:layout_marginTop="10dp"-->
 <!--            android:background="@drawable/review_border"-->
 <!--            android:src="@drawable/ic_baseline_add_circle_24"/>-->
@@ -150,7 +151,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="리뷰"
+        android:text="@string/restaurant_review"
         android:fontFamily="@font/pretendardregular"
         android:layout_marginTop="8dp"
         android:layout_marginStart="10dp"
@@ -166,7 +167,9 @@
         android:backgroundTint="@color/gray_f5"
         android:fontFamily="@font/pretendardregular"
         android:gravity="top"
-        android:hint="해당 식당에 대한 리뷰를 적어주세요."
+        android:hint="@string/write_restaurant_review"
+        android:inputType="textMultiLine"
+        android:importantForAutofill="no"
         android:lines="10" />
 
 <!--    <Button-->

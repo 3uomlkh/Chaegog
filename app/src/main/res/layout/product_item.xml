@@ -6,6 +6,7 @@
     android:layout_margin="5dp">
     <ImageView
         android:id="@+id/ProductImageView"
+        android:src="@drawable/tomato"
         android:layout_margin="10dp"
         android:layout_width="90dp"
         android:layout_height="90dp"/>
@@ -46,15 +47,13 @@
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/pretendardregular"/>
-            <CheckBox
+            <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox"
+                android:src="@drawable/favorite_off"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="2dp"
-                android:backgroundTint="@color/green"
-                android:id="@+id/ProductFavorite"/>
+                android:id="@+id/product_save_image"/>
         </LinearLayout>
     </LinearLayout>
 

@@ -17,7 +17,7 @@
             android:id="@+id/search_edit_text"
             android:layout_width="250dp"
             android:layout_height="50dp"
-            android:hint="식당 검색"
+            android:hint="@string/restaurant_search_btn"
             android:inputType="text"
             android:imeOptions="actionSearch"
             android:layout_marginTop="40dp"/>
@@ -25,7 +25,7 @@
             android:id="@+id/search_btn"
             android:layout_width="80dp"
             android:layout_height="50dp"
-            android:text="검색"
+            android:text="@string/search_btn"
             android:layout_marginStart="10dp"
             android:layout_marginTop="40dp"/>
     </LinearLayout>
