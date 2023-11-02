@@ -140,7 +140,7 @@ public class WritePostActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             if (imageFile != null) {
-                                imageUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.finalprojectvegan.fileprovider", imageFile);
+                                imageUri = FileProvider.getUriForFile(getApplicationContext(), "com.cchaegog.chaegog.fileprovider", imageFile);
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                                 startActivityForResult(intent, CAMERA);
                             }
