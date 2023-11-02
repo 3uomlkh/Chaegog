@@ -2,12 +2,14 @@ package com.cchaegog.chaegog.Fcm;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -24,12 +26,16 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "FirebaseMsgService";
-
+    private SharedPreferences pref;
+    private int myInt;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        if (remoteMessage.getNotification() != null) {
+        pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        myInt = pref.getInt("MyPrefInt", 1);
+
+        if (remoteMessage.getNotification() != null && myInt == 1) {
             if(remoteMessage.getNotification().getClickAction() != null) {
                 Log.d(TAG, remoteMessage.getNotification().getClickAction());
                 sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(),
@@ -44,7 +50,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if(remoteMessage.getNotification().getClickAction() != null) {
                 String click_action = remoteMessage.getNotification().getClickAction();
                 sendNotification(title, body, click_action);
-            } else {
+            }
+            if(remoteMessage.getNotification().getClickAction() == null) {
                 sendNotification(title, body);
             }
         }

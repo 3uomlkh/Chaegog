@@ -55,18 +55,12 @@ public class CommentActivity extends AppCompatActivity {
     private String postPublisher, token;
     PushNotification pushNotification;
     static String TOPIC = "/topics/myTopic";
-    private int myInt;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-
-        // SharedPreferences 초기화 후 저장해둔 값 불러오기
-        pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
-        myInt = pref.getInt("MyPrefInt", 1);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_comment);
         setSupportActionBar(toolbar);
@@ -166,18 +160,14 @@ public class CommentActivity extends AppCompatActivity {
         final String comment = Et_Comment.getText().toString();
 
         if (comment.length() > 0) {
-            if(myInt == 0) {
+            if(postPublisher.equals(firebaseUser.getUid())) { // 게시물 작성자 == 댓글 작성자라면 알림을 보내지 않음
                 WriteCommentInfo writeCommentInfo = new WriteCommentInfo(comment, firebaseUser.getUid(), FeedId, new Date());
                 uploader(writeCommentInfo);
-            } else {
-                if(postPublisher.equals(firebaseUser.getUid())) { // 게시물 작성자 == 댓글 작성자라면 알림을 보내지 않음
-                    WriteCommentInfo writeCommentInfo = new WriteCommentInfo(comment, firebaseUser.getUid(), FeedId, new Date());
-                    uploader(writeCommentInfo);
-                } else {
-                    sendCommentToFCM();
-                    WriteCommentInfo writeCommentInfo = new WriteCommentInfo(comment, firebaseUser.getUid(), FeedId, new Date());
-                    uploader(writeCommentInfo);
-                }
+            }
+            if(!postPublisher.equals(firebaseUser.getUid())) { // 게시물 작성자 != 댓글 작성자라면 알림을 보냄
+                sendCommentToFCM();
+                WriteCommentInfo writeCommentInfo = new WriteCommentInfo(comment, firebaseUser.getUid(), FeedId, new Date());
+                uploader(writeCommentInfo);
             }
         } else {
             Toast.makeText(this, "댓글 내용을 입력해주세요", Toast.LENGTH_SHORT).show();
