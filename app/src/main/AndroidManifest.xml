@@ -67,6 +67,8 @@
         <activity
             android:name=".MapButtonActivity"
             android:exported="false" />
+        <activity android:name=".EditFeedActivity"
+            android:exported="false" />
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
