@@ -10,6 +10,6 @@ public class MyKey {
     public @interface types{}
 
     public final static String BASE_URL = "https://fcm.googleapis.com/";
-    public final static String SERVER_KEY = "AAAASO3yth0:APA91bGtvLyfHqh9Vy-jY9Z7Jsr-uH9QGP_2rT4tcXFD-LjyNlgzGTUIdGCN_wryGek8jruFNEJn4q6zR4vRHkEYo3nlTE70O5UcF-khzz6IUc_ciILYUvIagYRLmQYljhIfNoYSdEzj";
+    public final static String SERVER_KEY = "AAAAEI8kC-Y:APA91bGKe1NplX0zdUabkDacezxYAGXQC2tMlqTkaflymEuMdujNZcpCgM6sBunkprkcS_LNNgdlZYboDFcf_C0OyKC_pTC_LzAlVoU8SkSRNi7nP3YB4NfZmZUgRKXyaagCFw1-A6tl";
     public final static String CONTENT_TYPE = "application/json";
 }
