@@ -6,6 +6,7 @@ import static java.lang.Math.sin;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
@@ -16,7 +17,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -91,26 +91,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapInfoButton = findViewById(R.id.map_info_button);
         mapInfoDayoffTv = findViewById(R.id.map_info_day_off_tv);
 
-//        final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            return;
-//        }
-//        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//        if(location != null) {
-//            myLatitude = location.getLatitude();
-//            myLongitude = location.getLongitude();
-//        }
-//
-//        FragmentManager fm = getSupportFragmentManager();
-//        MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map_fragment);
-//        if (mapFragment == null) {
-//            mapFragment = MapFragment.newInstance();
-//            fm.beginTransaction().add(R.id.map_fragment, mapFragment).commit();
-//        }
-//
-//        mapFragment.getMapAsync(this);
-//
-//        mLocationSource = new FusedLocationSource(this, PERMISSION_REQUEST_CODE);
         FragmentManager fm = getSupportFragmentManager();
         MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map_fragment);
         if (mapFragment == null) {
@@ -171,22 +151,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                     }
                     for(int i=0; i < mapNameList.size(); i++){
-                        Log.d("map_list", mapNameList.toString());
                         Marker[] markers = new Marker[mapNameList.size()];
-
                         markers[i] = new Marker();
                         lat = Double.parseDouble(mapLatList.get(i));
                         lnt = Double.parseDouble(mapLntList.get(i));
-//                        markers[i].setPosition(new LatLng(lat, lnt));
-//                        markers[i].setCaptionText(mapNameList.get(i));
-//                        markers[i].setMap(naverMap);
-                        Log.d("my_location", myLatitude + " , " + myLongitude);
 
-                        distance = new ArrayList<Integer>();
+                        distance = new ArrayList<>();
                         distance.add(getDistance(myLatitude ,myLongitude, lat, lnt));
                         for(int k=0; k<distance.size(); k++) {
                             if(distance.get(k) <= 1000) {
-                                Log.d("map_distance", distance.get(k) + "m - " + mapNameList.get(i));
                                 markers[i].setPosition(new LatLng(lat, lnt));
                                 markers[i].setCaptionText(mapNameList.get(i));
                                 markers[i].setMap(naverMap);
@@ -245,14 +218,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 // visibility가 gone으로 되어있던 정보창 레이아웃을 visible로 변경
                                 mapInfoLayout.setVisibility(View.VISIBLE);
 
-                                map_fragment.setOnTouchListener(new View.OnTouchListener() {
-                                    @Override
-                                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                                        mapInfoLayout.setVisibility(View.GONE);
-                                        return false;
-                                    }
-                                });
-
                                 return false;
 
                             }
@@ -281,12 +246,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // 이미지 가져오기
         private void startLoadingImage() {
-            Glide.with(this)
-                    .load(mapInfoImage)
-                    .override(400,400)
-                    .apply(new RequestOptions().transform(new CenterCrop(),
-                            new RoundedCorners(20)))
-                    .into(getMapInfoImage);
+            getMapInfoImage.setImageResource(R.drawable.chaegog_restaurant);
+            if(mapInfoCategory.equals("까페") || mapInfoCategory.equals("카페")) {
+                getMapInfoImage.setImageResource(R.drawable.chaegog_cafe);
+            }
+            if(mapInfoCategory.equals("베이커리")) {
+                getMapInfoImage.setImageResource(R.drawable.chaegog_bakery);
+            }
+//            Glide.with(this)
+//                    .load(mapInfoImage)
+//                    .override(400,400)
+//                    .apply(new RequestOptions().transform(new CenterCrop(),
+//                            new RoundedCorners(20)))
+//                    .into(getMapInfoImage);
         }
 
         private int getDistance(double lat1, double lnt1, double lat2, double lnt2) {
@@ -303,13 +275,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-//            if (mLocationSource.onRequestPermissionsResult(
-//                    requestCode, permissions, grantResults)) {
-//                if (!mLocationSource.isActivated()) { // 권한 거부됨
-//                    mNaverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
-//                }
-//                return;
-//            }
             if (requestCode == PERMISSION_REQUEST_CODE) {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

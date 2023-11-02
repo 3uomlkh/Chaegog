@@ -74,10 +74,9 @@ public class FragHomeProduct extends Fragment {
         adapter = new ProductAdapter();
 
 
-//        getBookmark();
-//        getproductData();
-        getData();
-
+        getBookmark();
+        getproductData();
+//        getData();
 
         return view;
     }
@@ -151,10 +150,10 @@ public class FragHomeProduct extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                String urlString = "https://altist.com/category/%EA%B3%A0%EA%B8%B0%EB%8C%80%EC%8B%A0/23/";
+                String urlString = "https://smartstore.naver.com/veggiegarden/category/5ed6e95ab9484d4ca912a8491eb2f55f?cp=1";
                 doc = Jsoup.connect(urlString).get();
 
-                final Elements title = doc.select("div ul li div[class=description] a > span[style$=;]");
+                final Elements title = doc.select("div ul il div[class=_2kRKWS_t1E] a");
                 final Elements image = doc.select("div ul li div[class=thumbnail] div[class=prdImg] a > img");
 
                 Handler handler = new Handler(Looper.getMainLooper());
@@ -163,35 +162,28 @@ public class FragHomeProduct extends Fragment {
                     public void run() {
 
                         for (Element element : title) {
+                            String img = element.attr("strong");
                             productName.add(element.text());
-                            productCompany.add("고기대신");
+                            productCompany.add("베지가든");
+                            productImg.add("img");
                         }
 
-                        for (Element element : image) {
-                            String img = element.attr("src").substring(13);
-                            productImg.add("https://altist.com/" + img);
-                        }
-
+//                        for (Element element : image) {
+//                            String img = element.attr("src").substring(13);
+//                            productImg.add("");
+//                        }
                         for (int i=0; i<productName.size(); i++) {
-                            Log.d("ProductName", "[제품명] " + productName.get(i));
-                            Log.d("ProductImg", "[URL] " + productImg.get(i+1));
-                            mDatabase = FirebaseDatabase.getInstance().getReference("product");
-                            if(mDatabase.child("ProductCompany").equals("고기대신")) {
-                                mDatabase.setValue(null);
-                            }
+                            Log.d("ProductName", "제품명 : " + productName.get(i));
+//                            mDatabase = FirebaseDatabase.getInstance().getReference("product");
 //                            mDatabase
 //                                    .push()
 //                                    .setValue(new ProductData(productName.get(i), productCompany.get(i), productImg.get(i)));
-//
-//
-//                            ProductData data = new ProductData(productName.get(i), productCompany.get(i), productImg.get(i));
-//
-//                            adapter.addItem(data);
-
                         }
-//                        adapter.notifyDataSetChanged();
+
                     }
                 });
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

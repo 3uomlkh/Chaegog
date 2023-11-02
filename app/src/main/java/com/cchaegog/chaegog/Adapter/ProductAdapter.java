@@ -96,10 +96,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         void onBind(ProductData data) {
             productName.setText(data.getProductName());
             productCompany.setText(data.getProductCompany());
-            Glide.with(itemView.getContext())
-                    .load(data.getProductImg())
-                    .override(200,200)
-                    .into(thumbnail);
+//            Glide.with(itemView.getContext())
+//                    .load(data.getProductImg())
+//                    .override(200,200)
+//                    .into(thumbnail);
         }
     }
 }
