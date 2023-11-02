@@ -164,79 +164,7 @@ public class FragMyFeed extends Fragment {
 
             }
         });
-//        db.collection("posts")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//
-//                            ArrayList<FeedInfo> MyFeedList = new ArrayList<>();
-//
-//                            if (firebaseUser != null) {
-//
-//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-//                                Log.d("MYFEED POST", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-//                                MyFeedList.add(new FeedInfo(
-//                                        documentSnapshot.getData().get("title").toString(),
-//                                        documentSnapshot.getData().get("content").toString(),
-//                                        documentSnapshot.getData().get("publisher").toString(),
-//                                        documentSnapshot.getId(),
-//                                        documentSnapshot.getData().get("uri").toString(),
-//                                        new Date(documentSnapshot.getDate("createdAt").getTime())));
-//
-//                            }
-//
-//                                Tv_Notice.setVisibility(GONE);
-//
-//                                RecyclerView recyclerView = view.findViewById(R.id.Rv_MyFeed);
-//                                recyclerView.setHasFixedSize(true);
-//                                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//
-//                                RecyclerView.Adapter mAdapter = new MyFeedAdapter(getActivity(), MyFeedList);
-//                                recyclerView.setAdapter(mAdapter);
-//
-//                            }
-//
-//                            Tv_Notice.setVisibility(VISIBLE);
-//
-//                        } else {
-//                            Log.d("error", "Error getting documents", task.getException());
-//                        }
-//                    }
-//                });
-//
         return view;
     }
 
-
-//    public void loadImage() {
-//
-//        StorageReference storageReference = firebaseStorage.getReference();
-//        StorageReference pathReference = storageReference.child("users");
-//        if (pathReference == null) {
-//            Toast.makeText(getActivity(), "저장소에 사진이 없습니다.", Toast.LENGTH_SHORT).show();
-//        } else {
-//            StorageReference submitProfile = storageReference.child("users/" + firebaseUser.getUid() + "/profileImage.jpg");
-//            submitProfile.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                @Override
-//                public void onSuccess(Uri uri) {
-//                    Glide.with(getActivity()).load(uri).centerCrop().override(300).into(imageView_profile);
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//
-//                }
-//            });
-//        }
-//    }
-//
-//    private void getFirebaseProfileImage(FirebaseUser id) {
-//        File file = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/profileImage");
-//        if (!file.isDirectory()) {
-//            file.mkdir();
-//        }
-//        loadImage();
-//    }
 }

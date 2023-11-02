@@ -86,7 +86,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginLeft="20dp"
-                android:background="@drawable/favorite_off"
+                android:background="@drawable/thumb_up_off"
                 android:button="@null" />
 
             <TextView

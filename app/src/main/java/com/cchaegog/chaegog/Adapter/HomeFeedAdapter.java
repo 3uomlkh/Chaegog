@@ -111,6 +111,18 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             firebaseDatabase = FirebaseDatabase.getInstance();
             databaseReference = firebaseDatabase.getReference();
 
+            Iv_HomeFeed_Favorite = view.findViewById(R.id.Iv_HomeFeedFavorite);
+            Iv_HomeFeed_Favorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAbsoluteAdapterPosition();
+//                    feedInfoList.get(pos).getFavorites();
+                    if (uidList.size() != 0 ) {
+                        onFavoriteClicked(firebaseDatabase.getReference().child("posts").child(uidList.get(pos)));
+                    }
+                }
+            });
+
             // 피드에서 더보기 선택시
             Btn_HomeFeedEtc = view.findViewById(R.id.Btn_HomeFeedEtc);
             Btn_HomeFeedEtc.setOnClickListener(new View.OnClickListener() {
@@ -309,6 +321,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                     }
                 }
             });
+
+
         }
 
         void onBind(FeedInfo data) {
@@ -397,8 +411,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
         db = FirebaseFirestore.getInstance();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (feedInfoList.get(position).getFavorites() != null) {
-            if (feedInfoList.get(position).getFavorites().containsKey(firebaseUser.getUid())) {
+        if (feedInfoList.get(position).getFavorite() != null) {
+            if (feedInfoList.get(position).getFavorite().containsKey(firebaseUser.getUid())) {
                 holder.Iv_HomeFeed_Favorite.setImageResource(R.drawable.thumb_up_on);
             } else {
                 holder.Iv_HomeFeed_Favorite.setImageResource(R.drawable.thumb_up_off);
@@ -406,17 +420,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
         } else {
             holder.Iv_HomeFeed_Favorite.setImageResource(R.drawable.thumb_up_off);
         }
-
-        holder.Iv_HomeFeed_Favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("좋아요", "눌림");
-                if (uidList.size() != 0 ) {
-                    Log.d("좋아요", "성공?");
-                    onFavoriteClicked(firebaseDatabase.getReference().child("posts").child(uidList.get(holder.getAbsoluteAdapterPosition())));
-                }
-            }
-        });
 
     }
 
@@ -467,21 +470,21 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     private void onFavoriteClicked(DatabaseReference feedRef) {
 
         feedRef.runTransaction(new Transaction.Handler() {
+            @NonNull
             @Override
-            public Transaction.Result doTransaction(MutableData currentData) {
+            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
                 FeedInfo feedInfo = currentData.getValue(FeedInfo.class);
                 if (feedInfo == null) {
                     return Transaction.success(currentData);
                 }
-
-                if (feedInfo.getFavorites().containsKey(firebaseUser.getUid())) {
+                if (feedInfo.getFavorite().containsKey(firebaseUser.getUid())) {
                     // Unstar the post and remove self from stars
                     feedInfo.setFavoriteCount(feedInfo.getFavoriteCount() - 1);
-                    feedInfo.getFavorites().remove(firebaseUser.getUid());
+                    feedInfo.getFavorite().remove(firebaseUser.getUid());
                 } else {
                     // Star the post and add self to stars
                     feedInfo.setFavoriteCount(feedInfo.getFavoriteCount() + 1);
-                    feedInfo.getFavorites().put(firebaseUser.getUid(), true);
+                    feedInfo.getFavorite().put(firebaseUser.getUid(), true);
                     if(myInt == 1 && !postPublisher.equals(firebaseUser.getUid())) { // 알림수신동의가 되어있다면 and 내 게시물이 아니라면 푸시알림 전송
                         sendCommentToFCM();
                     }
@@ -507,6 +510,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
                 FeedInfo feedInfo = currentData.getValue(FeedInfo.class);
                 ReportInfo reportInfo = new ReportInfo(feedInfo.getPostId(), null);
+                Log.d("신고", feedInfo.getReport() + "입니다.");
                 if (feedInfo == null) {
                     return Transaction.success(currentData);
                 }

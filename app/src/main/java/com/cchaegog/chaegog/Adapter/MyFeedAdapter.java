@@ -15,6 +15,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,14 +26,19 @@ import com.bumptech.glide.request.RequestOptions;
 import com.cchaegog.chaegog.CommentActivity;
 import com.cchaegog.chaegog.EditFeedActivity;
 import com.cchaegog.chaegog.Model.FeedInfo;
+import com.cchaegog.chaegog.Model.ReportInfo;
 import com.cchaegog.chaegog.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -62,7 +68,7 @@ public class MyFeedAdapter extends RecyclerView.Adapter<MyFeedAdapter.ViewHolder
 
     private PopupMenu popupMenu;
 
-    private ImageView Iv_MyFeed_Item, Iv_MyFeed_Profile;
+    private ImageView Iv_MyFeed_Item, Iv_MyFeed_Profile, Iv_MyFeedFavorite;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -90,6 +96,15 @@ public class MyFeedAdapter extends RecyclerView.Adapter<MyFeedAdapter.ViewHolder
                         intent.putExtra("POSTSDocumentId", MyFeedId);
                         context.startActivity(intent);
                     }
+                }
+            });
+
+            Iv_MyFeedFavorite = view.findViewById(R.id.Iv_MyFeedFavorite);
+            Iv_MyFeedFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAbsoluteAdapterPosition();
+                    onFavoriteClicked(databaseReference.child("posts").child(uidList.get(pos)));
                 }
             });
 
@@ -168,10 +183,6 @@ public class MyFeedAdapter extends RecyclerView.Adapter<MyFeedAdapter.ViewHolder
         this.uidList = uidList;
         this.context = context;
     }
-//    public MyFeedAdapter(Context context, ArrayList<FeedInfo> myDataset) {
-//        MyFeedDataset = myDataset;
-//        this.context = context;
-//    }
 
     @NonNull
     @Override
@@ -200,7 +211,17 @@ public class MyFeedAdapter extends RecyclerView.Adapter<MyFeedAdapter.ViewHolder
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         Iv_MyFeed_Item = cardView.findViewById(R.id.Iv_MyFeed_item_Image);
         Iv_MyFeed_Profile = cardView.findViewById(R.id.Iv_MyFeed_Profile);
+        Iv_MyFeedFavorite = cardView.findViewById(R.id.Iv_MyFeedFavorite);
 
+        if (feedInfoList.get(position).getFavorite() != null) {
+            if (feedInfoList.get(position).getFavorite().containsKey(firebaseUser.getUid())) {
+                Iv_MyFeedFavorite.setImageResource(R.drawable.thumb_up_on);
+            } else {
+                Iv_MyFeedFavorite.setImageResource(R.drawable.thumb_up_off);
+            }
+        } else {
+            Iv_MyFeedFavorite.setImageResource(R.drawable.thumb_up_off);
+        }
 
         db = FirebaseFirestore.getInstance();
         db.collection("users")
@@ -263,6 +284,36 @@ public class MyFeedAdapter extends RecyclerView.Adapter<MyFeedAdapter.ViewHolder
                         }
                     }
                 });
+    }
+
+    private void onFavoriteClicked(DatabaseReference feedRef) {
+        feedRef.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                FeedInfo feedInfo = currentData.getValue(FeedInfo.class);
+                Log.d("좋아요", feedInfo.getFavorite() + "입니다.");
+                if (feedInfo == null) {
+                    return Transaction.success(currentData);
+                }
+                if (feedInfo.getReport().containsKey(firebaseUser.getUid())) {
+//                    feedInfoList.remove()
+                    feedInfo.setReportCount(feedInfo.getReportCount() - 1);
+                    feedInfo.getReport().remove(firebaseUser.getUid());
+                } else {
+                    feedInfo.setReportCount(feedInfo.getReportCount() + 1);
+                    feedInfo.getReport().put(firebaseUser.getUid(), true);
+                }
+                currentData.setValue(feedInfo);
+                return Transaction.success(currentData);
+
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+
+            }
+        });
     }
 
     @Override
