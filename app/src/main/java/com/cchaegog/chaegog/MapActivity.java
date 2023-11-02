@@ -32,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.LocationTrackingMode;
@@ -137,6 +138,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         @Override
         public void onMapReady (@NonNull NaverMap naverMap){
             Log.d(TAG, "onMapReady");
+
+//            mDatabase = FirebaseDatabase.getInstance().getReference("Maps");
+//            String targetCategory = "한식";
+//            Query query = mDatabase.orderByChild("storeCategory").equalTo(targetCategory);
+//            query.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+//                        // 조회한 각 항목의 image 필드 수정
+//                        itemSnapshot.getRef().child("storeImage").setValue("new_image_url");
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//                    System.out.println("데이터 조회 실패: " + databaseError.getMessage());
+//                }
+//            });
 
             mapSearchBtn = findViewById(R.id.map_search_btn);
             mapSearchBtn.setOnClickListener(new View.OnClickListener() {

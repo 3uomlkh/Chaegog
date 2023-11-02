@@ -6,7 +6,7 @@
     android:layout_margin="5dp">
     <ImageView
         android:id="@+id/ProductImageView"
-        android:src="@drawable/tomato"
+        android:src="@drawable/chaegog_default"
         android:layout_margin="10dp"
         android:layout_width="90dp"
         android:layout_height="90dp"/>
