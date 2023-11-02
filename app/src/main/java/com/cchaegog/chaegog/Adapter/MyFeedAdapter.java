@@ -69,6 +69,7 @@ public class MyFeedAdapter extends RecyclerView.Adapter<MyFeedAdapter.ViewHolder
     private PopupMenu popupMenu;
 
     private ImageView Iv_MyFeed_Item, Iv_MyFeed_Profile, Iv_MyFeedFavorite;
+    private TextView Tv_MyFeed_Favorite;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -212,6 +213,7 @@ public class MyFeedAdapter extends RecyclerView.Adapter<MyFeedAdapter.ViewHolder
         Iv_MyFeed_Item = cardView.findViewById(R.id.Iv_MyFeed_item_Image);
         Iv_MyFeed_Profile = cardView.findViewById(R.id.Iv_MyFeed_Profile);
         Iv_MyFeedFavorite = cardView.findViewById(R.id.Iv_MyFeedFavorite);
+        Tv_MyFeed_Favorite = cardView.findViewById(R.id.Tv_MyFeed_Favorite);
 
         if (feedInfoList.get(position).getFavorite() != null) {
             if (feedInfoList.get(position).getFavorite().containsKey(firebaseUser.getUid())) {
@@ -284,6 +286,7 @@ public class MyFeedAdapter extends RecyclerView.Adapter<MyFeedAdapter.ViewHolder
                         }
                     }
                 });
+        Tv_MyFeed_Favorite.setText(String.valueOf(feedInfoList.get(position).getFavoriteCount()));
     }
 
     private void onFavoriteClicked(DatabaseReference feedRef) {
