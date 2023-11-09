@@ -57,7 +57,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     double lat, lnt;
     String mapInfoName, mapInfoAddr, mapInfoTime, mapInfoDayoff,
             mapInfoImage, mapInfoCategory, mapInfoMenu, mapInfoPhonenum, mapInfoKey;
-    TextView getMapInfoName, getMapInfoAddr, getMapInfoTime, getMapInfoDayoff, mapInfoDayoffTv;
+    TextView getMapInfoName, getMapInfoAddr, getMapInfoTime, getMapInfoDayoff, mapInfoDayoffTv, mapInfoTimeTv;
     ImageView getMapInfoImage, mapSearchImage;
     ImageButton mapInfoButton;
     FloatingActionButton mapSearchBtn;
@@ -90,6 +90,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         getMapInfoImage = findViewById(R.id.map_info_image);
         mapInfoButton = findViewById(R.id.map_info_button);
         mapInfoDayoffTv = findViewById(R.id.map_info_day_off_tv);
+        mapInfoTimeTv = findViewById(R.id.map_info_time_tv);
 
         FragmentManager fm = getSupportFragmentManager();
         MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map_fragment);
@@ -211,6 +212,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 } else {
                                     mapInfoDayoffTv.setVisibility(View.VISIBLE);
                                 }
+
+                                if(mapInfoTime.trim().isEmpty()) {
+                                    mapInfoTimeTv.setVisibility(View.GONE);
+                                } else {
+                                    mapInfoTimeTv.setVisibility(View.VISIBLE);
+                                }
+
                                 getMapInfoDayoff.setText(mapInfoDayoff);
 
                                 startLoadingImage();
@@ -247,7 +255,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // 이미지 가져오기
         private void startLoadingImage() {
             getMapInfoImage.setImageResource(R.drawable.chaegog_restaurant);
-            if(mapInfoCategory.equals("까페") || mapInfoCategory.equals("카페")) {
+            if(mapInfoCategory.equals("카페")) {
                 getMapInfoImage.setImageResource(R.drawable.chaegog_cafe);
             }
             if(mapInfoCategory.equals("베이커리")) {
